@@ -1,10 +1,12 @@
 ---
-# Source: media/Leafsong Retreat - 16th oct.pdf (developer brochure, 16 Oct 2026).
-# DRAFT until the gaps below are filled. Not in the brochure, so not guessed:
-#   - UP RERA registration number (required before publishing)
-#   - Carpet areas (brochure gives saleable area only)
-#   - Land area, total units, floors, possession date, exact site address and coordinates
+# Sources: media/Leafsong Retreat - 16th oct.pdf (developer brochure, 16 Oct 2026) and
+# herohomes.in/projects/apartments/greater-noida-uttar-pradesh/leafsong-retreat-sec-mu
+# (RERA number and "three 30-storey towers", checked 20 Oct 2026).
+# Still missing, so not shown rather than guessed:
+#   - Carpet areas (both sources give saleable area only)
+#   - Land area, total units, possession date, exact site address and coordinates
 #   - Nearby places with distances
+# Pre-launch price below is valid till 25 Oct 2026; update it to ₹11,499/sq. ft. after that.
 name: Leafsong Retreat
 slug: leafsong-retreat-sector-mu
 tagline: 3 BHK homes in three towers at Sector Mu, with fresh-air ERV, split ACs and a modular kitchen included
@@ -38,8 +40,10 @@ priceBasis: base
 priceNote: Pre-launch BSP of ₹10,999 per sq. ft. on saleable area, valid till 25 Oct 2026. GST, IFMS, lease rent and other charges are extra.
 
 towers: 3
+floors: 30
 
-reraNumber: "[UP RERA number pending]"
+# As listed by Hero Homes; confirm on up-rera.in.
+reraNumber: UPRERAPRJ414014/10/2026
 
 amenities:
   - Clubhouse with banquet hall
@@ -116,8 +120,8 @@ images:
     - src: ../../assets/projects/leafsong-retreat-sector-mu/plan-3bhk-3t-sr.jpg
       configuration: 3BHK 3T+SR
 
-featured: false
-published: false
+featured: true
+published: true
 listedAt: 2026-10-20
 ---
 
