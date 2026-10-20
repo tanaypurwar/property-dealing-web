@@ -7,23 +7,27 @@ export const site = {
   tagline: 'Trust, in writing.',
   url: 'https://propertydealing.in',
 
-  // TODO: replace with the real number. `phone` is for tel: links, `whatsapp` is digits only for wa.me.
-  phone: '+919999999999',
-  phoneDisplay: '+91 99999 99999',
-  whatsapp: '919999999999',
+  // From the founder's business card. `phone` is for tel: links, `whatsapp` is digits only for wa.me.
+  // Assumes the same number takes WhatsApp chats.
+  phone: '+919717510425',
+  phoneDisplay: '+91 97175 10425',
+  whatsapp: '919717510425',
   whatsappGreeting:
     "Namaste! I'm looking for verified projects in Noida or Greater Noida. Please send me options with the full price breakup.",
 
-  email: '[hello@propertydealing.in]',
-  address: '[Office address], Noida, Uttar Pradesh',
+  email: 'propertydealingteam@gmail.com',
+  address: 'Noida 201307, Uttar Pradesh',
   hours: 'Site visits daily, 10 am to 7 pm',
-  agentRera: '[UPRERAAGTxxxxx]',
+  agentRera: '[UPRERAAGTxxxxx]', // TODO: the card says "RERA Certified" but not the number
+
+  founder: { name: 'Amit Kumar Verma', role: 'Founder' },
 
   social: [
-    { label: 'Instagram', href: 'https://instagram.com/[handle]' },
-    { label: 'Facebook', href: 'https://facebook.com/[handle]' },
-    { label: 'YouTube', href: 'https://youtube.com/@[handle]' },
-    { label: 'LinkedIn', href: 'https://linkedin.com/company/[handle]' },
+    // From the QR codes in media/QR codes social media.docx.
+    { label: 'Instagram', href: 'https://www.instagram.com/propertydealingteam' },
+    { label: 'YouTube', href: 'https://www.youtube.com/@propertydealingteam' },
+    { label: 'Facebook', href: 'https://www.facebook.com/propertydealingteam/' },
+    { label: 'WhatsApp channel', href: 'https://whatsapp.com/channel/0029VbCGwZhHLHQaPwPGx50c' },
   ],
 
   nav: [
