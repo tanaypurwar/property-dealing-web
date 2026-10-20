@@ -59,3 +59,13 @@ export function formatDistance(km: number): string {
 export function formatMonth(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });
 }
+
+/** "20 Oct 2026" */
+export function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });
+}
+
+/** Reading time at ~200 words a minute, never less than one minute. */
+export function readingMinutes(text: string): number {
+  return Math.max(1, Math.round(text.trim().split(/\s+/).length / 200));
+}

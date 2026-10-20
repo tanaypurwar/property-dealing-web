@@ -185,4 +185,20 @@ const projects = defineCollection({
       }),
 });
 
-export const collections = { projects };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string().trim().min(1).max(110),
+    /** Meta description and the summary on /blog. Keep it under ~160 characters. */
+    description: z.string().trim().min(1).max(170),
+    publishedAt: z.coerce.date(),
+    updatedAt: z.coerce.date().optional(),
+    author: z.string().trim().min(1),
+    tags: z.array(z.string().trim().min(1)).default([]),
+    /** Every factual claim in a post should trace to one of these. Shown at the end of the post. */
+    sources: z.array(z.object({ title: z.string().trim().min(1), url: z.url() })).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, blog };
