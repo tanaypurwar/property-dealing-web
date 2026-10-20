@@ -101,11 +101,20 @@ aws cloudformation describe-stacks --region ap-south-1 --stack-name propertydeal
 
 ## 5. Deploy (every release)
 
+Current production values (stack `propertydealing-site`, ap-south-1, created 20 Oct 2026):
+
+| | |
+| --- | --- |
+| BucketName | `propertydealing-site-sitebucket-wkyfbj8m4h1a` |
+| DistributionId | `EP2VDPHVNCNPP` |
+| DistributionDomainName | `d1u0ock4ukn34c.cloudfront.net` |
+| Certificate (us-east-1) | `arn:aws:acm:us-east-1:433101551692:certificate/029f3516-b6ce-4198-bb23-e7398e8692aa` |
+
 PowerShell:
 
 ```powershell
-$env:S3_BUCKET = "<BucketName>"
-$env:CLOUDFRONT_DISTRIBUTION_ID = "<DistributionId>"
+$env:S3_BUCKET = "propertydealing-site-sitebucket-wkyfbj8m4h1a"
+$env:CLOUDFRONT_DISTRIBUTION_ID = "EP2VDPHVNCNPP"
 npm run deploy
 ```
 
