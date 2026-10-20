@@ -45,8 +45,8 @@ export const site = {
     { label: 'PG and rentals', href: '/projects?type=pg-rental' },
   ],
 
-  /** Where "Get price sheet" goes until the enquiry form exists. */
-  enquireHref: '/contact#enquire',
+  /** Where "Get price sheet" and "Request a callback" go: the enquiry form on the home page. */
+  enquireHref: '/#enquire',
 
   /**
    * TODO: URL that receives enquiry form submissions as a JSON POST (e.g. a form service

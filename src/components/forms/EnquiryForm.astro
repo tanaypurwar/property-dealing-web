@@ -9,17 +9,35 @@ import { whatsappUrl } from '../../lib/whatsapp';
 /**
  * The main lead form. Elsewhere on the page, a link with `data-prefill-config="3BHK"`
  * and `href="#<id>"` pre-selects that configuration and moves focus here.
+ * Without `projectName` it's a general enquiry (e.g. on the home page).
  */
 interface Props {
   id: string;
-  projectName: string;
+  projectName?: string;
+  /** Choices for the "Interested in" select: unit types on a project page, budgets elsewhere. */
   configurations: string[];
+  interestLabel?: string;
+  title?: string;
+  submitLabel?: string;
+  intro?: string;
   /** Pre-filled message for the "Prefer WhatsApp?" link. */
   whatsappMessage?: string;
   class?: string;
 }
 
-const { id, projectName, configurations, whatsappMessage, class: className } = Astro.props;
+const {
+  id,
+  projectName,
+  configurations,
+  interestLabel = 'Interested in',
+  title = 'Get the full price sheet',
+  submitLabel = 'Get the price sheet',
+  intro = projectName
+    ? `The all-inclusive breakup for ${projectName}, from your advisor.`
+    : 'Tell us what you need and your advisor sends verified options with the full price breakup.',
+  whatsappMessage,
+  class: className,
+} = Astro.props;
 
 const configOptions = [
   ...configurations.map((c) => ({ value: c, label: c })),
@@ -41,8 +59,8 @@ const callTimes = [
   data-lead-section
 >
   <div data-lead-body>
-    <h2 id={`${id}-title`} class="text-h4 font-extrabold">Get the full price sheet</h2>
-    <p class="mt-1 text-stone">The all-inclusive breakup for {projectName}, from your advisor.</p>
+    <h2 id={`${id}-title`} class="text-h4 font-extrabold">{title}</h2>
+    <p class="mt-1 text-stone">{intro}</p>
 
     <form
       class="mt-4 flex flex-col gap-3.5"
@@ -74,7 +92,7 @@ const callTimes = [
       <SelectField
         id={`${id}-config`}
         name="configuration"
-        label="Interested in"
+        label={interestLabel}
         options={configOptions}
         value={configOptions[0]!.value}
       />
@@ -85,14 +103,14 @@ const callTimes = [
         options={callTimes}
         value="Any time"
       />
-      <ConsentField id={`${id}-consent`} />
+      <ConsentField id={`${id}-consent`} subject={projectName ? 'this project' : 'property options'} />
 
       <!-- Honeypot: hidden from people, filled in by most spam bots. -->
       <div class="hidden" aria-hidden="true">
         <label>Leave this empty <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
       </div>
 
-      <Button type="submit" size="lg" block>Get the price sheet</Button>
+      <Button type="submit" size="lg" block>{submitLabel}</Button>
       <p data-lead-error hidden role="alert" class="text-small font-medium text-deep"></p>
       <a
         href={whatsappUrl(whatsappMessage)}

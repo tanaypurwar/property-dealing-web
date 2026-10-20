@@ -1,9 +1,11 @@
 ---
 interface Props {
   id: string;
+  /** What we'll contact them about: "this project", "property options". */
+  subject?: string;
 }
 
-const { id } = Astro.props;
+const { id, subject = 'this project' } = Astro.props;
 ---
 
 <div class="flex flex-col gap-1">
@@ -16,7 +18,7 @@ const { id } = Astro.props;
       class="mt-0.5 size-5 shrink-0 cursor-pointer accent-deep"
     />
     <span>
-      Call or WhatsApp me about this project. My number is never shared with other brokers.
+      Call or WhatsApp me about {subject}. My number is never shared with other brokers.
     </span>
   </label>
   <p id={`${id}-error`} hidden class="text-small font-medium text-deep"></p>
