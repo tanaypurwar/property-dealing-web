@@ -113,7 +113,7 @@ images:
 
 featured: false
 published: true
-listedAt: 2026-10-20
+listedAt: 2026-10-20T20:12:00+05:30
 ---
 
 Godrej Properties is planning a residential project of about 23 acres inside the DMIC (Delhi–Mumbai Industrial Corridor) integrated township in Greater Noida. The township is planned with offices, a sports complex and an 18-hole golf course, and sits close to NH-91, the Eastern Peripheral Expressway and the planned Boraki transport hub.

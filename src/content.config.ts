@@ -136,7 +136,10 @@ const projects = defineCollection({
 
         featured: z.boolean().default(false),
         published: z.boolean().default(false),
-        /** When the project was added to the site. Drives the "Newest" sort. */
+        /**
+         * When the project was added to the site, e.g. 2026-10-20T19:19:00+05:30 (a plain date
+         * works too). Drives the "Newest" sort and the home page's "Just listed" spotlight.
+         */
         listedAt: z.coerce.date(),
       })
       .superRefine((p, ctx) => {

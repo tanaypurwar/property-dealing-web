@@ -119,7 +119,7 @@ images:
 
 featured: false
 published: true
-listedAt: 2026-10-20
+listedAt: 2026-10-20T20:05:00+05:30
 ---
 
 Sikka Kaamya Greens is a residential project in Sector 10, Greater Noida West, on land allotted by the Greater Noida Authority. It has ten apartment types, from a 980 sq. ft. 2 BHK to a 2,120 sq. ft. 4 BHK, arranged around a central park with a clubhouse, pool and a shopping complex.

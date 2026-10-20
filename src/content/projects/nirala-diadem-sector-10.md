@@ -89,7 +89,7 @@ images:
 
 featured: false
 published: true
-listedAt: 2026-10-20
+listedAt: 2026-10-20T19:33:00+05:30
 ---
 
 Nirala Diadem is a mixed-use building by Nirala World on a corner plot in Sector 10, Greater Noida West, open on three sides with about 130 metres of road frontage. The lower floors hold retail shops, restaurants, a banquet hall, a family entertainment zone and a multiplex cinema, with studio apartments in the tower above.
