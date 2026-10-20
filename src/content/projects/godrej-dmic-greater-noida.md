@@ -12,6 +12,10 @@
 #   - Prices are confirmed: the source gives "onwards" figures with an unexplained asterisk.
 #   - Official project images, floor plans and the exact address come from Godrej Properties.
 #     The partner site's images are not reused here.
+# Main image: media/dmrc/DMRCImage.jpeg, a "Global Business City" presentation slide. The photo is
+#   an existing business district abroad (note the SUNING sign), not the DMIC site or a Godrej
+#   render. Used on the owner's instruction (20 Oct 2026) with a visible "illustrative" caption.
+#   Replace it with official renders or site photos as soon as they're available.
 name: Godrej DMIC Greater Noida
 slug: godrej-dmic-greater-noida
 tagline: 1, 2 and 3 BHK homes by Godrej Properties on a 23-acre site in the DMIC township, Greater Noida
@@ -106,8 +110,9 @@ nearby:
 
 images:
   hero:
-    src: ../../assets/projects/godrej-dmic-greater-noida/hero.jpg
-    alt: Placeholder illustration; official Godrej Properties images to be added
+    src: ../../assets/projects/godrej-dmic-greater-noida/illustrative-gbc.jpg
+    alt: Stock photo of a business district used for illustration only; not the Godrej project or the DMIC site
+    caption: Illustrative image only. Not the project or the DMIC site.
   gallery: []
   floorPlans: []
 

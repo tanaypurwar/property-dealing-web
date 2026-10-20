@@ -46,7 +46,7 @@ const headingId = `project-${p.slug}`;
   aria-labelledby={headingId}
   class="relative flex flex-col overflow-hidden rounded-card border border-line bg-white"
 >
-  <a href={href} tabindex="-1" aria-hidden="true" class="block bg-sand">
+  <a href={href} tabindex="-1" aria-hidden="true" class="relative block bg-sand">
     <Image
       src={p.images.hero.src}
       alt={p.images.hero.alt}
@@ -58,6 +58,13 @@ const headingId = `project-${p.slug}`;
       fetchpriority={eager ? 'high' : 'auto'}
       class="aspect-[16/10] w-full object-cover"
     />
+    {
+      p.images.hero.caption && (
+        <span class="absolute right-2.5 bottom-2.5 max-w-[calc(100%-1.25rem)] rounded-badge bg-paper/90 px-2 py-0.5 text-[0.75rem] leading-4 text-stone">
+          {p.images.hero.caption}
+        </span>
+      )
+    }
   </a>
   <!-- Outside the aria-hidden image link so screen readers still hear type and status. -->
   <div class="pointer-events-none absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 pr-2.5">

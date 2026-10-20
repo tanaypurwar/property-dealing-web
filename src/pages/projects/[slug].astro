@@ -82,7 +82,7 @@ const areaHeader = p.configurations.every((c) => c.carpetArea)
 const allInclusive = p.priceBasis === 'all-inclusive';
 
 const slides = [
-  { src: p.images.hero.src, alt: p.images.hero.alt },
+  { src: p.images.hero.src, alt: p.images.hero.alt, caption: p.images.hero.caption },
   ...p.images.gallery.map((g) => ({ src: g.src, alt: g.caption, caption: g.caption })),
 ];
 

@@ -112,7 +112,15 @@ const projects = defineCollection({
         ),
 
         images: z.object({
-          hero: z.object({ src: image(), alt: z.string().trim().min(1) }),
+          hero: z.object({
+            src: image(),
+            alt: z.string().trim().min(1),
+            /**
+             * Shown on the image itself (carousel, cards, home spotlight), e.g. "Site photo, Oct 2026"
+             * or "Artist's impression". Required in practice for anything that isn't the project.
+             */
+            caption: z.string().trim().min(1).optional(),
+          }),
           gallery: z.array(z.object({ src: image(), caption: z.string().trim().min(1) })),
           floorPlans: z.array(
             z.object({ src: image(), configuration: z.string().trim().min(1) }),
