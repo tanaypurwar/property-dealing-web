@@ -5,7 +5,7 @@
 export const site = {
   name: 'Propertydealing.in',
   tagline: 'Trust, in writing.',
-  url: 'https://propertydealing.in',
+  url: 'https://www.propertydealing.in',
 
   // From the founder's business card. `phone` is for tel: links, `whatsapp` is digits only for wa.me.
   // Assumes the same number takes WhatsApp chats.

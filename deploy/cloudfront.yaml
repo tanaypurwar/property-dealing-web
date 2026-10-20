@@ -1,0 +1,139 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Propertydealing.in static site: private S3 bucket served through CloudFront on
+  www.propertydealing.in, with HTTPS, security headers and clean-URL rewriting.
+  See deploy/README.md for the full setup, including GoDaddy DNS.
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: www.propertydealing.in
+    Description: The hostname visitors use. GoDaddy points it here with a CNAME.
+  CertificateArn:
+    Type: String
+    AllowedPattern: '^arn:aws:acm:us-east-1:\d{12}:certificate/[0-9a-f-]+$'
+    ConstraintDescription: Must be an ACM certificate ARN in us-east-1 (CloudFront only accepts us-east-1 certificates).
+    Description: ACM certificate in us-east-1 covering the domain name above.
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Private: only CloudFront can read it, through Origin Access Control below.
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${AWS::StackName}-oac'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # Inline copy of deploy/cloudfront-function.js. Keep the two in sync.
+  CleanUrlFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub '${AWS::StackName}-clean-urls'
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Map /about and /about/ to /about/index.html
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function handler(event) {
+          var request = event.request;
+          var uri = request.uri;
+          if (uri.endsWith('/')) {
+            request.uri = uri + 'index.html';
+          } else if (uri.substring(uri.lastIndexOf('/') + 1).indexOf('.') === -1) {
+            request.uri = uri + '/index.html';
+          }
+          return request;
+        }
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub '${DomainName} static site'
+        Aliases:
+          - !Ref DomainName
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        # PriceClass_200 includes the Indian edge locations (Mumbai, Delhi, Chennai, Hyderabad…).
+        PriceClass: PriceClass_200
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        Origins:
+          - Id: s3-site
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultCacheBehavior:
+          TargetOriginId: s3-site
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          # Managed "CachingOptimized": honours the Cache-Control headers the deploy script sets.
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          # Managed "SecurityHeadersPolicy": HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy.
+          ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt CleanUrlFunction.FunctionMetadata.FunctionARN
+        # A private bucket answers 403 for files that don't exist; show the site's 404 page for both.
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 60
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 60
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub '${SiteBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'
+
+Outputs:
+  BucketName:
+    Description: Set as S3_BUCKET for npm run deploy.
+    Value: !Ref SiteBucket
+  DistributionId:
+    Description: Set as CLOUDFRONT_DISTRIBUTION_ID for npm run deploy.
+    Value: !Ref Distribution
+  DistributionDomainName:
+    Description: Point the www CNAME at GoDaddy to this.
+    Value: !GetAtt Distribution.DomainName

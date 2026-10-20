@@ -1,0 +1,25 @@
+---
+import Button from '../components/Button.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { whatsappUrl } from '../lib/whatsapp';
+---
+
+<BaseLayout title="Page not found" description="This page doesn't exist." noindex>
+  <section class="mx-auto flex max-w-site flex-col items-start gap-5 px-4 py-20 sm:px-6 md:py-28">
+    <p class="font-display text-lead font-bold text-deep">404</p>
+    <h1 class="max-w-[20ch] text-h2 font-extrabold md:text-h1">This page doesn't exist.</h1>
+    <p class="max-w-[52ch] text-lead text-stone">
+      The link may be old, or the project may no longer be listed. Browse current projects, or tell
+      us what you were looking for and we'll send it on WhatsApp.
+    </p>
+    <div class="flex flex-wrap gap-3">
+      <Button href="/projects/" size="lg">See all projects</Button>
+      <Button href={whatsappUrl()} variant="whatsapp" icon="chat" size="lg" target="_blank" rel="noopener">
+        Ask on WhatsApp
+      </Button>
+    </div>
+    <a href="/" class="inline-flex min-h-tap items-center font-display font-bold text-deep underline decoration-2 underline-offset-4 hover:text-ink">
+      Go to the home page
+    </a>
+  </section>
+</BaseLayout>

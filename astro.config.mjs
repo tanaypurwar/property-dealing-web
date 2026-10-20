@@ -5,7 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://propertydealing.in',
+  // Served from CloudFront on www; GoDaddy forwards the bare domain here (see deploy/README.md).
+  site: 'https://www.propertydealing.in',
   vite: {
     plugins: [tailwindcss()]
   }
