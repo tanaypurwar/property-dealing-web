@@ -35,9 +35,13 @@ export function areaSummary(configs: Configuration[]): { label: string; value: s
   };
 }
 
-/** Short note shown beside a price: "all-inclusive", or "BSP, plus charges" for base prices. */
+/** Short note shown beside a price, so a figure is never read as more than it is. */
 export function priceLabel(p: Pick<Project, 'priceBasis'>): string {
-  return p.priceBasis === 'all-inclusive' ? 'all-inclusive' : 'BSP, taxes and charges extra';
+  return {
+    'all-inclusive': 'all-inclusive',
+    base: 'BSP, taxes and charges extra',
+    indicative: 'starting prices, to be confirmed',
+  }[p.priceBasis];
 }
 
 export const projectUrl = (slug: string) => `/projects/${slug}`;

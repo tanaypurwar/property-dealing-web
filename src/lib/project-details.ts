@@ -1,5 +1,6 @@
 /** Helpers for the project detail page: icons for free-text data, YouTube ids, nearby grouping. */
 import type { IconName } from '../components/Icon.astro';
+import { formatDistance } from './format';
 import type { Project } from './project';
 
 /** First match wins, so put specific words before general ones. */
@@ -33,17 +34,30 @@ type NearbyCategory = Project['nearby'][number]['category'];
 /** Display order: the categories buyers ask about first. */
 export const NEARBY_CATEGORIES: { key: NearbyCategory; label: string; icon: IconName }[] = [
   { key: 'metro', label: 'Metro', icon: 'metro' },
+  { key: 'railway', label: 'Railway', icon: 'train' },
   { key: 'highway', label: 'Highways', icon: 'highway' },
-  { key: 'school', label: 'Schools', icon: 'school' },
+  { key: 'airport', label: 'Airports', icon: 'plane' },
+  { key: 'school', label: 'Schools and colleges', icon: 'school' },
   { key: 'hospital', label: 'Hospitals', icon: 'hospital' },
   { key: 'mall', label: 'Shopping', icon: 'mall' },
+  { key: 'office', label: 'Offices', icon: 'building' },
 ];
+
+type Nearby = Project['nearby'][number];
+
+/** Kilometres first when known, otherwise drive time, as the source gave it. */
+const nearness = (n: Nearby) => n.distanceKm ?? (n.travelMinutes ?? 0) / 2;
 
 export function groupNearby(nearby: Project['nearby']) {
   return NEARBY_CATEGORIES.map((c) => ({
     ...c,
-    places: nearby.filter((n) => n.category === c.key).sort((a, b) => a.distanceKm - b.distanceKm),
+    places: nearby.filter((n) => n.category === c.key).sort((a, b) => nearness(a) - nearness(b)),
   })).filter((g) => g.places.length > 0);
+}
+
+/** "1.5 km" or "12 min drive" */
+export function formatNearby(n: Nearby): string {
+  return n.distanceKm !== undefined ? formatDistance(n.distanceKm) : `${n.travelMinutes} min drive`;
 }
 
 /** "https://youtu.be/abc" or "https://www.youtube.com/watch?v=abc" → "abc" */

@@ -59,10 +59,11 @@ const projects = defineCollection({
         /** Overall range for listing filters. Must cover every configuration's price range. */
         priceRange: z.object({ min: rupees, max: rupees }),
         /**
-         * What the prices include. `all-inclusive` is the brand default; `base` means BSP only,
-         * and then `priceNote` must say what's extra (GST, IFMS…) and when the price is valid.
+         * What the prices include. `all-inclusive` is the brand default; `base` means BSP only;
+         * `indicative` means starting prices whose basis isn't confirmed yet. For anything but
+         * all-inclusive, `priceNote` must say what's extra or unconfirmed.
          */
-        priceBasis: z.enum(['all-inclusive', 'base']).default('all-inclusive'),
+        priceBasis: z.enum(['all-inclusive', 'base', 'indicative']).default('all-inclusive'),
         priceNote: z.string().trim().min(1).optional(),
 
         landAreaAcres: z.number().positive().optional(),
@@ -79,11 +80,26 @@ const projects = defineCollection({
         highlights: z.array(z.string().trim().min(1)).min(3).max(6),
 
         nearby: z.array(
-          z.object({
-            name: z.string().trim().min(1),
-            category: z.enum(['school', 'hospital', 'metro', 'mall', 'highway']),
-            distanceKm: z.number().nonnegative(),
-          }),
+          z
+            .object({
+              name: z.string().trim().min(1),
+              category: z.enum([
+                'metro',
+                'railway',
+                'highway',
+                'airport',
+                'school',
+                'hospital',
+                'mall',
+                'office',
+              ]),
+              // Use whichever the source gives; don't convert drive times into kilometres.
+              distanceKm: z.number().nonnegative().optional(),
+              travelMinutes: z.number().int().positive().optional(),
+            })
+            .refine((n) => n.distanceKm !== undefined || n.travelMinutes !== undefined, {
+              message: 'each nearby place needs distanceKm or travelMinutes',
+            }),
         ),
 
         images: z.object({
@@ -136,11 +152,11 @@ const projects = defineCollection({
           }
         });
 
-        if (p.priceBasis === 'base' && !p.priceNote) {
+        if (p.priceBasis !== 'all-inclusive' && !p.priceNote) {
           ctx.addIssue({
             code: 'custom',
             path: ['priceNote'],
-            message: 'priceNote is required when priceBasis is "base": say what is extra',
+            message: 'priceNote is required unless prices are all-inclusive: say what is extra or unconfirmed',
           });
         }
 

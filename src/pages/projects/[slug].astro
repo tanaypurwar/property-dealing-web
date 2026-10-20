@@ -18,10 +18,10 @@ import MapEmbed from '../../components/media/MapEmbed.astro';
 import VideoEmbed from '../../components/media/VideoEmbed.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../config/site';
-import { formatDistance, formatMonth, formatPriceRange } from '../../lib/format';
+import { formatMonth, formatPriceRange } from '../../lib/format';
 import { areaSummary, configurationSummary, priceLabel, unitArea } from '../../lib/project';
 import { STATUS_LABELS } from '../../lib/project-filters';
-import { amenityIcon, groupNearby, similarProjects, youtubeId } from '../../lib/project-details';
+import { amenityIcon, formatNearby, groupNearby, similarProjects, youtubeId } from '../../lib/project-details';
 import { projectWhatsappMessage } from '../../lib/whatsapp';
 
 export const getStaticPaths = (async () => {
@@ -63,6 +63,7 @@ const facts: { icon: IconName; label: string; value: string }[] = [
   { icon: 'home', label: 'Configurations', value: configs },
   { icon: 'area', ...areaSummary(p.configurations) },
   ...(possession ? [{ icon: 'calendar' as const, label: 'Possession', value: possession }] : []),
+  ...(p.landAreaAcres ? [{ icon: 'leaf' as const, label: 'Land area', value: `${p.landAreaAcres} acres` }] : []),
   ...(p.totalUnits ? [{ icon: 'units' as const, label: 'Total units', value: indian.format(p.totalUnits) }] : []),
   ...(p.towers ? [{ icon: 'building' as const, label: 'Towers', value: String(p.towers) }] : []),
   { icon: 'shield', label: 'UP RERA no.', value: p.reraNumber },
@@ -84,7 +85,7 @@ const slides = [
 
 // SEO
 const title = `${p.name}, ${shortArea}: ${configs} price and floor plans`;
-const description = `${p.name} in ${area}: ${configs}, ${price} ${allInclusive ? 'all-inclusive' : 'BSP'}. ${STATUS_LABELS[p.status]}. UP RERA ${p.reraNumber}. Floor plans, amenities and price sheet.`;
+const description = `${p.name} in ${area}: ${configs}, ${price} ${priceLabel(p)}. ${STATUS_LABELS[p.status]}. UP RERA ${p.reraNumber}. Floor plans, amenities and price sheet.`;
 const ogImage = new URL(
   (await getImage({ src: p.images.hero.src, width: 1200, height: 630, format: 'jpg', fit: 'cover' })).src,
   Astro.site ?? site.url,
@@ -282,7 +283,7 @@ const section = 'scroll-mt-24';
             intro={
               allInclusive
                 ? 'All-inclusive: PLC, IFMS, parking and registry are in these figures. Ask for the itemised sheet for any unit.'
-                : `Basic sale price (BSP) only. ${p.priceNote ?? ''} Ask for the all-inclusive sheet for any unit.`
+                : `${p.priceNote ?? ''} Ask us for the all-inclusive sheet for any unit.`
             }
           />
           <table class="mt-6 w-full border-collapse text-left">
@@ -291,7 +292,7 @@ const section = 'scroll-mt-24';
               <tr class="border-b-2 border-ink font-display text-small text-stone">
                 <th scope="col" class="py-3 pr-4 font-bold">Unit type</th>
                 <th scope="col" class="py-3 pr-4 font-bold">{areaHeader}</th>
-                <th scope="col" class="py-3 pr-4 font-bold">{allInclusive ? 'Price, all-inclusive' : 'Price (BSP)'}</th>
+                <th scope="col" class="py-3 pr-4 font-bold">{allInclusive ? 'Price, all-inclusive' : p.priceBasis === 'base' ? 'Price (BSP)' : 'Starting price'}</th>
                 <th scope="col" class="py-3"><span class="sr-only">Action</span></th>
               </tr>
             </thead>
@@ -433,7 +434,7 @@ const section = 'scroll-mt-24';
                       {g.places.map((n) => (
                         <li class="flex items-baseline justify-between gap-4 py-2.5">
                           <span>{n.name}</span>
-                          <span class="shrink-0 font-display font-bold tabular-nums">{formatDistance(n.distanceKm)}</span>
+                          <span class="shrink-0 font-display font-bold tabular-nums">{formatNearby(n)}</span>
                         </li>
                       ))}
                     </ul>
