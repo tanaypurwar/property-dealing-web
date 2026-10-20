@@ -18,15 +18,16 @@ import MapEmbed from '../../components/media/MapEmbed.astro';
 import VideoEmbed from '../../components/media/VideoEmbed.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../config/site';
-import { formatAreaRange, formatDistance, formatMonth, formatPriceRange } from '../../lib/format';
-import { carpetAreaSummary, configurationSummary } from '../../lib/project';
+import { formatDistance, formatMonth, formatPriceRange } from '../../lib/format';
+import { areaSummary, configurationSummary, priceLabel, unitArea } from '../../lib/project';
 import { STATUS_LABELS } from '../../lib/project-filters';
 import { amenityIcon, groupNearby, similarProjects, youtubeId } from '../../lib/project-details';
 import { projectWhatsappMessage } from '../../lib/whatsapp';
 
 export const getStaticPaths = (async () => {
-  const entries = await getCollection('projects', ({ data }) => data.published);
-  const all = entries.map((e) => e.data);
+  // In `astro dev`, drafts get pages too so they can be reviewed; builds only include published ones.
+  const entries = await getCollection('projects', ({ data }) => data.published || import.meta.env.DEV);
+  const all = entries.filter((e) => e.data.published).map((e) => e.data);
   return entries.map((entry) => ({
     params: { slug: entry.data.slug },
     props: { entry, similar: similarProjects(entry.data, all) },
@@ -60,12 +61,21 @@ const possession = p.possessionDate
 
 const facts: { icon: IconName; label: string; value: string }[] = [
   { icon: 'home', label: 'Configurations', value: configs },
-  { icon: 'area', label: 'Carpet area', value: carpetAreaSummary(p.configurations) },
+  { icon: 'area', ...areaSummary(p.configurations) },
   ...(possession ? [{ icon: 'calendar' as const, label: 'Possession', value: possession }] : []),
-  { icon: 'units', label: 'Total units', value: indian.format(p.totalUnits) },
+  ...(p.totalUnits ? [{ icon: 'units' as const, label: 'Total units', value: indian.format(p.totalUnits) }] : []),
   ...(p.towers ? [{ icon: 'building' as const, label: 'Towers', value: String(p.towers) }] : []),
   { icon: 'shield', label: 'UP RERA no.', value: p.reraNumber },
 ];
+
+const threeCol = facts.length % 3 === 0;
+
+const areaHeader = p.configurations.every((c) => c.carpetArea)
+  ? 'Carpet area'
+  : p.configurations.every((c) => !c.carpetArea)
+    ? 'Saleable area'
+    : 'Area';
+const allInclusive = p.priceBasis === 'all-inclusive';
 
 const slides = [
   { src: p.images.hero.src, alt: p.images.hero.alt },
@@ -74,7 +84,7 @@ const slides = [
 
 // SEO
 const title = `${p.name}, ${shortArea}: ${configs} price and floor plans`;
-const description = `${p.name} in ${area}: ${configs}, ${price} all-inclusive. ${STATUS_LABELS[p.status]}. UP RERA ${p.reraNumber}. Floor plans, amenities and price sheet.`;
+const description = `${p.name} in ${area}: ${configs}, ${price} ${allInclusive ? 'all-inclusive' : 'BSP'}. ${STATUS_LABELS[p.status]}. UP RERA ${p.reraNumber}. Floor plans, amenities and price sheet.`;
 const ogImage = new URL(
   (await getImage({ src: p.images.hero.src, width: 1200, height: 630, format: 'jpg', fit: 'cover' })).src,
   Astro.site ?? site.url,
@@ -104,9 +114,11 @@ const jsonLd = [
         addressRegion: 'Uttar Pradesh',
         addressCountry: 'IN',
       },
-      geo: { '@type': 'GeoCoordinates', latitude: p.location.latitude, longitude: p.location.longitude },
+      ...(p.location.latitude !== undefined && {
+        geo: { '@type': 'GeoCoordinates', latitude: p.location.latitude, longitude: p.location.longitude },
+      }),
       amenityFeature: p.amenities.map((a) => ({ '@type': 'LocationFeatureSpecification', name: a, value: true })),
-      ...(p.type === 'residential' && { numberOfAccommodationUnits: p.totalUnits }),
+      ...(p.type === 'residential' && p.totalUnits && { numberOfAccommodationUnits: p.totalUnits }),
       offers: {
         '@type': 'AggregateOffer',
         priceCurrency: 'INR',
@@ -138,6 +150,7 @@ const section = 'scroll-mt-24';
   jsonLd={jsonLd}
   whatsappMessage={projectWhatsappMessage(p.name, area)}
   floatingWhatsApp={false}
+  noindex={!p.published}
 >
   <div class="mx-auto max-w-site md:px-6">
     <nav aria-label="Breadcrumb" class="px-4 py-2 md:px-0">
@@ -149,6 +162,15 @@ const section = 'scroll-mt-24';
         <li aria-current="page" class="font-medium text-ink">{p.name}</li>
       </ol>
     </nav>
+
+    {
+      !p.published && (
+        <p role="note" class="mx-4 mb-3 rounded-control border-2 border-dashed border-deep bg-paper px-4 py-3 font-medium text-ink md:mx-0">
+          Draft preview. This page only exists in <code>astro dev</code> and won't be published until{' '}
+          <code>published: true</code> is set, which needs a real UP RERA number.
+        </p>
+      )
+    }
 
     <!-- 1. Hero -->
     <HeroCarousel label={`${p.name} images`} slides={slides} />
@@ -168,7 +190,14 @@ const section = 'scroll-mt-24';
         </p>
       </div>
       <div class="flex flex-col gap-3 md:items-end md:text-right">
-        <PriceTag min={p.priceRange.min} max={p.priceRange.max} size="lg" class="md:justify-end" />
+        <PriceTag
+          min={p.priceRange.min}
+          max={p.priceRange.max}
+          note={priceLabel(p)}
+          size="lg"
+          class="md:justify-end"
+        />
+        {p.priceNote && <p class="max-w-[42ch] text-small text-stone">{p.priceNote}</p>}
         <div class="grid grid-cols-2 gap-2 sm:flex">
           <Button href="#enquire" size="lg">Enquire now</Button>
           {
@@ -188,17 +217,25 @@ const section = 'scroll-mt-24';
     </header>
 
     <!-- 2. Quick facts -->
+    <!--
+      Facts vary per project (4 to 6). Desktop: one row, equal columns. Smaller screens: 3 columns
+      when that fills evenly, otherwise 2, where the RERA number takes a full row and the fact
+      before it widens if it would otherwise sit alone.
+    -->
     <dl
-      class="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-3 lg:grid-cols-6"
+      class:list={[
+        'mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line lg:grid-flow-col lg:auto-cols-fr lg:grid-cols-none',
+        threeCol && 'sm:grid-cols-3',
+      ]}
       aria-label="Quick facts"
     >
       {
         facts.map((f, i) => (
-          // On phones the RERA number needs a full row; if that would leave a gap, the fact before it widens too.
           <div
             class:list={[
               'flex flex-col gap-1 bg-white p-4',
-              (f.icon === 'shield' || (i === facts.length - 2 && facts.length % 2 === 0)) && 'max-sm:col-span-2',
+              (f.icon === 'shield' || (i === facts.length - 2 && facts.length % 2 === 0)) &&
+                (threeCol ? 'max-sm:col-span-2' : 'max-lg:col-span-2'),
             ]}
           >
             <dt class="flex items-center gap-1.5 font-display text-small font-bold text-stone">
@@ -217,7 +254,7 @@ const section = 'scroll-mt-24';
         <section id="overview" aria-labelledby="overview-title" class={section}>
           <h2 id="overview-title" class="text-h3 font-extrabold md:text-h2">Overview</h2>
           <p class="mt-2 text-lead text-stone">{p.tagline}</p>
-          <div class="mt-5 max-w-[68ch] [&_a]:text-deep [&_a]:underline [&>*+*]:mt-4">
+          <div class="mt-5 max-w-[68ch] [&_a]:text-deep [&_a]:underline [&>*+*]:mt-4 [&_h3]:mt-8 [&_h3]:text-h4 [&_h3]:font-bold [&_li]:ml-5 [&_li]:list-disc [&_table]:w-full [&_table]:text-left [&_td]:border-b [&_td]:border-line [&_td]:py-2 [&_td]:pr-3 [&_td:last-child]:text-right [&_td:last-child]:tabular-nums [&_th]:border-b-2 [&_th]:border-ink [&_th]:py-2 [&_th]:pr-3 [&_th]:font-display [&_th]:text-small [&_th]:text-stone [&_th:last-child]:text-right">
             <Content />
           </div>
           <ul class="mt-8 grid gap-3 sm:grid-cols-2">
@@ -232,7 +269,7 @@ const section = 'scroll-mt-24';
           </ul>
           <dl class="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-small">
             <div class="flex gap-1.5"><dt class="text-stone">Developer</dt><dd class="font-medium">{p.developer}</dd></div>
-            <div class="flex gap-1.5"><dt class="text-stone">Land area</dt><dd class="font-medium tabular-nums">{p.landAreaAcres} acres</dd></div>
+            {p.landAreaAcres && <div class="flex gap-1.5"><dt class="text-stone">Land area</dt><dd class="font-medium tabular-nums">{p.landAreaAcres} acres</dd></div>}
             {p.floors && <div class="flex gap-1.5"><dt class="text-stone">Tallest tower</dt><dd class="font-medium tabular-nums">{p.floors} floors</dd></div>}
           </dl>
         </section>
@@ -242,15 +279,19 @@ const section = 'scroll-mt-24';
           <SectionHeading
             id="pricing-title"
             title="Configurations and prices"
-            intro="All-inclusive: PLC, IFMS, parking and registry are in these figures. Ask for the itemised sheet for any unit."
+            intro={
+              allInclusive
+                ? 'All-inclusive: PLC, IFMS, parking and registry are in these figures. Ask for the itemised sheet for any unit.'
+                : `Basic sale price (BSP) only. ${p.priceNote ?? ''} Ask for the all-inclusive sheet for any unit.`
+            }
           />
           <table class="mt-6 w-full border-collapse text-left">
             <caption class="sr-only">Prices for each configuration at {p.name}</caption>
             <thead class="max-md:sr-only">
               <tr class="border-b-2 border-ink font-display text-small text-stone">
                 <th scope="col" class="py-3 pr-4 font-bold">Unit type</th>
-                <th scope="col" class="py-3 pr-4 font-bold">Carpet area</th>
-                <th scope="col" class="py-3 pr-4 font-bold">Price, all-inclusive</th>
+                <th scope="col" class="py-3 pr-4 font-bold">{areaHeader}</th>
+                <th scope="col" class="py-3 pr-4 font-bold">{allInclusive ? 'Price, all-inclusive' : 'Price (BSP)'}</th>
                 <th scope="col" class="py-3"><span class="sr-only">Action</span></th>
               </tr>
             </thead>
@@ -262,8 +303,10 @@ const section = 'scroll-mt-24';
                       {c.type}
                     </th>
                     <td class="py-4 pr-4 tabular-nums max-md:py-0">
-                      <span class="block text-small text-stone md:hidden">Carpet area</span>
-                      {formatAreaRange(c.carpetArea.min, c.carpetArea.max)}
+                      <span class:list={['block text-small text-stone', areaHeader !== 'Area' && 'md:hidden']}>
+                        {unitArea(c).label}
+                      </span>
+                      {unitArea(c).value}
                     </td>
                     <td class="py-4 pr-4 font-display font-bold tabular-nums max-md:py-0">
                       <span class="block font-sans text-small font-normal text-stone md:hidden">Price</span>

@@ -51,9 +51,9 @@ export const SORTS = [
 export type Sort = (typeof SORTS)[number]['value'];
 export const DEFAULT_SORT: Sort = 'newest';
 
-/** "2BHK" → "2", "Shop" → "shop". Matches UNIT_OPTIONS values. */
+/** "2BHK" → "2", "3BHK 2T" → "3", "Shop" → "shop". Matches UNIT_OPTIONS values. */
 export function unitKind(type: string): string {
-  return /^(\d+)\s*BHK$/i.exec(type.trim())?.[1] ?? type.trim().toLowerCase();
+  return /^(\d+)\s*BHK\b/i.exec(type.trim())?.[1] ?? type.trim().toLowerCase();
 }
 
 export function slugify(text: string): string {

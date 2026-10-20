@@ -7,14 +7,17 @@ import Icon from '../Icon.astro';
  * so the page makes no request to Google on load. No API key needed.
  */
 interface Props {
-  latitude: number;
-  longitude: number;
+  /** Without coordinates the map searches the address, so it shows the area, not a pin. */
+  latitude?: number;
+  longitude?: number;
   title: string;
   address: string;
 }
 
 const { latitude, longitude, title, address } = Astro.props;
-const q = `${latitude},${longitude}`;
+const q = encodeURIComponent(
+  latitude !== undefined && longitude !== undefined ? `${latitude},${longitude}` : address,
+);
 const embed = `https://www.google.com/maps?q=${q}&z=15&output=embed`;
 const directions = `https://www.google.com/maps/search/?api=1&query=${q}`;
 ---

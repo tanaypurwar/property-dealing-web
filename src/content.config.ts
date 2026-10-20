@@ -31,8 +31,9 @@ const projects = defineCollection({
           sector: z.string().trim().min(1), // "Sector 150", "Greater Noida West"
           city: z.string().trim().min(1),
           address: z.string().trim().min(1),
-          latitude: z.number().min(-90).max(90),
-          longitude: z.number().min(-180).max(180),
+          /** Leave both out until the exact site is confirmed; the map then searches the address. */
+          latitude: z.number().min(-90).max(90).optional(),
+          longitude: z.number().min(-180).max(180).optional(),
         }),
 
         type: z.enum(['residential', 'commercial', 'plot', 'pg-rental']),
@@ -40,20 +41,33 @@ const projects = defineCollection({
 
         configurations: z
           .array(
-            z.object({
-              type: z.string().trim().min(1), // "2BHK", "3BHK", "Shop", "Office"
-              carpetArea: range('carpetArea'), // sq. ft.
-              price: range('price'), // rupees
-            }),
+            z
+              .object({
+                type: z.string().trim().min(1), // "2BHK", "3BHK 2T", "Shop", "Office"
+                // sq. ft. Carpet area is the RERA measure; use saleable (super) area only when
+                // the developer hasn't shared carpet area yet. Never put one in the other's field.
+                carpetArea: range('carpetArea').optional(),
+                saleableArea: range('saleableArea').optional(),
+                price: range('price'), // rupees
+              })
+              .refine((c) => c.carpetArea || c.saleableArea, {
+                message: 'each configuration needs carpetArea or saleableArea',
+              }),
           )
           .min(1),
 
         /** Overall range for listing filters. Must cover every configuration's price range. */
         priceRange: z.object({ min: rupees, max: rupees }),
+        /**
+         * What the prices include. `all-inclusive` is the brand default; `base` means BSP only,
+         * and then `priceNote` must say what's extra (GST, IFMS…) and when the price is valid.
+         */
+        priceBasis: z.enum(['all-inclusive', 'base']).default('all-inclusive'),
+        priceNote: z.string().trim().min(1).optional(),
 
-        landAreaAcres: z.number().positive(),
+        landAreaAcres: z.number().positive().optional(),
         towers: z.number().int().positive().optional(), // n/a for plots
-        totalUnits: z.number().int().positive(),
+        totalUnits: z.number().int().positive().optional(),
         floors: z.number().int().positive().optional(), // tallest tower; n/a for plots
 
         /** Month precision is enough: `2027-12` or `2027-12-31`. Required unless upcoming. */
@@ -121,6 +135,31 @@ const projects = defineCollection({
             });
           }
         });
+
+        if (p.priceBasis === 'base' && !p.priceNote) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['priceNote'],
+            message: 'priceNote is required when priceBasis is "base": say what is extra',
+          });
+        }
+
+        if ((p.location.latitude === undefined) !== (p.location.longitude === undefined)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['location'],
+            message: 'set both latitude and longitude, or neither',
+          });
+        }
+
+        // Drafts may carry a placeholder RERA number; a published page may not.
+        if (p.published && /[[\]]|pending|tbc|tba/i.test(p.reraNumber)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['reraNumber'],
+            message: 'a published project needs its real UP RERA registration number',
+          });
+        }
 
         if (p.status !== 'upcoming' && !p.possessionDate) {
           ctx.addIssue({

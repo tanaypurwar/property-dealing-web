@@ -13,11 +13,31 @@ export function configurationSummary(configs: Project['configurations']): string
   return [...new Set(configs.map((c) => c.type))].join(', ');
 }
 
-/** Smallest to largest carpet area across all configurations. */
-export function carpetAreaSummary(configs: Project['configurations']): string {
-  const min = Math.min(...configs.map((c) => c.carpetArea.min));
-  const max = Math.max(...configs.map((c) => c.carpetArea.max));
-  return formatAreaRange(min, max);
+type Configuration = Project['configurations'][number];
+
+/**
+ * The area to show for one configuration: carpet area when known, otherwise saleable
+ * area, always labelled so the two are never confused.
+ */
+export function unitArea(c: Configuration): { label: string; value: string } {
+  return c.carpetArea
+    ? { label: 'Carpet area', value: formatAreaRange(c.carpetArea.min, c.carpetArea.max) }
+    : { label: 'Saleable area', value: formatAreaRange(c.saleableArea!.min, c.saleableArea!.max) };
+}
+
+/** Smallest to largest area across configurations: carpet if every unit has it, else saleable. */
+export function areaSummary(configs: Configuration[]): { label: string; value: string } {
+  const useCarpet = configs.every((c) => c.carpetArea);
+  const ranges = configs.map((c) => (useCarpet ? c.carpetArea : (c.saleableArea ?? c.carpetArea))!);
+  return {
+    label: useCarpet ? 'Carpet area' : 'Saleable area',
+    value: formatAreaRange(Math.min(...ranges.map((r) => r.min)), Math.max(...ranges.map((r) => r.max))),
+  };
+}
+
+/** Short note shown beside a price: "all-inclusive", or "BSP, plus charges" for base prices. */
+export function priceLabel(p: Pick<Project, 'priceBasis'>): string {
+  return p.priceBasis === 'all-inclusive' ? 'all-inclusive' : 'BSP, taxes and charges extra';
 }
 
 export const projectUrl = (slug: string) => `/projects/${slug}`;

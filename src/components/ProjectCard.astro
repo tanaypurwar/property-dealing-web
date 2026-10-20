@@ -6,7 +6,8 @@ import PriceTag from './PriceTag.astro';
 import Ring from './Ring.astro';
 import { formatMonth } from '../lib/format';
 import {
-  carpetAreaSummary,
+  areaSummary,
+  priceLabel,
   configurationSummary,
   projectUrl,
   type Project,
@@ -23,6 +24,7 @@ interface Props {
     | 'location'
     | 'configurations'
     | 'priceRange'
+    | 'priceBasis'
     | 'possessionDate'
     | 'reraNumber'
     | 'images'
@@ -73,7 +75,7 @@ const headingId = `project-${p.slug}`;
 
     <ul class="flex flex-wrap gap-x-4 gap-y-1 text-[0.875rem]">
       <li>{configurationSummary(p.configurations)}</li>
-      <li class="tabular-nums">{carpetAreaSummary(p.configurations)}</li>
+      <li class="tabular-nums">{areaSummary(p.configurations).value}{!p.configurations.every((c) => c.carpetArea) && ' saleable'}</li>
       {
         p.possessionDate && (
           <li>
@@ -86,6 +88,7 @@ const headingId = `project-${p.slug}`;
     <PriceTag
       min={p.priceRange.min}
       max={p.priceRange.max}
+      note={priceLabel(p)}
       class="border-t border-dashed border-line pt-3"
     />
 
