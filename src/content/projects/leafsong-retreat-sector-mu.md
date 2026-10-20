@@ -9,7 +9,7 @@
 # Pre-launch price below is valid till 25 Oct 2026; update it to ₹11,499/sq. ft. after that.
 name: Leafsong Retreat
 slug: leafsong-retreat-sector-mu
-tagline: 3 BHK homes in three towers at Sector Mu, with fresh-air ERV, split ACs and a modular kitchen included
+tagline: By Hero Homes. 3 BHK homes in three towers at Sector Mu, with fresh-air ERV, split ACs and a modular kitchen
 developer: Hero Homes
 
 location:
@@ -68,9 +68,9 @@ amenities:
   - Amphitheatre (OAT)
 
 highlights:
+  - By Hero Homes (Hero Realty), with projects in Gurugram, Mohali, Ludhiana, Haridwar and Greater Noida
   - ERV fresh-air system for AQI-controlled homes and clubhouse
-  - Split ACs, modular kitchen (hob, chimney, RO) and engineered marble flooring included
-  - Master bathroom fitted with vanity, shower cubicle, mirror and geyser
+  - Split ACs, modular kitchen (hob, chimney, RO), marble flooring and a fitted master bathroom included
   - Clubhouse in three parts for socialising, fitness and quiet time
   - Launch payment plan with 25% due in the first year
   - Free transfer once 25% is paid

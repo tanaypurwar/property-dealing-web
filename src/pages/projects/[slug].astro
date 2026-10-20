@@ -187,10 +187,13 @@ const section = 'scroll-mt-24';
           <Badge category={p.type} />
           <Badge status={p.status} />
         </div>
-        <h1 class="text-h2 font-extrabold md:text-h1">{p.name}</h1>
+        <div>
+          <p class="font-display text-lead font-extrabold text-stone md:text-h4">{p.developer}</p>
+          <h1 class="text-h2 font-extrabold md:text-h1">{p.name}</h1>
+        </div>
         <p class="flex items-start gap-1.5 text-lead text-stone">
           <Icon name="pin" size={20} class="mt-1.5" />
-          <span>{area} <span class="text-stone/80">by {p.developer}</span></span>
+          <span>{area}</span>
         </p>
       </div>
       <div class="flex flex-col gap-3 md:items-end md:text-right">

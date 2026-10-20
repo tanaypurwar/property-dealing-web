@@ -27,9 +27,10 @@ const published = (await getCollection('projects', ({ data }) => data.published)
 
 const newestFirst = [...published].sort((a, b) => b.listedAt.getTime() - a.listedAt.getTime());
 
-// The spotlight at the top of the page: the most recently listed project that is RERA-registered.
-// Projects whose registration is only "applied for" aren't promoted here.
-const latest = newestFirst.find((p) => p.reraStatus === 'registered');
+// The spotlight at the top of the page: the newest *featured* RERA-registered project, or if none
+// is featured, the newest RERA-registered one. Projects with RERA only "applied for" aren't promoted.
+const registered = newestFirst.filter((p) => p.reraStatus === 'registered');
+const latest = registered.find((p) => p.featured) ?? registered[0];
 const latestArea = latest && `${latest.location.sector}, ${latest.location.city}`;
 
 // The grid below: everything else, newest first, three cards at most.
@@ -117,12 +118,15 @@ const section = 'mx-auto max-w-site px-4 sm:px-6';
           <div class="flex flex-col gap-3">
             <p class="flex items-center gap-2 font-display text-small font-bold text-deep">
               <span aria-hidden="true" class="size-2 rounded-full bg-sun" />
-              Just listed on {formatDate(latest.listedAt)}
+              {latest.featured ? 'Featured project' : `Just listed on ${formatDate(latest.listedAt)}`}
             </p>
-            <h2 id="latest-title" class="text-h3 font-extrabold md:text-h2">
-              <a href={projectUrl(latest.slug)} class="hover:text-deep hover:underline">{latest.name}</a>
-            </h2>
-            <p class="text-lead text-stone">{latestArea}, by {latest.developer}</p>
+            <div>
+              <p class="font-display text-lead font-extrabold text-stone">{latest.developer}</p>
+              <h2 id="latest-title" class="text-h3 font-extrabold md:text-h2">
+                <a href={projectUrl(latest.slug)} class="hover:text-deep hover:underline">{latest.name}</a>
+              </h2>
+            </div>
+            <p class="text-lead text-stone">{latestArea}</p>
             <div class="flex flex-wrap gap-1.5">
               <Badge category={latest.type} />
               <Badge status={latest.status} />
