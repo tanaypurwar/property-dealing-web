@@ -95,6 +95,8 @@ const projects = defineCollection({
 
         featured: z.boolean().default(false),
         published: z.boolean().default(false),
+        /** When the project was added to the site. Drives the "Newest" sort. */
+        listedAt: z.coerce.date(),
       })
       .superRefine((p, ctx) => {
         const minPrice = Math.min(...p.configurations.map((c) => c.price.min));
