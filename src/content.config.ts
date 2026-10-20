@@ -121,6 +121,11 @@ const projects = defineCollection({
              */
             caption: z.string().trim().min(1).optional(),
           }),
+          /**
+           * Developer ad or launch creative, shown whole (not cropped) as the first slide of the
+           * home page spotlight. Keep the ad's own RERA line and disclaimer in the image.
+           */
+          promo: z.object({ src: image(), alt: z.string().trim().min(1) }).optional(),
           gallery: z.array(z.object({ src: image(), caption: z.string().trim().min(1) })),
           floorPlans: z.array(
             z.object({ src: image(), configuration: z.string().trim().min(1) }),

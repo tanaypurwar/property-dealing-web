@@ -81,6 +81,10 @@ images:
   hero:
     src: ../../assets/projects/leafsong-retreat-sector-mu/hero.jpg
     alt: Three Leafsong Retreat towers seen from the approach road, artist's impression
+  # Developer ad (media/herohomes/leafsong.jpeg). Says "₹1.89 Cr* onwards"; our BSP-based figure is ₹1.82 Cr.
+  promo:
+    src: ../../assets/projects/leafsong-retreat-sector-mu/promo-ad.jpg
+    alt: "Hero Homes ad for Leafsong Retreat, Sector Mu: 3 BHK premium residences, AQI-controlled homes, starting price ₹1.89 Cr onwards, UP RERA UPRERAPRJ414014/10/2026"
   gallery:
     - src: ../../assets/projects/leafsong-retreat-sector-mu/towers.jpg
       caption: The three towers from the central garden (artist's impression)

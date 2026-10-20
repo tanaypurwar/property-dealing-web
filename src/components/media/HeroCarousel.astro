@@ -9,13 +9,18 @@ import Icon from '../Icon.astro';
  */
 interface Props {
   label: string;
-  slides: { src: ImageMetadata; alt: string; caption?: string }[];
+  /** `contain` shows the whole image (for ads and slides with text) instead of cropping it. */
+  slides: { src: ImageMetadata; alt: string; caption?: string; contain?: boolean }[];
+  /** `page`: full-width project hero. `compact`: a 2:1 box (the shape of most launch ads), e.g. the home page spotlight. */
+  variant?: 'page' | 'compact';
 }
 
-const { label, slides } = Astro.props;
+const { label, slides, variant = 'page' } = Astro.props;
+const compact = variant === 'compact';
+const sizes = compact ? '(min-width: 1200px) 640px, (min-width: 1024px) 54vw, 100vw' : '(min-width: 1200px) 1168px, 100vw';
 ---
 
-<div class="relative bg-sand md:rounded-card md:overflow-hidden" role="region" aria-roledescription="carousel" aria-label={label} data-carousel>
+<div class:list={['relative overflow-hidden bg-sand', compact ? 'rounded-card' : 'md:rounded-card']} role="region" aria-roledescription="carousel" aria-label={label} data-carousel>
   <ul
     class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     data-carousel-track
@@ -29,17 +34,36 @@ const { label, slides } = Astro.props;
           aria-roledescription="slide"
           aria-label={`${i + 1} of ${slides.length}`}
         >
-          <Image
-            src={slide.src}
-            alt={slide.alt}
-            width={1600}
-            height={1000}
-            widths={[640, 960, 1280, 1600]}
-            sizes="(min-width: 1200px) 1168px, 100vw"
-            loading={i === 0 ? 'eager' : 'lazy'}
-            fetchpriority={i === 0 ? 'high' : 'auto'}
-            class="aspect-[16/10] w-full object-cover md:aspect-auto md:h-[min(62vh,520px)]"
-          />
+          {slide.contain ? (
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              width={Math.min(1600, slide.src.width)}
+              height={Math.round((Math.min(1600, slide.src.width) * slide.src.height) / slide.src.width)}
+              sizes={sizes}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+              class:list={[
+                'w-full bg-ink object-contain',
+                compact ? 'aspect-[2/1]' : 'aspect-[16/10] md:aspect-auto md:h-[min(62vh,520px)]',
+              ]}
+            />
+          ) : (
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              width={1600}
+              height={1000}
+              widths={[640, 960, 1280, 1600]}
+              sizes={sizes}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+              class:list={[
+                'w-full object-cover',
+                compact ? 'aspect-[2/1]' : 'aspect-[16/10] md:aspect-auto md:h-[min(62vh,520px)]',
+              ]}
+            />
+          )}
           {slide.caption && (
             <p class="absolute bottom-3 left-3 max-w-[80%] rounded-badge bg-paper/90 px-2 py-0.5 text-small text-stone">
               {slide.caption}
@@ -56,7 +80,7 @@ const { label, slides } = Astro.props;
         <button
           type="button"
           data-carousel-prev
-          class="absolute top-1/2 left-3 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex"
+          class:list={['absolute top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex', compact ? 'size-10 left-2 opacity-80 hover:opacity-100' : 'size-12 left-3']}
         >
           <span class="sr-only">Previous image</span>
           <Icon name="chevronLeft" size={24} />
@@ -64,7 +88,7 @@ const { label, slides } = Astro.props;
         <button
           type="button"
           data-carousel-next
-          class="absolute top-1/2 right-3 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex"
+          class:list={['absolute top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex', compact ? 'size-10 right-2 opacity-80 hover:opacity-100' : 'size-12 right-3']}
         >
           <span class="sr-only">Next image</span>
           <Icon name="chevronRight" size={24} />
