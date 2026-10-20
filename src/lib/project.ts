@@ -58,9 +58,15 @@ export function toListingItem(p: Project): ListingItem {
     location: slugify(p.location.sector),
     type: p.type,
     status: p.status,
-    units: p.configurations.map((c) => ({ kind: unitKind(c.type), min: c.price.min, max: c.price.max })),
+    // Unpriced unit types fall back to the starting price with no upper limit, so budget
+    // filters include the project wherever it could fit. MAX_SAFE_INTEGER survives JSON; Infinity doesn't.
+    units: p.configurations.map((c) => ({
+      kind: unitKind(c.type),
+      min: c.price?.min ?? p.priceRange.min,
+      max: c.price?.max ?? p.priceRange.max ?? Number.MAX_SAFE_INTEGER,
+    })),
     priceMin: p.priceRange.min,
-    priceMax: p.priceRange.max,
+    priceMax: p.priceRange.max ?? p.priceRange.min,
     listedAt: p.listedAt.getTime(),
     possession: p.possessionDate?.getTime() ?? null,
   };

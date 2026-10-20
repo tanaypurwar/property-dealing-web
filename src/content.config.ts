@@ -49,13 +49,18 @@ const projects = defineCollection({
                 // Leave both out if neither is known; the site then shows "Area on request".
                 carpetArea: range('carpetArea').optional(),
                 saleableArea: range('saleableArea').optional(),
-                price: range('price'), // rupees
+                // Rupees. Leave out when the developer hasn't priced this unit type; the site
+                // shows "On request" and filters use the project's starting price.
+                price: range('price').optional(),
               }),
           )
           .min(1),
 
-        /** Overall range for listing filters. Must cover every configuration's price range. */
-        priceRange: z.object({ min: rupees, max: rupees }),
+        /**
+         * Overall range for listing filters. Must cover every priced configuration. Leave `max`
+         * out when only a starting price is known; it then shows as "From ₹X".
+         */
+        priceRange: z.object({ min: rupees, max: rupees.optional() }),
         /**
          * What the prices include. `all-inclusive` is the brand default; `base` means BSP only;
          * `indicative` means starting prices whose basis isn't confirmed yet. For anything but
@@ -129,9 +134,13 @@ const projects = defineCollection({
         listedAt: z.coerce.date(),
       })
       .superRefine((p, ctx) => {
-        const minPrice = Math.min(...p.configurations.map((c) => c.price.min));
-        const maxPrice = Math.max(...p.configurations.map((c) => c.price.max));
-        if (p.priceRange.min > minPrice || p.priceRange.max < maxPrice) {
+        const priced = p.configurations.flatMap((c) => (c.price ? [c.price] : []));
+        const minPrice = Math.min(...priced.map((r) => r.min));
+        const maxPrice = Math.max(...priced.map((r) => r.max));
+        if (
+          priced.length > 0 &&
+          (p.priceRange.min > minPrice || (p.priceRange.max !== undefined && p.priceRange.max < maxPrice))
+        ) {
           ctx.addIssue({
             code: 'custom',
             path: ['priceRange'],
@@ -175,13 +184,8 @@ const projects = defineCollection({
           });
         }
 
-        if (p.status !== 'upcoming' && !p.possessionDate) {
-          ctx.addIssue({
-            code: 'custom',
-            path: ['possessionDate'],
-            message: 'possessionDate is required unless status is upcoming',
-          });
-        }
+        // possessionDate is optional: some projects (e.g. "OC applied") have no published date.
+        // Show it whenever the RERA filing or developer gives one.
       }),
 });
 

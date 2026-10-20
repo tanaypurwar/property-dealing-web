@@ -8,6 +8,8 @@ import { formatPrice, formatPriceRange } from '../lib/format';
 interface Props {
   min: number;
   max?: number;
+  /** Only a starting price is known: shows "From ₹X". */
+  from?: boolean;
   /** What the figure includes. Shown beside the price; set to "" to hide. */
   note?: string;
   /** e.g. "/month" for rentals */
@@ -16,7 +18,7 @@ interface Props {
   class?: string;
 }
 
-const { min, max, note = 'all-inclusive', per, size = 'md', class: className } = Astro.props;
+const { min, max, from = false, note = 'all-inclusive', per, size = 'md', class: className } = Astro.props;
 
 const value = max === undefined ? formatPrice(min) : formatPriceRange(min, max);
 ---
@@ -28,6 +30,7 @@ const value = max === undefined ? formatPrice(min) : formatPriceRange(min, max);
       size === 'lg' ? 'text-h4 sm:text-h3' : 'text-[1.3125rem] leading-7',
     ]}
   >
+    {from && <span class:list={['font-bold text-stone', size === 'lg' ? 'text-lead' : 'text-body']}>From </span>}
     {value}
     {per && <span class="text-body font-bold text-stone">{per}</span>}
   </strong>

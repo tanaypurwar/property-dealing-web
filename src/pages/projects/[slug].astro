@@ -18,7 +18,7 @@ import MapEmbed from '../../components/media/MapEmbed.astro';
 import VideoEmbed from '../../components/media/VideoEmbed.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../config/site';
-import { formatMonth, formatPriceRange } from '../../lib/format';
+import { formatMonth, formatPrice, formatPriceRange } from '../../lib/format';
 import { areaSummary, configurationSummary, priceLabel, unitArea } from '../../lib/project';
 import { STATUS_LABELS } from '../../lib/project-filters';
 import { amenityIcon, formatNearby, groupNearby, similarProjects, youtubeId } from '../../lib/project-details';
@@ -46,7 +46,10 @@ const { Content } = await render(entry);
 const area = `${p.location.sector}, ${p.location.city}`;
 const shortArea = p.location.sector.includes(p.location.city) ? p.location.sector : area;
 const configs = configurationSummary(p.configurations);
-const price = formatPriceRange(p.priceRange.min, p.priceRange.max);
+const price =
+  p.priceRange.max === undefined
+    ? `from ${formatPrice(p.priceRange.min)}`
+    : formatPriceRange(p.priceRange.min, p.priceRange.max);
 const videoId = p.video ? youtubeId(p.video) : undefined;
 const nearby = groupNearby(p.nearby);
 const indian = new Intl.NumberFormat('en-IN');
@@ -124,7 +127,7 @@ const jsonLd = [
         '@type': 'AggregateOffer',
         priceCurrency: 'INR',
         lowPrice: p.priceRange.min,
-        highPrice: p.priceRange.max,
+        ...(p.priceRange.max !== undefined && { highPrice: p.priceRange.max }),
         offerCount: p.configurations.length,
       },
     },
@@ -194,6 +197,7 @@ const section = 'scroll-mt-24';
         <PriceTag
           min={p.priceRange.min}
           max={p.priceRange.max}
+          from={p.priceRange.max === undefined}
           note={priceLabel(p)}
           size="lg"
           class="md:justify-end"
@@ -311,7 +315,7 @@ const section = 'scroll-mt-24';
                     </td>
                     <td class="py-4 pr-4 font-display font-bold tabular-nums max-md:py-0">
                       <span class="block font-sans text-small font-normal text-stone md:hidden">Price</span>
-                      {formatPriceRange(c.price.min, c.price.max)}
+                      {c.price ? formatPriceRange(c.price.min, c.price.max) : 'On request'}
                     </td>
                     <td class="py-3 text-right max-md:col-span-2 max-md:py-0 max-md:pt-1">
                       <Button

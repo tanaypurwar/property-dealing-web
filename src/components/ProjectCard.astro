@@ -91,6 +91,7 @@ const headingId = `project-${p.slug}`;
     <PriceTag
       min={p.priceRange.min}
       max={p.priceRange.max}
+      from={p.priceRange.max === undefined}
       note={priceLabel(p)}
       class="border-t border-dashed border-line pt-3"
     />
