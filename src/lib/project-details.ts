@@ -23,6 +23,9 @@ const AMENITY_ICONS: [RegExp, IconName][] = [
   [/air.?condition|hvac|\bac\b/i, 'snow'],
   [/banquet|party|event/i, 'party'],
   [/club/i, 'building'],
+  [/retail|shop|store|boulevard/i, 'mall'],
+  [/cinema|multiplex|theatre|theater/i, 'play'],
+  [/entertainment|leisure|gaming/i, 'party'],
 ];
 
 export function amenityIcon(name: string): IconName {

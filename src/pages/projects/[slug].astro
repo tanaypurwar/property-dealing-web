@@ -73,7 +73,7 @@ const threeCol = facts.length % 3 === 0;
 
 const areaHeader = p.configurations.every((c) => c.carpetArea)
   ? 'Carpet area'
-  : p.configurations.every((c) => !c.carpetArea)
+  : p.configurations.every((c) => !c.carpetArea && c.saleableArea)
     ? 'Saleable area'
     : 'Area';
 const allInclusive = p.priceBasis === 'all-inclusive';
@@ -84,7 +84,7 @@ const slides = [
 ];
 
 // SEO
-const title = `${p.name}, ${shortArea}: ${configs} price and floor plans`;
+const title = `${p.name}, ${shortArea}: ${configs} price${p.images.floorPlans.length > 0 ? ' and floor plans' : ' and details'}`;
 const description = `${p.name} in ${area}: ${configs}, ${price} ${priceLabel(p)}. ${STATUS_LABELS[p.status]}. UP RERA ${p.reraNumber}. Floor plans, amenities and price sheet.`;
 const ogImage = new URL(
   (await getImage({ src: p.images.hero.src, width: 1200, height: 630, format: 'jpg', fit: 'cover' })).src,

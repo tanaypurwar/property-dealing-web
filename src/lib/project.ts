@@ -20,15 +20,21 @@ type Configuration = Project['configurations'][number];
  * area, always labelled so the two are never confused.
  */
 export function unitArea(c: Configuration): { label: string; value: string } {
-  return c.carpetArea
-    ? { label: 'Carpet area', value: formatAreaRange(c.carpetArea.min, c.carpetArea.max) }
-    : { label: 'Saleable area', value: formatAreaRange(c.saleableArea!.min, c.saleableArea!.max) };
+  if (c.carpetArea) return { label: 'Carpet area', value: formatAreaRange(c.carpetArea.min, c.carpetArea.max) };
+  if (c.saleableArea) return { label: 'Saleable area', value: formatAreaRange(c.saleableArea.min, c.saleableArea.max) };
+  return { label: 'Area', value: 'On request' };
 }
 
-/** Smallest to largest area across configurations: carpet if every unit has it, else saleable. */
+/**
+ * Smallest to largest area across configurations: carpet if every unit has it, else
+ * saleable (falling back to carpet), skipping units whose area isn't known yet.
+ */
 export function areaSummary(configs: Configuration[]): { label: string; value: string } {
   const useCarpet = configs.every((c) => c.carpetArea);
-  const ranges = configs.map((c) => (useCarpet ? c.carpetArea : (c.saleableArea ?? c.carpetArea))!);
+  const ranges = configs
+    .map((c) => (useCarpet ? c.carpetArea : (c.saleableArea ?? c.carpetArea)))
+    .filter((r) => r !== undefined);
+  if (ranges.length === 0) return { label: 'Area', value: 'On request' };
   return {
     label: useCarpet ? 'Carpet area' : 'Saleable area',
     value: formatAreaRange(Math.min(...ranges.map((r) => r.min)), Math.max(...ranges.map((r) => r.max))),

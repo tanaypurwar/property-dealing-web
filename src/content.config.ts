@@ -46,12 +46,10 @@ const projects = defineCollection({
                 type: z.string().trim().min(1), // "2BHK", "3BHK 2T", "Shop", "Office"
                 // sq. ft. Carpet area is the RERA measure; use saleable (super) area only when
                 // the developer hasn't shared carpet area yet. Never put one in the other's field.
+                // Leave both out if neither is known; the site then shows "Area on request".
                 carpetArea: range('carpetArea').optional(),
                 saleableArea: range('saleableArea').optional(),
                 price: range('price'), // rupees
-              })
-              .refine((c) => c.carpetArea || c.saleableArea, {
-                message: 'each configuration needs carpetArea or saleableArea',
               }),
           )
           .min(1),

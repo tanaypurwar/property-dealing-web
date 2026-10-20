@@ -25,6 +25,7 @@ export type ProjectType = keyof typeof TYPE_LABELS;
 export type ProjectStatus = keyof typeof STATUS_LABELS;
 
 export const UNIT_OPTIONS = [
+  { value: 'studio', label: 'Studio' },
   { value: '1', label: '1 BHK' },
   { value: '2', label: '2 BHK' },
   { value: '3', label: '3 BHK' },
@@ -51,8 +52,9 @@ export const SORTS = [
 export type Sort = (typeof SORTS)[number]['value'];
 export const DEFAULT_SORT: Sort = 'newest';
 
-/** "2BHK" → "2", "3BHK 2T" → "3", "Shop" → "shop". Matches UNIT_OPTIONS values. */
+/** "2BHK" → "2", "3BHK 2T" → "3", "Studio apartment" → "studio", "Shop" → "shop". Matches UNIT_OPTIONS values. */
 export function unitKind(type: string): string {
+  if (/studio/i.test(type)) return 'studio';
   return /^(\d+)\s*BHK\b/i.exec(type.trim())?.[1] ?? type.trim().toLowerCase();
 }
 
