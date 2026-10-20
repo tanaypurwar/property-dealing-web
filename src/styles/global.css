@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* Brand tokens from brand/brand-book.html. Use these utilities (bg-ink, text-sun, font-display…) instead of raw hex values. */
+@theme {
+  --color-ink: #1c1b19;
+  --color-paper: #faf7f2;
+  --color-sand: #efe8dc;
+  --color-stone: #6b665e;
+  --color-sun: #f26b1d;
+  --color-deep: #b84a0e;
+  --color-neem: #2f6b4f;
+  --color-slate: #3d4b5a;
+
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Mukta", ui-sans-serif, system-ui, sans-serif;
+}
