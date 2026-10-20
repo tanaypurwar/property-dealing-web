@@ -5,7 +5,7 @@ import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Ring from '../components/Ring.astro';
 import SectionHeading from '../components/SectionHeading.astro';
-import EnquiryForm from '../components/forms/EnquiryForm.astro';
+import EnquirySection from '../components/EnquirySection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../config/site';
 import { promises } from '../lib/brand-content';
@@ -216,37 +216,5 @@ const section = 'mx-auto max-w-site px-4 sm:px-6';
     </div>
   </section>
 
-  <!-- Enquiry -->
-  <section aria-labelledby="enquire-intro-title" class="bg-ink text-paper">
-    <div class:list={[section, 'grid gap-10 py-16 md:py-24 lg:grid-cols-[minmax(0,1fr)_26rem] lg:gap-16']}>
-      <div class="flex flex-col gap-6">
-        <h2 id="enquire-intro-title" class="text-h3 font-extrabold md:text-h2">Tell us your budget and preferred area.</h2>
-        <p class="max-w-[50ch] text-lead text-paper/80">
-          We'll send projects that fit, each with its RERA number and full price breakup. We call only
-          at the time you pick, and your number is never shared with other brokers.
-        </p>
-        <ul class="flex flex-col gap-1">
-          <li>
-            <a href={`tel:${site.phone}`} class="inline-flex min-h-tap items-center gap-3 font-display text-lead font-bold tabular-nums hover:text-sun">
-              <Icon name="phone" size={20} />{site.phoneDisplay}
-            </a>
-          </li>
-          <li>
-            <a href={whatsappUrl()} target="_blank" rel="noopener" class="inline-flex min-h-tap items-center gap-3 hover:text-sun">
-              <Icon name="chat" size={20} />Chat on WhatsApp
-            </a>
-          </li>
-          <li class="flex min-h-tap items-center gap-3 text-paper/80"><Icon name="clock" size={20} />{site.hours}</li>
-        </ul>
-      </div>
-      <EnquiryForm
-        id="enquire"
-        configurations={BUDGETS.map((b) => b.label)}
-        interestLabel="Budget"
-        title="Get verified options"
-        submitLabel="Send me options"
-        class="scroll-mt-24 text-ink"
-      />
-    </div>
-  </section>
+  <EnquirySection />
 </BaseLayout>

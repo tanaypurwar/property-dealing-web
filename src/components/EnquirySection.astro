@@ -1,0 +1,55 @@
+---
+import Icon from './Icon.astro';
+import EnquiryForm from './forms/EnquiryForm.astro';
+import { site } from '../config/site';
+import { BUDGETS } from '../lib/project-filters';
+import { whatsappUrl } from '../lib/whatsapp';
+
+/**
+ * "Tell us your budget" block: the pitch, direct contact options and the general
+ * enquiry form (#enquire). Used at the end of the home page and as the contact page.
+ * Extra contact lines (email, address…) can go in the default slot.
+ */
+interface Props {
+  /** h1 when this block is the page itself (contact), h2 inside a longer page. */
+  as?: 'h1' | 'h2';
+}
+
+const { as: Heading = 'h2' } = Astro.props;
+---
+
+<section aria-labelledby="enquire-intro-title" class="bg-ink text-paper">
+  <div class="mx-auto grid max-w-site gap-10 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[minmax(0,1fr)_26rem] lg:gap-16">
+    <div class="flex flex-col gap-6">
+      <Heading id="enquire-intro-title" class="text-h3 font-extrabold md:text-h2">
+        Tell us your budget and preferred area.
+      </Heading>
+      <p class="max-w-[50ch] text-lead text-paper/80">
+        We'll send projects that fit, each with its RERA number and full price breakup. We call only at
+        the time you pick, and your number is never shared with other brokers.
+      </p>
+      <ul class="flex flex-col gap-1">
+        <li>
+          <a href={`tel:${site.phone}`} class="inline-flex min-h-tap items-center gap-3 font-display text-lead font-bold tabular-nums hover:text-sun">
+            <Icon name="phone" size={20} />{site.phoneDisplay}
+          </a>
+        </li>
+        <li>
+          <a href={whatsappUrl()} target="_blank" rel="noopener" class="inline-flex min-h-tap items-center gap-3 hover:text-sun">
+            <Icon name="chat" size={20} />Chat on WhatsApp
+          </a>
+        </li>
+        <li class="flex min-h-tap items-center gap-3 text-paper/80"><Icon name="clock" size={20} />{site.hours}</li>
+        <slot />
+      </ul>
+    </div>
+    <EnquiryForm
+      id="enquire"
+      configurations={BUDGETS.map((b) => b.label)}
+      interestLabel="Budget"
+      title="Get verified options"
+      submitLabel="Send me options"
+      class="scroll-mt-24 self-start text-ink"
+    />
+  </div>
+</section>
