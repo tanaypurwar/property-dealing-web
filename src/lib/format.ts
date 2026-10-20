@@ -49,6 +49,12 @@ export function formatAreaRange(min: number, max: number): string {
   return `${indian.format(min)}–${indian.format(max)} sq. ft.`;
 }
 
+/** 0.25 → "250 m", 1.5 → "1.5 km" */
+export function formatDistance(km: number): string {
+  if (km < 1) return `${Math.round(km * 100) * 10} m`;
+  return `${short(km)} km`;
+}
+
 /** "Dec 2027", "Sep 2027" (en-US gives three-letter months; en-IN gives "Sept"). */
 export function formatMonth(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });

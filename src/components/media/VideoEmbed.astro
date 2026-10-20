@@ -1,0 +1,46 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+
+/**
+ * YouTube embed that loads nothing from YouTube until the visitor presses play.
+ * The poster is our own image, so there's no third-party request on page load.
+ */
+interface Props {
+  videoId: string;
+  title: string;
+  poster: ImageMetadata;
+}
+
+const { videoId, title, poster } = Astro.props;
+---
+
+<div class="relative aspect-video overflow-hidden rounded-card bg-ink" data-video={videoId} data-video-title={title}>
+  <Image src={poster} alt="" width={1280} height={720} widths={[640, 960, 1280]} sizes="(min-width: 1024px) 760px, 100vw" class="size-full object-cover opacity-80" />
+  <button
+    type="button"
+    data-video-play
+    class="absolute inset-0 flex flex-col items-center justify-center gap-3 font-display font-bold text-paper"
+  >
+    <span class="grid size-18 place-items-center rounded-full bg-deep text-white shadow-float">
+      <Icon name="play" size={30} class="translate-x-0.5" />
+    </span>
+    <span class="rounded-badge bg-ink/70 px-2 py-0.5">Play video: {title}</span>
+  </button>
+</div>
+
+<script>
+  for (const box of document.querySelectorAll<HTMLElement>('[data-video]')) {
+    box.querySelector('[data-video-play]')!.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${box.dataset.video}?autoplay=1&rel=0`;
+      iframe.title = box.dataset.videoTitle ?? 'Video';
+      iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 size-full';
+      box.replaceChildren(iframe);
+      iframe.focus();
+    });
+  }
+</script>

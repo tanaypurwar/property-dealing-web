@@ -43,4 +43,11 @@ export const site = {
 
   /** Where "Get price sheet" goes until the enquiry form exists. */
   enquireHref: '/contact#enquire',
+
+  /**
+   * TODO: URL that receives enquiry form submissions as a JSON POST (e.g. a form service
+   * or CRM webhook). While empty, the enquiry form opens WhatsApp with the details typed
+   * in, and brochure requests download without being recorded.
+   */
+  enquiryEndpoint: '' as string,
 } as const;

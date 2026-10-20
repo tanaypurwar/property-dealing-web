@@ -1,0 +1,114 @@
+---
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import ConsentField from './ConsentField.astro';
+import TextField from './TextField.astro';
+
+/**
+ * Asks for name and phone before the brochure downloads. Open it with any
+ * element carrying `data-brochure-open`. The PDF still lives in public/, so this
+ * is a lead-capture step, not access control.
+ */
+interface Props {
+  href: string;
+  projectName: string;
+}
+
+const { href, projectName } = Astro.props;
+const fileName = href.split('/').pop();
+---
+
+<dialog
+  data-brochure-gate
+  data-href={href}
+  data-file={fileName}
+  aria-labelledby="brochure-title"
+  class="m-auto w-[min(100%-2rem,28rem)] rounded-card bg-paper p-0 text-ink shadow-raise backdrop:bg-ink/50"
+>
+  <div class="flex items-start justify-between gap-4 px-5 pt-5">
+    <div>
+      <h2 id="brochure-title" class="text-h4 font-extrabold">Download the brochure</h2>
+      <p class="mt-1 text-stone">
+        Tell us who you are and the {projectName} brochure downloads straight away.
+      </p>
+    </div>
+    <button
+      type="button"
+      data-brochure-close
+      class="-mt-2 -mr-2 inline-flex size-tap shrink-0 items-center justify-center rounded-control hover:bg-sand"
+    >
+      <span class="sr-only">Close</span>
+      <Icon name="close" size={22} />
+    </button>
+  </div>
+
+  <form novalidate class="flex flex-col gap-4 p-5" data-brochure-form data-project={projectName}>
+    <TextField id="brochure-name" name="name" label="Your name" autocomplete="name" required />
+    <TextField
+      id="brochure-phone"
+      name="phone"
+      label="Mobile number"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel-national"
+      prefix="+91"
+      placeholder="98765 43210"
+      required
+    />
+    <ConsentField id="brochure-consent" />
+    <Button type="submit" icon="download" block>Download brochure</Button>
+    <p data-brochure-error hidden role="alert" class="text-small font-medium text-deep"></p>
+  </form>
+
+  <div data-brochure-done hidden role="status" class="flex flex-col gap-3 px-5 pb-5">
+    <p>Your download has started. If it didn't, <a href={href} download class="font-bold text-deep underline">download the brochure here</a>.</p>
+    <Button variant="secondary" data-brochure-close>Close</Button>
+  </div>
+</dialog>
+
+<script>
+  import { submitEnquiry, validateLeadForm } from '../../lib/enquiry';
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-brochure-gate]');
+  if (dialog) {
+    const form = dialog.querySelector<HTMLFormElement>('[data-brochure-form]')!;
+    const done = dialog.querySelector<HTMLElement>('[data-brochure-done]')!;
+    const errorBox = dialog.querySelector<HTMLElement>('[data-brochure-error]')!;
+
+    document.querySelectorAll('[data-brochure-open]').forEach((el) =>
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        dialog.showModal();
+      }),
+    );
+    dialog.querySelectorAll('[data-brochure-close]').forEach((el) =>
+      el.addEventListener('click', () => dialog.close()),
+    );
+    dialog.addEventListener('click', (e) => e.target === dialog && dialog.close());
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.hidden = true;
+      const fields = validateLeadForm(form);
+      if (!fields) return;
+      try {
+        await submitEnquiry(
+          { ...fields, project: form.dataset.project, source: 'brochure', page: location.href },
+          'none',
+        );
+      } catch {
+        errorBox.textContent = "We couldn't save your details. Check your connection and try again.";
+        errorBox.hidden = false;
+        return;
+      }
+      const a = document.createElement('a');
+      a.href = dialog.dataset.href!;
+      a.download = dialog.dataset.file!;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      form.hidden = true;
+      done.hidden = false;
+    });
+  }
+</script>

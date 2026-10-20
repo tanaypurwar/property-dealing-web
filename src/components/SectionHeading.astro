@@ -5,6 +5,8 @@
  */
 interface Props {
   title: string;
+  /** Id for the heading, so a section can point aria-labelledby at it. */
+  id?: string;
   intro?: string;
   /** Heading level. Pages own their single h1, so sections default to h2. */
   as?: 'h1' | 'h2' | 'h3';
@@ -13,7 +15,7 @@ interface Props {
   class?: string;
 }
 
-const { title, intro, as: Tag = 'h2', link, align = 'left', class: className } = Astro.props;
+const { title, id, intro, as: Tag = 'h2', link, align = 'left', class: className } = Astro.props;
 
 const sizes = {
   h1: 'text-h2 md:text-h1 font-extrabold',
@@ -30,7 +32,7 @@ const sizes = {
   ]}
 >
   <div class:list={['flex max-w-[40rem] flex-col gap-2', align === 'center' && 'items-center']}>
-    <Tag class:list={[sizes[Tag], 'text-ink']}>{title}</Tag>
+    <Tag id={id} class:list={[sizes[Tag], 'text-ink']}>{title}</Tag>
     {intro && <p class="max-w-[60ch] text-lead text-stone">{intro}</p>}
   </div>
   {

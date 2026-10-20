@@ -1,0 +1,105 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+
+/**
+ * Swipeable image carousel built on CSS scroll-snap; the script only wires up the
+ * arrows and the counter. The first slide is the LCP image, so it loads eagerly.
+ */
+interface Props {
+  label: string;
+  slides: { src: ImageMetadata; alt: string; caption?: string }[];
+}
+
+const { label, slides } = Astro.props;
+---
+
+<div class="relative bg-sand md:rounded-card md:overflow-hidden" role="region" aria-roledescription="carousel" aria-label={label} data-carousel>
+  <ul
+    class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    data-carousel-track
+    tabindex="0"
+    aria-label={`${label}, swipe or use the arrow buttons`}
+  >
+    {
+      slides.map((slide, i) => (
+        <li
+          class="relative w-full shrink-0 snap-start"
+          aria-roledescription="slide"
+          aria-label={`${i + 1} of ${slides.length}`}
+        >
+          <Image
+            src={slide.src}
+            alt={slide.alt}
+            width={1600}
+            height={1000}
+            widths={[640, 960, 1280, 1600]}
+            sizes="(min-width: 1200px) 1168px, 100vw"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'auto'}
+            class="aspect-[16/10] w-full object-cover md:aspect-auto md:h-[min(62vh,520px)]"
+          />
+          {slide.caption && (
+            <p class="absolute bottom-3 left-3 max-w-[80%] rounded-badge bg-paper/90 px-2 py-0.5 text-small text-stone">
+              {slide.caption}
+            </p>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+
+  {
+    slides.length > 1 && (
+      <>
+        <button
+          type="button"
+          data-carousel-prev
+          class="absolute top-1/2 left-3 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex"
+        >
+          <span class="sr-only">Previous image</span>
+          <Icon name="chevronLeft" size={24} />
+        </button>
+        <button
+          type="button"
+          data-carousel-next
+          class="absolute top-1/2 right-3 hidden size-12 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex"
+        >
+          <span class="sr-only">Next image</span>
+          <Icon name="chevronRight" size={24} />
+        </button>
+        <p
+          class="absolute right-3 bottom-3 rounded-badge bg-ink/80 px-2 py-0.5 font-display text-small font-bold text-paper tabular-nums"
+          data-carousel-count
+          aria-hidden="true"
+        >
+          1 / {slides.length}
+        </p>
+      </>
+    )
+  }
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
+    const track = root.querySelector<HTMLElement>('[data-carousel-track]')!;
+    const count = root.querySelector<HTMLElement>('[data-carousel-count]');
+    const total = track.children.length;
+    const index = () => Math.round(track.scrollLeft / track.clientWidth);
+    const go = (i: number) => {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      track.scrollTo({ left: ((i + total) % total) * track.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
+    };
+
+    root.querySelector('[data-carousel-prev]')?.addEventListener('click', () => go(index() - 1));
+    root.querySelector('[data-carousel-next]')?.addEventListener('click', () => go(index() + 1));
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(index() - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(index() + 1); }
+    });
+    track.addEventListener('scroll', () => {
+      if (count) count.textContent = `${index() + 1} / ${total}`;
+    }, { passive: true });
+  }
+</script>

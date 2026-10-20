@@ -1,0 +1,103 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import Lightbox from './Lightbox.astro';
+
+/** Floor plans with one tab per configuration. Each plan opens full size in a lightbox. */
+interface Props {
+  projectName: string;
+  plans: { src: ImageMetadata; configuration: string }[];
+}
+
+const { projectName, plans } = Astro.props;
+const alt = (c: string) => `${c} floor plan, ${projectName}`;
+const tabs = plans.length > 1;
+---
+
+<div data-tabs>
+  {
+    tabs && (
+      <div role="tablist" aria-label="Floor plans by configuration" class="flex flex-wrap gap-2">
+        {plans.map((p, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`plan-tab-${i}`}
+            aria-controls={`plan-panel-${i}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            class="min-h-tap rounded-control border-2 border-line bg-white px-4 font-display font-bold text-ink hover:border-ink aria-selected:border-ink aria-selected:bg-ink aria-selected:text-paper"
+          >
+            {p.configuration}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    plans.map((p, i) => (
+      <div
+        role={tabs ? 'tabpanel' : undefined}
+        id={`plan-panel-${i}`}
+        aria-labelledby={tabs ? `plan-tab-${i}` : undefined}
+        hidden={i !== 0}
+        class="mt-4"
+      >
+        <button
+          type="button"
+          data-lightbox-open="floor-plan-viewer"
+          data-index={i}
+          class="group relative block w-full overflow-hidden rounded-card border border-line bg-white"
+        >
+          <Image
+            src={p.src}
+            alt={alt(p.configuration)}
+            width={Math.min(1200, p.src.width)}
+            height={Math.round((Math.min(1200, p.src.width) * p.src.height) / p.src.width)}
+            widths={[480, 800, Math.min(1200, p.src.width)]}
+            sizes="(min-width: 1024px) 760px, 100vw"
+            class="w-full"
+          />
+          <span class="absolute right-3 bottom-3 inline-flex min-h-tap items-center gap-2 rounded-control bg-ink/85 px-3 font-display text-small font-bold text-paper group-hover:bg-ink">
+            <Icon name="expand" size={16} />
+            Zoom
+            <span class="sr-only">{p.configuration} floor plan</span>
+          </span>
+        </button>
+      </div>
+    ))
+  }
+</div>
+
+<Lightbox
+  id="floor-plan-viewer"
+  label={`${projectName} floor plans`}
+  items={plans.map((p) => ({ src: p.src, alt: alt(p.configuration), caption: `${p.configuration} floor plan` }))}
+/>
+
+<script>
+  // ARIA tabs: click or arrow keys switch panels; only the active tab is in the tab order.
+  for (const root of document.querySelectorAll<HTMLElement>('[data-tabs]')) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+    const select = (i: number) => {
+      tabs.forEach((tab, n) => {
+        const on = n === i;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        document.getElementById(tab.getAttribute('aria-controls')!)!.hidden = !on;
+      });
+      tabs[i]!.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (e) => {
+        const next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (next === undefined) return;
+        e.preventDefault();
+        select((next + tabs.length) % tabs.length);
+      });
+    });
+  }
+</script>

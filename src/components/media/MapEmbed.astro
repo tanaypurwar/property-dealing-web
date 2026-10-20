@@ -1,0 +1,65 @@
+---
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+
+/**
+ * Google Maps embed loaded on click. Until then it's a static panel with the address,
+ * so the page makes no request to Google on load. No API key needed.
+ */
+interface Props {
+  latitude: number;
+  longitude: number;
+  title: string;
+  address: string;
+}
+
+const { latitude, longitude, title, address } = Astro.props;
+const q = `${latitude},${longitude}`;
+const embed = `https://www.google.com/maps?q=${q}&z=15&output=embed`;
+const directions = `https://www.google.com/maps/search/?api=1&query=${q}`;
+---
+
+<div class="overflow-hidden rounded-card border border-line bg-sand">
+  <div
+    class="relative flex aspect-[4/3] flex-col items-center justify-center gap-4 p-6 text-center sm:aspect-[16/9]"
+    data-map={embed}
+    data-map-title={`Map showing ${title}`}
+  >
+    <!-- A plain grid hints at a map without loading one. -->
+    <svg aria-hidden="true" class="absolute inset-0 size-full text-line" preserveAspectRatio="none">
+      <defs>
+        <pattern id="map-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+          <path d="M48 0H0V48" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#map-grid)"></rect>
+    </svg>
+    <span class="relative grid size-14 place-items-center rounded-full bg-deep text-white shadow-float">
+      <Icon name="pin" size={26} />
+    </span>
+    <p class="relative max-w-[36ch] text-ink">{address}</p>
+    <Button variant="secondary" class="relative bg-paper" data-map-load>Show map</Button>
+  </div>
+  <a
+    href={directions}
+    target="_blank"
+    rel="noopener"
+    class="flex min-h-tap items-center justify-center gap-2 border-t border-line bg-white font-display font-bold text-deep hover:text-ink"
+  >
+    Open in Google Maps <Icon name="external" size={16} />
+  </a>
+</div>
+
+<script>
+  for (const box of document.querySelectorAll<HTMLElement>('[data-map]')) {
+    box.querySelector('[data-map-load]')!.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = box.dataset.map!;
+      iframe.title = box.dataset.mapTitle!;
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.className = 'absolute inset-0 size-full border-0';
+      box.replaceChildren(iframe);
+    });
+  }
+</script>

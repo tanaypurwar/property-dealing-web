@@ -71,6 +71,8 @@ images:
     - src: ../../assets/projects/neelgagan-residency-sector-150/plan-3bhk.png
       configuration: 3BHK
 
+brochure: /brochures/neelgagan-residency-sector-150.pdf
+
 featured: true
 published: true
 listedAt: 2026-08-10

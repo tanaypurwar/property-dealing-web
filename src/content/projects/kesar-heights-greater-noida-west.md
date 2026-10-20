@@ -70,6 +70,12 @@ images:
     - src: ../../assets/projects/kesar-heights-greater-noida-west/plan-4bhk.png
       configuration: 4BHK
 
+brochure: /brochures/kesar-heights-greater-noida-west.pdf
+# Direct download, no form: shows how to switch the gate off per project.
+brochureGated: false
+# Placeholder video (Blender Foundation's Big Buck Bunny) to exercise the video section.
+video: https://www.youtube.com/watch?v=aqz-KE-bpKQ
+
 featured: true
 published: true
 listedAt: 2026-10-01

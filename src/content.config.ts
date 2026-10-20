@@ -85,6 +85,8 @@ const projects = defineCollection({
           .string()
           .regex(/^\/brochures\/[\w.-]+\.pdf$/, 'brochure must be /brochures/<file>.pdf')
           .optional(),
+        /** Ask for name and phone before the brochure downloads. Set false to make it a direct download. */
+        brochureGated: z.boolean().default(true),
         video: z
           .url()
           .regex(

@@ -1,0 +1,185 @@
+---
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import SelectField from '../SelectField.astro';
+import ConsentField from './ConsentField.astro';
+import TextField from './TextField.astro';
+import { whatsappUrl } from '../../lib/whatsapp';
+
+/**
+ * The main lead form. Elsewhere on the page, a link with `data-prefill-config="3BHK"`
+ * and `href="#<id>"` pre-selects that configuration and moves focus here.
+ */
+interface Props {
+  id: string;
+  projectName: string;
+  configurations: string[];
+  /** Pre-filled message for the "Prefer WhatsApp?" link. */
+  whatsappMessage?: string;
+  class?: string;
+}
+
+const { id, projectName, configurations, whatsappMessage, class: className } = Astro.props;
+
+const configOptions = [
+  ...configurations.map((c) => ({ value: c, label: c })),
+  { value: 'Not sure yet', label: 'Not sure yet' },
+];
+
+const callTimes = [
+  'Morning, 10 am to 1 pm',
+  'Afternoon, 1 pm to 4 pm',
+  'Evening, 4 pm to 7 pm',
+  'Any time',
+].map((t) => ({ value: t, label: t }));
+---
+
+<section
+  id={id}
+  aria-labelledby={`${id}-title`}
+  class:list={['rounded-card border border-line bg-white p-5 transition-shadow duration-300 sm:p-6', className]}
+  data-lead-section
+>
+  <div data-lead-body>
+    <h2 id={`${id}-title`} class="text-h4 font-extrabold">Get the full price sheet</h2>
+    <p class="mt-1 text-stone">The all-inclusive breakup for {projectName}, from your advisor.</p>
+
+    <form
+      class="mt-4 flex flex-col gap-3.5"
+      novalidate
+      data-lead-form
+      data-source="enquiry-form"
+      data-project={projectName}
+    >
+      <TextField id={`${id}-name`} name="name" label="Your name" autocomplete="name" required />
+      <TextField
+        id={`${id}-phone`}
+        name="phone"
+        label="Mobile number"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel-national"
+        prefix="+91"
+        placeholder="98765 43210"
+        required
+      />
+      <TextField
+        id={`${id}-email`}
+        name="email"
+        label="Email"
+        type="email"
+        autocomplete="email"
+        optional
+      />
+      <SelectField
+        id={`${id}-config`}
+        name="configuration"
+        label="Interested in"
+        options={configOptions}
+        value={configOptions[0]!.value}
+      />
+      <SelectField
+        id={`${id}-time`}
+        name="callTime"
+        label="Best time to call"
+        options={callTimes}
+        value="Any time"
+      />
+      <ConsentField id={`${id}-consent`} />
+
+      <!-- Honeypot: hidden from people, filled in by most spam bots. -->
+      <div class="hidden" aria-hidden="true">
+        <label>Leave this empty <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <Button type="submit" size="lg" block>Get the price sheet</Button>
+      <p data-lead-error hidden role="alert" class="text-small font-medium text-deep"></p>
+      <a
+        href={whatsappUrl(whatsappMessage)}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex min-h-tap items-center justify-center gap-2 font-display text-small font-bold text-neem hover:underline"
+      >
+        <Icon name="chat" size={18} />
+        Prefer WhatsApp? Chat with an advisor
+      </a>
+    </form>
+  </div>
+
+  <div data-lead-success hidden role="status" tabindex="-1" class="flex flex-col gap-3 outline-none">
+    <span class="grid size-12 place-items-center rounded-full bg-neem text-white">
+      <Icon name="check" size={26} />
+    </span>
+    <h2 class="text-h4 font-extrabold" data-success-title>Thank you</h2>
+    <p class="text-stone" data-success-text></p>
+  </div>
+</section>
+
+<script>
+  import { submitEnquiry, validateLeadForm, type Enquiry } from '../../lib/enquiry';
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('form[data-lead-form]')) {
+    const section = form.closest<HTMLElement>('[data-lead-section]')!;
+    const errorBox = form.querySelector<HTMLElement>('[data-lead-error]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[type=submit]')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.hidden = true;
+      const fields = validateLeadForm(form);
+      if (!fields) return;
+
+      const data = new FormData(form);
+      if (data.get('company')) return; // honeypot
+
+      const enquiry: Enquiry = {
+        ...fields,
+        configuration: String(data.get('configuration') ?? ''),
+        callTime: String(data.get('callTime') ?? ''),
+        project: form.dataset.project,
+        source: (form.dataset.source as Enquiry['source']) ?? 'enquiry-form',
+        page: location.href,
+      };
+
+      submit.disabled = true;
+      try {
+        const delivery = await submitEnquiry(enquiry);
+        const time = enquiry.callTime === 'Any time' ? 'soon' : `in the ${enquiry.callTime?.split(',')[0]?.toLowerCase()}`;
+        section.querySelector('[data-success-title]')!.textContent = `Thank you, ${fields.name.split(' ')[0]}`;
+        section.querySelector('[data-success-text]')!.textContent =
+          delivery === 'whatsapp'
+            ? 'WhatsApp has opened with your details typed in. Press send and your advisor will reply with the price sheet.'
+            : `Your advisor will call you on +91 ${fields.phone} ${time} with the full price sheet.`;
+        section.querySelector<HTMLElement>('[data-lead-body]')!.hidden = true;
+        const success = section.querySelector<HTMLElement>('[data-lead-success]')!;
+        success.hidden = false;
+        success.focus();
+      } catch {
+        errorBox.textContent = "We couldn't send your details. Check your connection and try again, or call us.";
+        errorBox.hidden = false;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+
+  // "Get price details" links: pre-select the configuration, then bring the form into view.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-prefill-config]')) {
+    link.addEventListener('click', (e) => {
+      const target = document.querySelector<HTMLElement>(link.hash);
+      const form = target?.querySelector<HTMLFormElement>('form[data-lead-form]');
+      if (!target || !form) return;
+      e.preventDefault();
+
+      const select = form.elements.namedItem('configuration') as HTMLSelectElement;
+      select.value = link.dataset.prefillConfig!;
+      form.dataset.source = 'price-row';
+
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      (form.elements.namedItem('name') as HTMLInputElement).focus({ preventScroll: true });
+      target.classList.add('ring-4', 'ring-sun/40');
+      setTimeout(() => target.classList.remove('ring-4', 'ring-sun/40'), 1600);
+    });
+  }
+</script>

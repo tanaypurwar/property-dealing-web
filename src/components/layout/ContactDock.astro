@@ -11,9 +11,11 @@ import { whatsappUrl } from '../../lib/whatsapp';
 interface Props {
   /** Pre-filled WhatsApp message, e.g. naming the project on a project page. */
   message?: string;
+  /** Desktop floating button. Pages with their own sticky enquiry panel turn it off. */
+  floating?: boolean;
 }
 
-const { message } = Astro.props;
+const { message, floating = true } = Astro.props;
 const wa = whatsappUrl(message);
 ---
 
@@ -36,11 +38,11 @@ const wa = whatsappUrl(message);
   </a>
 </div>
 
-<a
+{floating && <a
   href={wa}
   target="_blank"
   rel="noopener"
   class="fixed right-6 bottom-6 z-40 hidden min-h-14 items-center gap-2.5 rounded-full bg-neem pr-6 pl-5 font-display font-bold text-white shadow-float transition-[filter] hover:brightness-90 md:flex"
 >
   <Icon name="chat" size={22} />Chat on WhatsApp
-</a>
+</a>}
