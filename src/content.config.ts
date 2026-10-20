@@ -77,7 +77,13 @@ const projects = defineCollection({
         /** Month precision is enough: `2027-12` or `2027-12-31`. Required unless upcoming. */
         possessionDate: z.coerce.date().optional(),
 
-        reraNumber: z.string().trim().min(5, 'RERA registration number is required'),
+        /**
+         * `registered` (the default) requires reraNumber. `applied` is only for a project whose
+         * registration is pending: the site then says "applied for, not yet registered" and warns
+         * buyers not to pay. Advertising before registration carries legal risk under RERA s.3/s.10.
+         */
+        reraStatus: z.enum(['registered', 'applied']).default('registered'),
+        reraNumber: z.string().trim().min(5).optional(),
 
         amenities: z.array(z.string().trim().min(1)).min(1),
         highlights: z.array(z.string().trim().min(1)).min(3).max(6),
@@ -175,12 +181,27 @@ const projects = defineCollection({
           });
         }
 
-        // Drafts may carry a placeholder RERA number; a published page may not.
-        if (p.published && /[[\]]|pending|tbc|tba/i.test(p.reraNumber)) {
+        // A registered project must show its number; drafts may carry a placeholder, published pages may not.
+        if (p.reraStatus === 'registered') {
+          if (!p.reraNumber) {
+            ctx.addIssue({
+              code: 'custom',
+              path: ['reraNumber'],
+              message: 'RERA registration number is required (or set reraStatus: applied)',
+            });
+          } else if (p.published && /[[\]]|pending|tbc|tba/i.test(p.reraNumber)) {
+            ctx.addIssue({
+              code: 'custom',
+              path: ['reraNumber'],
+              message: 'a published project needs its real UP RERA registration number',
+            });
+          }
+        }
+        if (p.reraStatus === 'applied' && p.reraNumber) {
           ctx.addIssue({
             code: 'custom',
             path: ['reraNumber'],
-            message: 'a published project needs its real UP RERA registration number',
+            message: 'remove reraNumber while reraStatus is applied, or set reraStatus: registered',
           });
         }
 

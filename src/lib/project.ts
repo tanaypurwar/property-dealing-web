@@ -50,6 +50,11 @@ export function priceLabel(p: Pick<Project, 'priceBasis'>): string {
   }[p.priceBasis];
 }
 
+/** The RERA number, or a plain statement that registration is still pending. */
+export function reraText(p: Pick<Project, 'reraStatus' | 'reraNumber'>): string {
+  return p.reraStatus === 'registered' ? p.reraNumber! : 'Applied for, not yet registered';
+}
+
 export const projectUrl = (slug: string) => `/projects/${slug}`;
 
 export function toListingItem(p: Project): ListingItem {

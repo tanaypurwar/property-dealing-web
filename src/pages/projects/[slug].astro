@@ -19,7 +19,7 @@ import VideoEmbed from '../../components/media/VideoEmbed.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../config/site';
 import { formatMonth, formatPrice, formatPriceRange } from '../../lib/format';
-import { areaSummary, configurationSummary, priceLabel, unitArea } from '../../lib/project';
+import { areaSummary, configurationSummary, priceLabel, reraText, unitArea } from '../../lib/project';
 import { STATUS_LABELS } from '../../lib/project-filters';
 import { amenityIcon, formatNearby, groupNearby, similarProjects, youtubeId } from '../../lib/project-details';
 import { projectWhatsappMessage } from '../../lib/whatsapp';
@@ -69,7 +69,7 @@ const facts: { icon: IconName; label: string; value: string }[] = [
   ...(p.landAreaAcres ? [{ icon: 'leaf' as const, label: 'Land area', value: `${p.landAreaAcres} acres` }] : []),
   ...(p.totalUnits ? [{ icon: 'units' as const, label: 'Total units', value: indian.format(p.totalUnits) }] : []),
   ...(p.towers ? [{ icon: 'building' as const, label: 'Towers', value: String(p.towers) }] : []),
-  { icon: 'shield', label: 'UP RERA no.', value: p.reraNumber },
+  { icon: 'shield', label: p.reraStatus === 'registered' ? 'UP RERA no.' : 'UP RERA', value: reraText(p) },
 ];
 
 const threeCol = facts.length % 3 === 0;
@@ -88,7 +88,7 @@ const slides = [
 
 // SEO
 const title = `${p.name}, ${shortArea}: ${configs} price${p.images.floorPlans.length > 0 ? ' and floor plans' : ' and details'}`;
-const description = `${p.name} in ${area}: ${configs}, ${price} ${priceLabel(p)}. ${STATUS_LABELS[p.status]}. UP RERA ${p.reraNumber}. Floor plans, amenities and price sheet.`;
+const description = `${p.name} in ${area}: ${configs}, ${price} ${priceLabel(p)}. ${STATUS_LABELS[p.status]}. UP RERA ${p.reraStatus === 'registered' ? p.reraNumber : 'applied for'}. ${p.images.floorPlans.length > 0 ? 'Floor plans, amenities' : 'Amenities, location'} and price sheet.`;
 const ogImage = new URL(
   (await getImage({ src: p.images.hero.src, width: 1200, height: 630, format: 'jpg', fit: 'cover' })).src,
   Astro.site ?? site.url,
@@ -220,6 +220,23 @@ const section = 'scroll-mt-24';
         </div>
       </div>
     </header>
+
+    {
+      p.reraStatus === 'applied' && (
+        <div role="note" class="mt-6 flex gap-3 rounded-card border-2 border-deep bg-paper p-4 sm:p-5">
+          <Icon name="shield" size={22} class="mt-0.5 text-deep" />
+          <div>
+            <p class="font-display font-bold text-ink">RERA registration applied for, not yet granted</p>
+            <p class="mt-1 text-stone">
+              The details below come from the developer's marketing partners and may change. We don't
+              take bookings or EOI payments for a project until it is registered on{' '}
+              <a href="https://up-rera.in" target="_blank" rel="noopener" class="font-medium text-deep underline">up-rera.in</a>.
+              Register your interest and we'll tell you as soon as it is.
+            </p>
+          </div>
+        </div>
+      )
+    }
 
     <!-- 2. Quick facts -->
     <!--
@@ -472,8 +489,10 @@ const section = 'scroll-mt-24';
         <h2 id="rera-title" class="text-h4 font-extrabold">RERA registration</h2>
         <dl class="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2">
           <div>
-            <dt class="text-small text-stone">Project UP RERA number</dt>
-            <dd class="flex items-center gap-2 font-display font-bold tabular-nums"><Ring />{p.reraNumber}</dd>
+            <dt class="text-small text-stone">Project UP RERA {p.reraStatus === 'registered' ? 'number' : 'status'}</dt>
+            <dd class="flex items-center gap-2 font-display font-bold tabular-nums">
+              {p.reraStatus === 'registered' ? <><Ring />{p.reraNumber}</> : <span class="text-deep">{reraText(p)}</span>}
+            </dd>
           </div>
           <div>
             <dt class="text-small text-stone">Developer</dt>

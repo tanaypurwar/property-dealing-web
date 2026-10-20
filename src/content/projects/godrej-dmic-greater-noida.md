@@ -1,8 +1,11 @@
 ---
 # Source: https://godrejs-dmicgreaternoida.com/ (fetched 20 Oct 2026). That site is run by
 # PropSolutions4U Pvt. Ltd., a marketing partner, not by Godrej Properties. Nothing below has
-# been verified by our team yet. DRAFT until:
-#   - The UP RERA registration is confirmed. The partner site prints "WING A - PM1181012503066 |
+# been verified by our team yet. Published with reraStatus: applied on the owner's instruction
+# (20 Oct 2026); the page warns buyers and says we take no bookings or EOI until registration.
+# Advertising an unregistered project carries legal risk under RERA s.3 and s.10.
+# Still to confirm:
+#   - The UP RERA registration. The partner site prints "WING A - PM1181012503066 |
 #     WING B - PM1181012503072" but also says the project "has not yet received RERA clearance".
 #     Those numbers don't follow the UPRERAPRJ format, so check them on up-rera.in.
 #   - The area basis is confirmed (the source doesn't say carpet or super; entered as saleable).
@@ -56,7 +59,7 @@ priceNote: Starting prices as published by the developer's marketing partner. Wh
 
 landAreaAcres: 23
 
-reraNumber: "[pending verification]"
+reraStatus: applied
 
 amenities:
   - Clubhouse with pool
@@ -109,7 +112,7 @@ images:
   floorPlans: []
 
 featured: false
-published: false
+published: true
 listedAt: 2026-10-20
 ---
 

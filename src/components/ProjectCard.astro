@@ -27,6 +27,7 @@ interface Props {
     | 'priceBasis'
     | 'possessionDate'
     | 'reraNumber'
+    | 'reraStatus'
     | 'images'
   >;
   /** Pass true for the first card when it sits above the fold. */
@@ -96,10 +97,16 @@ const headingId = `project-${p.slug}`;
       class="border-t border-dashed border-line pt-3"
     />
 
-    <p class="flex items-center gap-1.5 text-small text-stone">
-      <Ring />
-      <span>UP RERA <span class="tabular-nums">{p.reraNumber}</span>, verified by our team</span>
-    </p>
+    {
+      p.reraStatus === 'registered' ? (
+        <p class="flex items-center gap-1.5 text-small text-stone">
+          <Ring />
+          <span>UP RERA <span class="tabular-nums">{p.reraNumber}</span>, verified by our team</span>
+        </p>
+      ) : (
+        <p class="text-small font-medium text-deep">UP RERA: applied for, not yet registered</p>
+      )
+    }
 
     <div class="mt-auto grid grid-cols-2 gap-2 pt-1">
       <Button href={href} size="sm" block aria-label={`View details of ${p.name}`}>View details</Button>
