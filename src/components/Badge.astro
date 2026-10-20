@@ -1,0 +1,69 @@
+---
+import Ring from './Ring.astro';
+
+type Status = 'upcoming' | 'under-construction' | 'ready-to-move';
+type Category = 'residential' | 'commercial' | 'plot' | 'pg-rental';
+
+/**
+ * Pass one of:
+ * - `status` for construction stage,
+ * - `category` for the project type (Neem / Slate per the brand book),
+ * - `launch` for the Sunrise "New launch" badge.
+ * Category and launch badges are solid so they hold up on photos.
+ */
+type Props =
+  | { status: Status; category?: never; launch?: never; class?: string }
+  | { category: Category; status?: never; launch?: never; class?: string }
+  | { launch: true; status?: never; category?: never; class?: string };
+
+const props = Astro.props;
+
+const statusLabels: Record<Status, string> = {
+  upcoming: 'Upcoming',
+  'under-construction': 'Under construction',
+  'ready-to-move': 'Ready to move',
+};
+
+const categoryStyles: Record<Category, { label: string; class: string }> = {
+  residential: { label: 'Residential', class: 'bg-neem text-white' },
+  commercial: { label: 'Commercial', class: 'bg-slate text-white' },
+  plot: { label: 'Plot', class: 'bg-ink text-paper' },
+  'pg-rental': { label: 'PG / rental', class: 'bg-ink text-paper' },
+};
+
+// Status badges sit on paper or white: outlined, so they read as a fact, not a promo.
+const statusStyles: Record<Status, string> = {
+  upcoming: 'border-stone text-stone bg-paper',
+  'under-construction': 'border-ink text-ink bg-paper',
+  'ready-to-move': 'border-neem text-neem bg-paper',
+};
+
+const base =
+  'inline-flex items-center gap-1.5 rounded-badge px-2 py-0.5 font-display text-small font-bold whitespace-nowrap';
+---
+
+{
+  'status' in props && props.status && (
+    <span class:list={[base, 'border-[1.5px]', statusStyles[props.status], props.class]}>
+      {props.status === 'ready-to-move' && (
+        <span aria-hidden="true" class="size-1.5 rounded-full bg-neem" />
+      )}
+      {statusLabels[props.status]}
+    </span>
+  )
+}
+{
+  'category' in props && props.category && (
+    <span class:list={[base, categoryStyles[props.category].class, props.class]}>
+      {categoryStyles[props.category].label}
+    </span>
+  )
+}
+{
+  'launch' in props && props.launch && (
+    <span class:list={[base, 'bg-sun text-ink font-extrabold', props.class]}>
+      <Ring tone="ink" />
+      New launch
+    </span>
+  )
+}

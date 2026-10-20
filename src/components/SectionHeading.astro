@@ -1,0 +1,46 @@
+---
+/**
+ * Section title with an optional intro and an optional link to "see all" on the right.
+ * Left-aligned by default; `center` is for short standalone sections (e.g. a final CTA).
+ */
+interface Props {
+  title: string;
+  intro?: string;
+  /** Heading level. Pages own their single h1, so sections default to h2. */
+  as?: 'h1' | 'h2' | 'h3';
+  link?: { label: string; href: string };
+  align?: 'left' | 'center';
+  class?: string;
+}
+
+const { title, intro, as: Tag = 'h2', link, align = 'left', class: className } = Astro.props;
+
+const sizes = {
+  h1: 'text-h2 md:text-h1 font-extrabold',
+  h2: 'text-h3 md:text-h2 font-extrabold',
+  h3: 'text-h4 md:text-h3 font-bold',
+};
+---
+
+<header
+  class:list={[
+    'flex flex-col gap-3',
+    align === 'center' ? 'items-center text-center' : 'sm:flex-row sm:items-end sm:justify-between',
+    className,
+  ]}
+>
+  <div class:list={['flex max-w-[40rem] flex-col gap-2', align === 'center' && 'items-center']}>
+    <Tag class:list={[sizes[Tag], 'text-ink']}>{title}</Tag>
+    {intro && <p class="max-w-[60ch] text-lead text-stone">{intro}</p>}
+  </div>
+  {
+    link && (
+      <a
+        href={link.href}
+        class="inline-flex min-h-tap shrink-0 items-center font-display font-bold text-deep underline decoration-2 underline-offset-4 hover:text-ink"
+      >
+        {link.label}
+      </a>
+    )
+  }
+</header>

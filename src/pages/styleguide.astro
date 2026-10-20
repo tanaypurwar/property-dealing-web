@@ -1,0 +1,246 @@
+---
+import Badge from '../components/Badge.astro';
+import Button from '../components/Button.astro';
+import PriceTag from '../components/PriceTag.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Ring from '../components/Ring.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import SkylineRule from '../components/SkylineRule.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatArea, formatAreaRange, formatPrice, formatPriceRange } from '../lib/format';
+import type { ComponentProps } from 'astro/types';
+import commercialA from '../assets/placeholders/commercial-a.jpg';
+import residentialA from '../assets/placeholders/residential-a.jpg';
+import residentialB from '../assets/placeholders/residential-b.jpg';
+
+type CardProject = ComponentProps<typeof ProjectCard>['project'];
+
+// Sample data for layout review only. Names, prices and RERA numbers are placeholders.
+const samples: CardProject[] = [
+  {
+    name: 'Sample Greens 150',
+    slug: 'sample-greens-150',
+    type: 'residential',
+    status: 'ready-to-move',
+    location: { sector: 'Sector 150', city: 'Noida', address: '', latitude: 28.4, longitude: 77.5 },
+    configurations: [
+      { type: '2BHK', carpetArea: { min: 1050, max: 1150 }, price: { min: 7800000, max: 8600000 } },
+      { type: '3BHK', carpetArea: { min: 1450, max: 1650 }, price: { min: 10500000, max: 11000000 } },
+    ],
+    priceRange: { min: 7800000, max: 11000000 },
+    possessionDate: new Date('2025-06-30'),
+    reraNumber: 'UPRERAPRJ000001',
+    images: { hero: { src: residentialA, alt: 'Placeholder illustration of residential towers' }, gallery: [], floorPlans: [] },
+  },
+  {
+    name: 'Sample Heights West',
+    slug: 'sample-heights-west',
+    type: 'residential',
+    status: 'under-construction',
+    location: { sector: 'Greater Noida West', city: 'Greater Noida', address: '', latitude: 28.6, longitude: 77.4 },
+    configurations: [
+      { type: '3BHK', carpetArea: { min: 1550, max: 1750 }, price: { min: 12000000, max: 14500000 } },
+      { type: '4BHK', carpetArea: { min: 2100, max: 2400 }, price: { min: 16500000, max: 18000000 } },
+    ],
+    priceRange: { min: 12000000, max: 18000000 },
+    possessionDate: new Date('2028-12-31'),
+    reraNumber: 'UPRERAPRJ000002',
+    images: { hero: { src: residentialB, alt: 'Placeholder illustration of high-rise towers' }, gallery: [], floorPlans: [] },
+  },
+  {
+    name: 'Sample Metro Square',
+    slug: 'sample-metro-square',
+    type: 'commercial',
+    status: 'under-construction',
+    location: { sector: 'Sector 142', city: 'Noida', address: '', latitude: 28.5, longitude: 77.4 },
+    configurations: [
+      { type: 'Shop', carpetArea: { min: 250, max: 600 }, price: { min: 4500000, max: 9500000 } },
+      { type: 'Office', carpetArea: { min: 500, max: 1200 }, price: { min: 5500000, max: 13000000 } },
+    ],
+    priceRange: { min: 4500000, max: 13000000 },
+    possessionDate: new Date('2027-09-30'),
+    reraNumber: 'UPRERAPRJ000003',
+    images: { hero: { src: commercialA, alt: 'Placeholder illustration of commercial blocks' }, gallery: [], floorPlans: [] },
+  },
+];
+
+const colours = [
+  { name: 'Ink', token: 'ink', hex: '#1C1B19', role: 'Text, headings, dark plates', swatch: 'bg-ink', dark: true },
+  { name: 'Paper', token: 'paper', hex: '#FAF7F2', role: 'Page ground', swatch: 'bg-paper', dark: false },
+  { name: 'Sand', token: 'sand', hex: '#EFE8DC', role: 'Panels, form fields', swatch: 'bg-sand', dark: false },
+  { name: 'Line', token: 'line', hex: '#E3DCCF', role: 'Hairline borders', swatch: 'bg-line', dark: false },
+  { name: 'Stone', token: 'stone', hex: '#6B665E', role: 'Secondary text, captions', swatch: 'bg-stone', dark: true },
+  { name: 'Sunrise', token: 'sun', hex: '#F26B1D', role: 'Sun, rings, badges. Ink text only', swatch: 'bg-sun', dark: false },
+  { name: 'Deep orange', token: 'deep', hex: '#B84A0E', role: 'CTA buttons, links', swatch: 'bg-deep', dark: true },
+  { name: 'Neem', token: 'neem', hex: '#2F6B4F', role: 'Residential, WhatsApp', swatch: 'bg-neem', dark: true },
+  { name: 'Slate', token: 'slate', hex: '#3D4B5A', role: 'Commercial', swatch: 'bg-slate', dark: true },
+];
+
+const typeScale = [
+  { cls: 'text-h1 font-extrabold font-display', label: 'h1 · 61/64 · 800', sample: 'Full price, upfront.' },
+  { cls: 'text-h2 font-extrabold font-display', label: 'h2 · 39/44 · 800', sample: 'New launches in Greater Noida' },
+  { cls: 'text-h3 font-bold font-display', label: 'h3 · 31/36 · 700', sample: 'Hero Homes, Sector Mu' },
+  { cls: 'text-h4 font-bold font-display', label: 'h4 · 25/30 · 700', sample: '3BHK, 1,650 sq. ft.' },
+  { cls: 'text-lead', label: 'lead · 20/30 · 400', sample: 'Every listing comes with its RERA number and an all-inclusive price breakup.' },
+  { cls: 'text-body', label: 'body · 16/26 · 400', sample: 'One advisor stays with you from the first site visit to registry, including loan paperwork.' },
+  { cls: 'text-small text-stone', label: 'small · 13/20 · 500', sample: 'Prices are all-inclusive unless stated.' },
+  { cls: 'text-lead font-medium', label: 'Hindi · Mukta 500', sample: 'भरोसा, लिखित में। पूरा दाम, पहले दिन से।' },
+];
+
+const priceSamples = [4500000, 7850000, 9999900, 12000000, 12500000, 18500];
+const section = 'mx-auto max-w-site px-4 py-12 sm:px-6 md:py-16';
+const label = 'font-display text-small font-bold text-stone';
+---
+
+<BaseLayout title="Styleguide" noindex>
+  <div class={section}>
+    <h1 class="text-h2 font-extrabold md:text-h1">Styleguide</h1>
+    <p class="mt-3 max-w-[60ch] text-lead text-stone">
+      Tokens and components for review. This page is not linked anywhere and is hidden from search
+      engines. Resize the window to see the header menu and the mobile Call / WhatsApp bar.
+    </p>
+  </div>
+
+  <section class={section} aria-labelledby="sg-colour">
+    <SectionHeading title="Colour" intro="Paper carries about 60% of any layout, Ink 22%. Sunrise stays near 6%, which is what keeps it calm." />
+    <ul id="sg-colour" class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      {colours.map((c) => (
+        <li class="overflow-hidden rounded-card border border-line bg-white">
+          <div class:list={['h-20', c.swatch]} />
+          <div class="p-3">
+            <p class="font-display font-bold">{c.name}</p>
+            <p class="text-small text-stone tabular-nums">{c.hex} · <code>{c.token}</code></p>
+            <p class="mt-1 text-small">{c.role}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class={section} aria-label="Typography">
+    <SectionHeading title="Type" intro="Manrope for headings and prices, Mukta for body text and Hindi. A 1.25 scale from 16px; headings drop one step on mobile." />
+    <ul class="mt-8 divide-y divide-line border-y border-line">
+      {typeScale.map((t) => (
+        <li class="grid gap-1 py-5 md:grid-cols-[12rem_1fr] md:items-baseline md:gap-6">
+          <span class={label}>{t.label}</span>
+          <span class:list={[t.cls, 'min-w-0 break-words']}>{t.sample}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class={section} aria-label="Buttons">
+    <SectionHeading title="Buttons" intro="Every label names what the buyer gets. All sizes are at least 44px tall." />
+    <div class="mt-8 flex flex-col gap-6">
+      <div class="flex flex-wrap items-center gap-3">
+        <Button href="#">Get price sheet</Button>
+        <Button variant="secondary" href="#">Book a free site visit</Button>
+        <Button variant="whatsapp" icon="chat" href="#">Chat on WhatsApp</Button>
+        <Button icon="phone" href="#">Call an advisor</Button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <Button size="sm">Small</Button>
+        <Button>Medium</Button>
+        <Button size="lg">Large</Button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 rounded-card bg-ink p-5">
+        <Button variant="inverse">Get price sheet</Button>
+        <Button variant="whatsapp" icon="chat">Chat on WhatsApp</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class={section} aria-label="Badges">
+    <SectionHeading title="Badges" intro="Status badges are outlined so they read as facts. Category and launch badges are solid so they hold up on photos." />
+    <dl class="mt-8 grid gap-6 sm:grid-cols-3">
+      <div class="flex flex-col gap-3">
+        <dt class={label}>Status</dt>
+        <dd class="flex flex-wrap gap-2">
+          <Badge status="ready-to-move" />
+          <Badge status="under-construction" />
+          <Badge status="upcoming" />
+        </dd>
+      </div>
+      <div class="flex flex-col gap-3">
+        <dt class={label}>Category</dt>
+        <dd class="flex flex-wrap gap-2">
+          <Badge category="residential" />
+          <Badge category="commercial" />
+          <Badge category="plot" />
+          <Badge category="pg-rental" />
+        </dd>
+      </div>
+      <div class="flex flex-col gap-3">
+        <dt class={label}>Launch and verification</dt>
+        <dd class="flex flex-wrap items-center gap-3">
+          <Badge launch />
+          <span class="inline-flex items-center gap-1.5 text-small font-medium"><Ring />RERA checked</span>
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class={section} aria-label="Prices">
+    <SectionHeading title="Prices" intro="Stored as rupees, shown in Lakh and Cr through one helper. Figures are tabular so columns line up." />
+    <div class="mt-8 grid gap-8 md:grid-cols-2">
+      <div class="flex flex-col gap-4 rounded-card bg-sand p-5">
+        <PriceTag min={7800000} max={11000000} size="lg" />
+        <PriceTag min={12000000} max={18000000} />
+        <PriceTag min={4500000} max={6000000} />
+        <PriceTag min={14200000} note="total cost, incl. PLC and parking" />
+        <PriceTag min={18500} per="/month" note="" />
+      </div>
+      <table class="w-full text-left tabular-nums">
+        <caption class="sr-only">Formatter output</caption>
+        <thead>
+          <tr class="border-b border-line">
+            <th scope="col" class:list={[label, 'py-2']}>Stored value</th>
+            <th scope="col" class:list={[label, 'py-2']}>Shown as</th>
+          </tr>
+        </thead>
+        <tbody>
+          {priceSamples.map((n) => (
+            <tr class="border-b border-line">
+              <td class="py-2 text-stone">{n}</td>
+              <td class="py-2 font-display font-bold">{formatPrice(n)}</td>
+            </tr>
+          ))}
+          <tr class="border-b border-line">
+            <td class="py-2 text-stone">7800000, 11000000</td>
+            <td class="py-2 font-display font-bold">{formatPriceRange(7800000, 11000000)}</td>
+          </tr>
+          <tr class="border-b border-line">
+            <td class="py-2 text-stone">1650 / 1150–1650</td>
+            <td class="py-2 font-display font-bold">{formatArea(1650)} / {formatAreaRange(1150, 1650)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class={section} aria-label="Section headings">
+    <div class="flex flex-col gap-12">
+      <SectionHeading
+        title="Verified projects in Sector 150"
+        intro="Each one has been visited by our team and comes with an all-inclusive price sheet."
+        link={{ label: 'See all projects', href: '#' }}
+      />
+      <SectionHeading as="h3" title="Nearby schools and hospitals" />
+      <SectionHeading align="center" title="Not sure where to start?" intro="Tell us your budget and preferred area on WhatsApp. We'll reply with verified options." />
+    </div>
+  </section>
+
+  <section id="cards" class={section} aria-label="Project cards">
+    <SectionHeading title="Project cards" intro="Sample data. Images are placeholders until real site photos arrive." />
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ProjectCard project={samples[0]!} />
+      <ProjectCard project={samples[1]!} newLaunch />
+      <ProjectCard project={samples[2]!} />
+    </div>
+  </section>
+
+  <section class={section} aria-label="Graphic devices">
+    <SectionHeading title="Skyline rule" intro="Footer edge and section divider. The sun sits between the towers." />
+    <SkylineRule class="mt-8" />
+  </section>
+</BaseLayout>

@@ -1,0 +1,63 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Icon, { type IconName } from './Icon.astro';
+
+/**
+ * primary: white on Deep Orange, the main action on a page.
+ * secondary: Ink outline, for a second action next to a primary one.
+ * whatsapp: white on Neem, only for WhatsApp links.
+ * inverse: Paper on Ink grounds (footer, dark panels).
+ */
+type Variant = 'primary' | 'secondary' | 'whatsapp' | 'inverse';
+type Size = 'sm' | 'md' | 'lg';
+
+type Props = {
+  variant?: Variant;
+  size?: Size;
+  icon?: IconName;
+  href?: string;
+  /** Stretch to the width of the container, e.g. in card action rows. */
+  block?: boolean;
+  class?: string;
+} & Omit<HTMLAttributes<'a'> & HTMLAttributes<'button'>, 'class'>;
+
+const {
+  variant = 'primary',
+  size = 'md',
+  icon,
+  href,
+  block = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const variants: Record<Variant, string> = {
+  primary: 'border-transparent bg-deep text-white hover:bg-ink',
+  secondary: 'border-ink text-ink hover:bg-ink hover:text-paper',
+  whatsapp: 'border-transparent bg-neem text-white hover:brightness-90',
+  inverse: 'border-transparent bg-paper text-ink hover:bg-sand',
+};
+
+// Every size meets the 44px tap target; `sm` only tightens the padding and type.
+const sizes: Record<Size, string> = {
+  sm: 'min-h-tap px-3.5 text-[0.875rem] gap-1.5',
+  md: 'min-h-tap px-5 text-[0.9375rem] gap-2',
+  lg: 'min-h-14 px-6 text-body gap-2.5',
+};
+
+const classes = [
+  'inline-flex items-center justify-center rounded-control border-2',
+  'font-display font-bold leading-tight whitespace-nowrap transition-colors duration-150',
+  variants[variant],
+  sizes[size],
+  block && 'w-full',
+  className,
+];
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag href={href} type={href ? undefined : 'button'} class:list={classes} {...rest}>
+  {icon && <Icon name={icon} size={size === 'lg' ? 20 : 18} />}
+  <slot />
+</Tag>

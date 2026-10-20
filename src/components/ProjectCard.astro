@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import Badge from './Badge.astro';
+import Button from './Button.astro';
+import PriceTag from './PriceTag.astro';
+import Ring from './Ring.astro';
+import { formatMonth } from '../lib/format';
+import {
+  carpetAreaSummary,
+  configurationSummary,
+  projectUrl,
+  type Project,
+} from '../lib/project';
+import { projectWhatsappMessage, whatsappUrl } from '../lib/whatsapp';
+
+interface Props {
+  project: Pick<
+    Project,
+    | 'name'
+    | 'slug'
+    | 'type'
+    | 'status'
+    | 'location'
+    | 'configurations'
+    | 'priceRange'
+    | 'possessionDate'
+    | 'reraNumber'
+    | 'images'
+  >;
+  /** Pass true for the first card when it sits above the fold. */
+  eager?: boolean;
+  newLaunch?: boolean;
+}
+
+const { project: p, eager = false, newLaunch = false } = Astro.props;
+
+const href = projectUrl(p.slug);
+const area = `${p.location.sector}, ${p.location.city}`;
+const headingId = `project-${p.slug}`;
+---
+
+<article
+  aria-labelledby={headingId}
+  class="relative flex flex-col overflow-hidden rounded-card border border-line bg-white"
+>
+  <a href={href} tabindex="-1" aria-hidden="true" class="block bg-sand">
+    <Image
+      src={p.images.hero.src}
+      alt={p.images.hero.alt}
+      width={800}
+      height={500}
+      widths={[400, 640, 800]}
+      sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      class="aspect-[16/10] w-full object-cover"
+    />
+  </a>
+  <!-- Outside the aria-hidden image link so screen readers still hear type and status. -->
+  <div class="pointer-events-none absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 pr-2.5">
+    <Badge category={p.type} />
+    <Badge status={p.status} />
+    {newLaunch && <Badge launch />}
+  </div>
+
+  <div class="flex flex-1 flex-col gap-3 p-4">
+    <div class="flex flex-col gap-1">
+      <h3 id={headingId} class="text-[1.1875rem] leading-6 font-extrabold">
+        <a href={href} class="hover:text-deep hover:underline">{p.name}</a>
+      </h3>
+      <p class="text-[0.9375rem] text-stone">{area}</p>
+    </div>
+
+    <ul class="flex flex-wrap gap-x-4 gap-y-1 text-[0.875rem]">
+      <li>{configurationSummary(p.configurations)}</li>
+      <li class="tabular-nums">{carpetAreaSummary(p.configurations)}</li>
+      {
+        p.possessionDate && p.status !== 'ready-to-move' && (
+          <li>Possession {formatMonth(p.possessionDate)}</li>
+        )
+      }
+    </ul>
+
+    <PriceTag
+      min={p.priceRange.min}
+      max={p.priceRange.max}
+      class="border-t border-dashed border-line pt-3"
+    />
+
+    <p class="flex items-center gap-1.5 text-small text-stone">
+      <Ring />
+      <span>UP RERA <span class="tabular-nums">{p.reraNumber}</span>, verified by our team</span>
+    </p>
+
+    <div class="mt-auto grid grid-cols-2 gap-2 pt-1">
+      <Button href={`${href}#price-sheet`} size="sm" icon="sheet" block>Price sheet</Button>
+      <Button
+        href={whatsappUrl(projectWhatsappMessage(p.name, area))}
+        variant="whatsapp"
+        size="sm"
+        icon="chat"
+        block
+        target="_blank"
+        rel="noopener"
+      >
+        WhatsApp
+      </Button>
+    </div>
+  </div>
+</article>

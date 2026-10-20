@@ -5,12 +5,77 @@
   --color-ink: #1c1b19;
   --color-paper: #faf7f2;
   --color-sand: #efe8dc;
+  --color-line: #e3dccf; /* hairline borders on paper and white */
   --color-stone: #6b665e;
-  --color-sun: #f26b1d;
-  --color-deep: #b84a0e;
-  --color-neem: #2f6b4f;
-  --color-slate: #3d4b5a;
+  --color-sun: #f26b1d; /* graphics and ink-on-sun badges only, never as a text colour on light grounds */
+  --color-deep: #b84a0e; /* CTA buttons (white text), links on light */
+  --color-neem: #2f6b4f; /* residential, WhatsApp */
+  --color-slate: #3d4b5a; /* commercial */
 
   --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Mukta", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale: 1.25 ratio from a 16px base (brand book, Part C). On mobile, step headings down one size: text-h2 md:text-h1. */
+  --text-small: 0.8125rem;
+  --text-small--line-height: 1.25rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.875rem;
+  --text-h4: 1.5625rem;
+  --text-h4--line-height: 1.875rem;
+  --text-h3: 1.9375rem;
+  --text-h3--line-height: 2.25rem;
+  --text-h2: 2.4375rem;
+  --text-h2--line-height: 2.75rem;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h1: 3.8125rem;
+  --text-h1--line-height: 4rem;
+  --text-h1--letter-spacing: -0.02em;
+
+  /* Spacing keeps Tailwind's 4px scale. `tap` is the minimum touch target. */
+  --spacing-tap: 2.75rem;
+  --container-site: 75rem;
+
+  /* Radius by role, so hierarchy stays consistent: badges < controls < cards. */
+  --radius-badge: 5px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+
+  /* Cards and panels use borders, not shadows. Shadows are only for things that float above the page. */
+  --shadow-float: 0 8px 24px -8px rgb(28 27 25 / 0.35);
+  --shadow-raise: 0 12px 32px -12px rgb(28 27 25 / 0.25);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem; /* clears the sticky header for #anchor links */
+  }
+
+  body {
+    @apply bg-paper font-sans text-body text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-deep);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

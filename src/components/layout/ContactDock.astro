@@ -1,0 +1,46 @@
+---
+import Icon from '../Icon.astro';
+import { site } from '../../config/site';
+import { whatsappUrl } from '../../lib/whatsapp';
+
+/**
+ * Mobile: a fixed bottom bar with Call and WhatsApp, in thumb reach.
+ * md and up: a floating WhatsApp button, bottom right. Only one shows at a time,
+ * so phones never get two WhatsApp buttons stacked on top of each other.
+ */
+interface Props {
+  /** Pre-filled WhatsApp message, e.g. naming the project on a project page. */
+  message?: string;
+}
+
+const { message } = Astro.props;
+const wa = whatsappUrl(message);
+---
+
+<div
+  class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-paper/95 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden"
+>
+  <a
+    href={`tel:${site.phone}`}
+    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-deep font-display font-bold text-white"
+  >
+    <Icon name="phone" size={20} />Call
+  </a>
+  <a
+    href={wa}
+    target="_blank"
+    rel="noopener"
+    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-neem font-display font-bold text-white"
+  >
+    <Icon name="chat" size={20} />WhatsApp
+  </a>
+</div>
+
+<a
+  href={wa}
+  target="_blank"
+  rel="noopener"
+  class="fixed right-6 bottom-6 z-40 hidden min-h-14 items-center gap-2.5 rounded-full bg-neem pr-6 pl-5 font-display font-bold text-white shadow-float transition-[filter] hover:brightness-90 md:flex"
+>
+  <Icon name="chat" size={22} />Chat on WhatsApp
+</a>
