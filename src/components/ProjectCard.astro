@@ -75,8 +75,10 @@ const headingId = `project-${p.slug}`;
       <li>{configurationSummary(p.configurations)}</li>
       <li class="tabular-nums">{carpetAreaSummary(p.configurations)}</li>
       {
-        p.possessionDate && p.status !== 'ready-to-move' && (
-          <li>Possession {formatMonth(p.possessionDate)}</li>
+        p.possessionDate && (
+          <li>
+            {p.status === 'ready-to-move' ? 'Ready since' : 'Possession'} {formatMonth(p.possessionDate)}
+          </li>
         )
       }
     </ul>
@@ -93,7 +95,7 @@ const headingId = `project-${p.slug}`;
     </p>
 
     <div class="mt-auto grid grid-cols-2 gap-2 pt-1">
-      <Button href={`${href}#price-sheet`} size="sm" icon="sheet" block>Price sheet</Button>
+      <Button href={href} size="sm" block aria-label={`View details of ${p.name}`}>View details</Button>
       <Button
         href={whatsappUrl(projectWhatsappMessage(p.name, area))}
         variant="whatsapp"
@@ -102,6 +104,7 @@ const headingId = `project-${p.slug}`;
         block
         target="_blank"
         rel="noopener"
+        aria-label={`Ask about ${p.name} on WhatsApp`}
       >
         WhatsApp
       </Button>

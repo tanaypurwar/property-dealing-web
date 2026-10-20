@@ -1,18 +1,16 @@
 import type { CollectionEntry } from 'astro:content';
 import { formatAreaRange } from './format';
+import { slugify, unitKind, type ListingItem } from './project-filters';
 
 export type Project = CollectionEntry<'projects'>['data'];
 
-/** "2 & 3 BHK", "4 BHK", or "Shop, Office" for non-BHK units. */
+/** "2, 3 BHK", "4 BHK", or "Shop, Office" for non-BHK units. */
 export function configurationSummary(configs: Project['configurations']): string {
-  const types = [...new Set(configs.map((c) => c.type))];
-  const bhk = types.map((t) => /^(\d+(?:\.\d)?)\s*BHK$/i.exec(t)?.[1]);
-  if (bhk.every(Boolean)) {
-    const nums = (bhk as string[]).sort((a, b) => Number(a) - Number(b));
-    const list = nums.length > 1 ? `${nums.slice(0, -1).join(', ')} & ${nums.at(-1)}` : nums[0];
-    return `${list} BHK`;
+  const kinds = [...new Set(configs.map((c) => unitKind(c.type)))];
+  if (kinds.every((k) => /^\d+$/.test(k))) {
+    return `${kinds.sort((a, b) => Number(a) - Number(b)).join(', ')} BHK`;
   }
-  return types.join(', ');
+  return [...new Set(configs.map((c) => c.type))].join(', ');
 }
 
 /** Smallest to largest carpet area across all configurations. */
@@ -23,3 +21,17 @@ export function carpetAreaSummary(configs: Project['configurations']): string {
 }
 
 export const projectUrl = (slug: string) => `/projects/${slug}`;
+
+export function toListingItem(p: Project): ListingItem {
+  return {
+    slug: p.slug,
+    location: slugify(p.location.sector),
+    type: p.type,
+    status: p.status,
+    units: p.configurations.map((c) => ({ kind: unitKind(c.type), min: c.price.min, max: c.price.max })),
+    priceMin: p.priceRange.min,
+    priceMax: p.priceRange.max,
+    listedAt: p.listedAt.getTime(),
+    possession: p.possessionDate?.getTime() ?? null,
+  };
+}

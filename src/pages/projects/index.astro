@@ -1,0 +1,298 @@
+---
+import { getCollection } from 'astro:content';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import SelectField from '../../components/SelectField.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../config/site';
+import { toListingItem } from '../../lib/project';
+import {
+  BUDGETS,
+  compare,
+  DEFAULT_SORT,
+  SORTS,
+  STATUS_LABELS,
+  TYPE_LABELS,
+  UNIT_OPTIONS,
+  slugify,
+} from '../../lib/project-filters';
+import { whatsappUrl } from '../../lib/whatsapp';
+
+const projects = (await getCollection('projects', ({ data }) => data.published)).map((e) => e.data);
+
+// Server-render in the default order so the grid doesn't jump when the script runs.
+const items = projects.map(toListingItem).sort(compare(DEFAULT_SORT));
+const bySlug = new Map(projects.map((p) => [p.slug, p]));
+const ordered = items.map((i) => bySlug.get(i.slug)!);
+
+// Location options come from the projects themselves, so there are never empty choices.
+const locations = [
+  ...new Map(
+    projects.map((p) => [
+      slugify(p.location.sector),
+      p.location.sector.includes(p.location.city)
+        ? p.location.sector
+        : `${p.location.sector}, ${p.location.city}`,
+    ]),
+  ),
+]
+  .map(([value, label]) => ({ value, label }))
+  .sort((a, b) => a.label.localeCompare(b.label, 'en', { numeric: true }));
+
+const typeOptions = Object.entries(TYPE_LABELS).map(([value, label]) => ({ value, label }));
+const statusOptions = Object.entries(STATUS_LABELS).map(([value, label]) => ({ value, label }));
+
+const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
+---
+
+<BaseLayout
+  title="Projects in Noida and Greater Noida"
+  description="Verified, RERA-registered residential and commercial projects in Noida and Greater Noida, each with an all-inclusive price sheet."
+>
+  <div class="mx-auto max-w-site px-4 pt-8 pb-16 sm:px-6 md:pt-12">
+    <header class="max-w-[44rem]">
+      <h1 class="text-h2 font-extrabold md:text-h1">Projects in Noida and Greater Noida</h1>
+      <p class="mt-3 text-lead text-stone">
+        Every project here has been visited by our team and carries its UP RERA number. Prices are
+        all-inclusive.
+      </p>
+    </header>
+
+    <!-- Desktop: the form sits here. Mobile: the script moves it into the bottom sheet when it opens. -->
+    <div data-filter-home class="mt-8 max-md:hidden">
+      <form
+        id="project-filters"
+        action="/projects"
+        method="get"
+        class="grid gap-4 md:grid-cols-5 md:gap-3 md:rounded-card md:border md:border-line md:bg-white md:p-4"
+      >
+        <SelectField label="Location" name="location" anyLabel="Any location" options={locations} />
+        <SelectField label="Type" name="type" anyLabel="Any type" options={typeOptions} />
+        <SelectField label="Status" name="status" anyLabel="Any status" options={statusOptions} />
+        <SelectField label="Configuration" name="bhk" anyLabel="Any size" options={UNIT_OPTIONS} />
+        <SelectField label="Budget" name="budget" anyLabel="Any budget" options={BUDGETS} />
+      </form>
+    </div>
+
+    <div class="mt-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 md:mt-5">
+      <div class="flex items-center gap-4">
+        <button
+          type="button"
+          data-filter-open
+          class="inline-flex min-h-tap items-center gap-2 rounded-control border-2 border-ink px-4 font-display font-bold md:hidden"
+          aria-haspopup="dialog"
+        >
+          <Icon name="filters" size={18} />
+          Filters
+          <span
+            data-filter-count
+            hidden
+            class="inline-grid min-w-6 place-items-center rounded-full bg-ink px-1.5 text-small text-paper"
+          ></span>
+        </button>
+        <p data-result-count aria-live="polite" class="font-display font-bold max-md:hidden">
+          {count(items.length)}
+        </p>
+        <button
+          type="button"
+          data-filter-clear
+          hidden
+          class="inline-flex min-h-tap items-center font-display font-bold text-deep underline decoration-2 underline-offset-4 hover:text-ink max-md:hidden"
+        >
+          Clear filters
+        </button>
+      </div>
+      <SelectField
+        label="Sort by"
+        name="sort"
+        id="field-sort"
+        form="project-filters"
+        options={SORTS}
+        value={DEFAULT_SORT}
+        class="w-[13.5rem] max-md:flex-1"
+      />
+    </div>
+    <p data-result-count-mobile aria-live="polite" class="mt-3 text-small text-stone md:hidden">{count(items.length)}</p>
+
+    <div data-project-grid class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        ordered.map((p, i) => (
+          <div data-project={p.slug} class="flex flex-col [&>article]:flex-1">
+            <ProjectCard project={p} eager={i === 0} />
+          </div>
+        ))
+      }
+    </div>
+
+    <section
+      data-empty
+      hidden
+      aria-labelledby="empty-title"
+      class="mt-6 flex flex-col items-start gap-4 rounded-card border border-dashed border-stone/50 bg-sand/60 p-6 md:p-10"
+    >
+      <h2 id="empty-title" class="text-h4 font-bold">No projects match these filters</h2>
+      <p class="max-w-[56ch] text-stone">
+        Try removing a filter. Or tell us your budget and area: we also track projects that aren't
+        listed here yet, and we'll only call at a time you pick.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <Button variant="secondary" data-filter-clear>Clear filters</Button>
+        <Button href={site.enquireHref}>Request a callback</Button>
+        <Button variant="whatsapp" icon="chat" href={whatsappUrl()} target="_blank" rel="noopener">
+          Ask on WhatsApp
+        </Button>
+      </div>
+    </section>
+  </div>
+
+  <dialog
+    data-filter-sheet
+    aria-labelledby="sheet-title"
+    class="fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-none flex-col rounded-t-card bg-paper p-0 text-ink backdrop:bg-ink/50 open:flex"
+  >
+    <div class="flex items-center justify-between border-b border-line px-4 py-2">
+      <h2 id="sheet-title" class="font-display text-lead font-extrabold">Filters</h2>
+      <button
+        type="button"
+        data-filter-close
+        class="-mr-2 inline-flex size-tap items-center justify-center rounded-control hover:bg-sand"
+      >
+        <span class="sr-only">Close filters</span>
+        <Icon name="close" size={24} />
+      </button>
+    </div>
+    <div data-sheet-slot class="overflow-y-auto px-4 py-5"></div>
+    <div
+      class="grid grid-cols-[auto_1fr] gap-3 border-t border-line px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+    >
+      <Button variant="secondary" data-filter-clear>Clear</Button>
+      <Button data-filter-close data-sheet-apply>Show {count(items.length)}</Button>
+    </div>
+  </dialog>
+
+  <script type="application/json" id="listing-data" set:html={JSON.stringify(items)} />
+</BaseLayout>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    dialog[open] {
+      animation: sheet-up 200ms ease-out;
+    }
+  }
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+  }
+</style>
+
+<script>
+  import {
+    activeFilterCount,
+    compare,
+    matches,
+    parseState,
+    toQuery,
+    FILTER_KEYS,
+    type FilterState,
+    type ListingItem,
+    type Sort,
+  } from '../../lib/project-filters';
+
+  const items: ListingItem[] = JSON.parse(document.getElementById('listing-data')!.textContent!);
+  const form = document.getElementById('project-filters') as HTMLFormElement;
+  const sortSelect = document.getElementById('field-sort') as HTMLSelectElement;
+  const grid = document.querySelector<HTMLElement>('[data-project-grid]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const home = document.querySelector<HTMLElement>('[data-filter-home]')!;
+  const sheet = document.querySelector<HTMLDialogElement>('[data-filter-sheet]')!;
+  const slot = sheet.querySelector<HTMLElement>('[data-sheet-slot]')!;
+  const countBadge = document.querySelector<HTMLElement>('[data-filter-count]')!;
+  const resultCount = document.querySelector<HTMLElement>('[data-result-count]')!;
+  const resultCountMobile = document.querySelector<HTMLElement>('[data-result-count-mobile]')!;
+  const applyButton = sheet.querySelector<HTMLElement>('[data-sheet-apply]')!;
+  const clearButtons = document.querySelectorAll<HTMLButtonElement>('[data-filter-clear]');
+  const cards = new Map(
+    [...grid.querySelectorAll<HTMLElement>('[data-project]')].map((el) => [el.dataset.project!, el]),
+  );
+
+  const field = (name: string) => form.elements.namedItem(name) as HTMLSelectElement;
+  const locationValues = [...field('location').options].map((o) => o.value).filter(Boolean);
+
+  function readForm(): FilterState {
+    const state = { sort: sortSelect.value as Sort } as FilterState;
+    for (const key of FILTER_KEYS) state[key] = field(key).value;
+    return state;
+  }
+
+  function writeForm(state: FilterState) {
+    for (const key of FILTER_KEYS) field(key).value = state[key];
+    sortSelect.value = state.sort;
+  }
+
+  const plural = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
+
+  function render(state: FilterState) {
+    const visible = items.filter((item) => matches(item, state)).sort(compare(state.sort));
+    const shown = new Set(visible.map((i) => i.slug));
+
+    // Re-append in sorted order, then hide the ones that don't match.
+    for (const item of [...visible, ...items.filter((i) => !shown.has(i.slug))]) {
+      const card = cards.get(item.slug)!;
+      card.hidden = !shown.has(item.slug);
+      grid.append(card);
+    }
+
+    const n = visible.length;
+    empty.hidden = n > 0;
+    grid.hidden = n === 0;
+    resultCount.textContent = plural(n);
+    resultCountMobile.textContent = plural(n);
+    applyButton.textContent = n === 0 ? 'No matches' : `Show ${plural(n)}`;
+
+    const active = activeFilterCount(state);
+    countBadge.hidden = active === 0;
+    countBadge.textContent = String(active);
+    // The empty state's own button stays visible; the toolbar one only when filters are set.
+    clearButtons.forEach((b) => {
+      if (!b.closest('[data-empty]') && !b.closest('[data-filter-sheet]')) b.hidden = active === 0;
+    });
+
+    history.replaceState(null, '', `${location.pathname}${toQuery(state)}${location.hash}`);
+  }
+
+  const update = () => render(readForm());
+
+  form.addEventListener('change', update);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    update();
+  });
+  sortSelect.addEventListener('change', update);
+
+  clearButtons.forEach((b) =>
+    b.addEventListener('click', () => {
+      writeForm({ ...readForm(), location: '', type: '', status: '', bhk: '', budget: '' });
+      update();
+    }),
+  );
+
+  // Mobile bottom sheet: move the same form into the dialog so state is never duplicated.
+  const openSheet = () => {
+    slot.append(form);
+    sheet.showModal();
+  };
+  sheet.addEventListener('close', () => home.append(form));
+  document.querySelector('[data-filter-open]')!.addEventListener('click', openSheet);
+  sheet.querySelectorAll('[data-filter-close]').forEach((b) => b.addEventListener('click', () => sheet.close()));
+  // Tap on the backdrop closes the sheet.
+  sheet.addEventListener('click', (e) => {
+    if (e.target === sheet) sheet.close();
+  });
+  matchMedia('(min-width: 48rem)').addEventListener('change', (e) => e.matches && sheet.open && sheet.close());
+
+  const initial = parseState(new URLSearchParams(location.search), locationValues);
+  writeForm(initial);
+  render(initial);
+</script>

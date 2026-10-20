@@ -1,8 +1,11 @@
 ---
 import Ring from './Ring.astro';
-
-type Status = 'upcoming' | 'under-construction' | 'ready-to-move';
-type Category = 'residential' | 'commercial' | 'plot' | 'pg-rental';
+import {
+  STATUS_LABELS,
+  TYPE_LABELS,
+  type ProjectStatus as Status,
+  type ProjectType as Category,
+} from '../lib/project-filters';
 
 /**
  * Pass one of:
@@ -18,17 +21,11 @@ type Props =
 
 const props = Astro.props;
 
-const statusLabels: Record<Status, string> = {
-  upcoming: 'Upcoming',
-  'under-construction': 'Under construction',
-  'ready-to-move': 'Ready to move',
-};
-
-const categoryStyles: Record<Category, { label: string; class: string }> = {
-  residential: { label: 'Residential', class: 'bg-neem text-white' },
-  commercial: { label: 'Commercial', class: 'bg-slate text-white' },
-  plot: { label: 'Plot', class: 'bg-ink text-paper' },
-  'pg-rental': { label: 'PG / rental', class: 'bg-ink text-paper' },
+const categoryStyles: Record<Category, string> = {
+  residential: 'bg-neem text-white',
+  commercial: 'bg-slate text-white',
+  plot: 'bg-ink text-paper',
+  'pg-rental': 'bg-ink text-paper',
 };
 
 // Status badges sit on paper or white: outlined, so they read as a fact, not a promo.
@@ -48,14 +45,14 @@ const base =
       {props.status === 'ready-to-move' && (
         <span aria-hidden="true" class="size-1.5 rounded-full bg-neem" />
       )}
-      {statusLabels[props.status]}
+      {STATUS_LABELS[props.status]}
     </span>
   )
 }
 {
   'category' in props && props.category && (
-    <span class:list={[base, categoryStyles[props.category].class, props.class]}>
-      {categoryStyles[props.category].label}
+    <span class:list={[base, categoryStyles[props.category], props.class]}>
+      {TYPE_LABELS[props.category]}
     </span>
   )
 }
