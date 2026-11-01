@@ -20,7 +20,7 @@ const compact = variant === 'compact';
 const sizes = compact ? '(min-width: 1200px) 640px, (min-width: 1024px) 54vw, 100vw' : '(min-width: 1200px) 1168px, 100vw';
 ---
 
-<div class:list={['relative overflow-hidden bg-sand', compact ? 'rounded-card' : 'md:rounded-card']} role="region" aria-roledescription="carousel" aria-label={label} data-carousel>
+<div class:list={['relative overflow-hidden bg-surface', compact ? 'rounded-card' : 'md:rounded-card']} role="region" aria-roledescription="carousel" aria-label={label} data-carousel>
   <ul
     class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     data-carousel-track
@@ -44,7 +44,7 @@ const sizes = compact ? '(min-width: 1200px) 640px, (min-width: 1024px) 54vw, 10
               loading={i === 0 ? 'eager' : 'lazy'}
               fetchpriority={i === 0 ? 'high' : 'auto'}
               class:list={[
-                'w-full bg-ink object-contain',
+                'w-full bg-canvas object-contain',
                 compact ? 'aspect-[2/1]' : 'aspect-[16/10] md:aspect-auto md:h-[min(62vh,520px)]',
               ]}
             />
@@ -65,7 +65,7 @@ const sizes = compact ? '(min-width: 1200px) 640px, (min-width: 1024px) 54vw, 10
             />
           )}
           {slide.caption && (
-            <p class="absolute bottom-3 left-3 max-w-[80%] rounded-badge bg-paper/90 px-2 py-0.5 text-small text-stone">
+            <p class="absolute bottom-3 left-3 max-w-[80%] rounded-badge bg-canvas/90 px-2 py-0.5 text-small text-mist">
               {slide.caption}
             </p>
           )}
@@ -80,7 +80,7 @@ const sizes = compact ? '(min-width: 1200px) 640px, (min-width: 1024px) 54vw, 10
         <button
           type="button"
           data-carousel-prev
-          class:list={['absolute top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex', compact ? 'size-10 left-2 opacity-80 hover:opacity-100' : 'size-12 left-3']}
+          class:list={['absolute top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-canvas/90 text-alabaster shadow-float hover:bg-canvas sm:inline-flex', compact ? 'size-10 left-2 opacity-80 hover:opacity-100' : 'size-12 left-3']}
         >
           <span class="sr-only">Previous image</span>
           <Icon name="chevronLeft" size={24} />
@@ -88,13 +88,13 @@ const sizes = compact ? '(min-width: 1200px) 640px, (min-width: 1024px) 54vw, 10
         <button
           type="button"
           data-carousel-next
-          class:list={['absolute top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink shadow-float hover:bg-paper sm:inline-flex', compact ? 'size-10 right-2 opacity-80 hover:opacity-100' : 'size-12 right-3']}
+          class:list={['absolute top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-canvas/90 text-alabaster shadow-float hover:bg-canvas sm:inline-flex', compact ? 'size-10 right-2 opacity-80 hover:opacity-100' : 'size-12 right-3']}
         >
           <span class="sr-only">Next image</span>
           <Icon name="chevronRight" size={24} />
         </button>
         <p
-          class="absolute right-3 bottom-3 rounded-badge bg-ink/80 px-2 py-0.5 font-display text-small font-bold text-paper tabular-nums"
+          class="absolute right-3 bottom-3 rounded-badge bg-canvas/80 px-2 py-0.5 text-small font-semibold text-alabaster tabular-nums"
           data-carousel-count
           aria-hidden="true"
         >

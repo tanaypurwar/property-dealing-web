@@ -21,16 +21,16 @@ const { id, label, items } = Astro.props;
   id={id}
   data-lightbox
   aria-label={label}
-  class="m-0 h-dvh max-h-none w-full max-w-none bg-ink/95 p-0 text-paper backdrop:bg-ink/80 open:flex open:flex-col"
+  class="m-0 h-dvh max-h-none w-full max-w-none bg-canvas/95 p-0 text-alabaster backdrop:bg-canvas/80 open:flex open:flex-col"
 >
   <div class="flex items-center justify-between gap-4 px-4 py-2">
-    <p class="font-display text-small font-bold tabular-nums" aria-live="polite" data-lightbox-count>
+    <p class="text-small font-semibold tabular-nums" aria-live="polite" data-lightbox-count>
       1 of {items.length}
     </p>
     <button
       type="button"
       data-lightbox-close
-      class="inline-flex size-tap items-center justify-center rounded-control hover:bg-paper/10"
+      class="inline-flex size-tap items-center justify-center rounded-control hover:bg-canvas/10"
     >
       <span class="sr-only">Close</span>
       <Icon name="close" size={26} />
@@ -47,9 +47,9 @@ const { id, label, items } = Astro.props;
             width={Math.min(1600, item.src.width)}
             height={Math.round((Math.min(1600, item.src.width) * item.src.height) / item.src.width)}
             loading="lazy"
-            class="max-h-[calc(100%-3rem)] w-auto max-w-full rounded-control bg-paper object-contain"
+            class="max-h-[calc(100%-3rem)] w-auto max-w-full rounded-control bg-canvas object-contain"
           />
-          {item.caption && <figcaption class="text-center text-paper/85">{item.caption}</figcaption>}
+          {item.caption && <figcaption class="text-center text-alabaster/85">{item.caption}</figcaption>}
         </figure>
       ))
     }
@@ -59,7 +59,7 @@ const { id, label, items } = Astro.props;
           <button
             type="button"
             data-lightbox-prev
-            class="absolute top-1/2 left-2 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-ink/70 hover:bg-ink"
+            class="absolute top-1/2 left-2 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/70 hover:bg-champagne-soft"
           >
             <span class="sr-only">Previous image</span>
             <Icon name="chevronLeft" size={26} />
@@ -67,7 +67,7 @@ const { id, label, items } = Astro.props;
           <button
             type="button"
             data-lightbox-next
-            class="absolute top-1/2 right-2 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-ink/70 hover:bg-ink"
+            class="absolute top-1/2 right-2 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/70 hover:bg-champagne-soft"
           >
             <span class="sr-only">Next image</span>
             <Icon name="chevronRight" size={26} />

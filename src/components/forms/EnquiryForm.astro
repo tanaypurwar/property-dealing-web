@@ -55,12 +55,12 @@ const callTimes = [
 <section
   id={id}
   aria-labelledby={`${id}-title`}
-  class:list={['rounded-card border border-line bg-white p-5 transition-shadow duration-300 sm:p-6', className]}
+  class:list={['rounded-card border border-line bg-surface p-5 transition-shadow duration-300 sm:p-6', className]}
   data-lead-section
 >
   <div data-lead-body>
-    <h2 id={`${id}-title`} class="text-h4 font-extrabold">{title}</h2>
-    <p class="mt-1 text-stone">{intro}</p>
+    <h2 id={`${id}-title`} class="text-h4 font-medium">{title}</h2>
+    <p class="mt-1 text-mist">{intro}</p>
 
     <form
       class="mt-4 flex flex-col gap-3.5"
@@ -111,12 +111,12 @@ const callTimes = [
       </div>
 
       <Button type="submit" size="lg" block>{submitLabel}</Button>
-      <p data-lead-error hidden role="alert" class="text-small font-medium text-deep"></p>
+      <p data-lead-error hidden role="alert" class="text-small font-medium text-alert"></p>
       <a
         href={whatsappUrl(whatsappMessage)}
         target="_blank"
         rel="noopener"
-        class="inline-flex min-h-tap items-center justify-center gap-2 font-display text-small font-bold text-neem hover:underline"
+        class="inline-flex min-h-tap items-center justify-center gap-2 text-small font-semibold text-neem hover:underline"
       >
         <Icon name="chat" size={18} />
         Prefer WhatsApp? Chat with an advisor
@@ -128,8 +128,8 @@ const callTimes = [
     <span class="grid size-12 place-items-center rounded-full bg-neem text-white">
       <Icon name="check" size={26} />
     </span>
-    <h2 class="text-h4 font-extrabold" data-success-title>Thank you</h2>
-    <p class="text-stone" data-success-text></p>
+    <h2 class="text-h4 font-medium" data-success-title>Thank you</h2>
+    <p class="text-mist" data-success-text></p>
   </div>
 </section>
 
@@ -196,8 +196,8 @@ const callTimes = [
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
       target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
       (form.elements.namedItem('name') as HTMLInputElement).focus({ preventScroll: true });
-      target.classList.add('ring-4', 'ring-sun/40');
-      setTimeout(() => target.classList.remove('ring-4', 'ring-sun/40'), 1600);
+      target.classList.add('ring-4', 'ring-champagne/40');
+      setTimeout(() => target.classList.remove('ring-4', 'ring-champagne/40'), 1600);
     });
   }
 </script>

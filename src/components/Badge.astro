@@ -10,9 +10,9 @@ import {
 /**
  * Pass one of:
  * - `status` for construction stage,
- * - `category` for the project type (Neem / Slate per the brand book),
- * - `launch` for the Sunrise "New launch" badge.
- * Category and launch badges are solid so they hold up on photos.
+ * - `category` for the project type,
+ * - `launch` for the "New launch" badge.
+ * All three are muted, translucent capsules so they read as facts, not promos, on photos and on canvas.
  */
 type Props =
   | { status: Status; category?: never; launch?: never; class?: string }
@@ -21,45 +21,34 @@ type Props =
 
 const props = Astro.props;
 
-const categoryStyles: Record<Category, string> = {
-  residential: 'bg-neem text-white',
-  commercial: 'bg-slate text-white',
-  plot: 'bg-ink text-paper',
-  'pg-rental': 'bg-ink text-paper',
-};
-
-// Status badges sit on paper or white: outlined, so they read as a fact, not a promo.
-const statusStyles: Record<Status, string> = {
-  upcoming: 'border-stone text-stone bg-paper',
-  'under-construction': 'border-ink text-ink bg-paper',
-  'ready-to-move': 'border-neem text-neem bg-paper',
+// Only "ready to move" gets a lit dot: it is the one status a buyer can act on today.
+const statusDot: Record<Status, string> = {
+  upcoming: 'border border-mist',
+  'under-construction': 'bg-mist',
+  'ready-to-move': 'bg-champagne',
 };
 
 const base =
-  'inline-flex items-center gap-1.5 rounded-badge px-2 py-0.5 font-display text-small font-bold whitespace-nowrap';
+  'inline-flex items-center gap-1.5 rounded-badge border border-alabaster/15 bg-canvas/65 px-2.5 py-0.5 text-[0.75rem] leading-5 font-medium tracking-[0.01em] whitespace-nowrap text-alabaster backdrop-blur-md';
 ---
 
 {
   'status' in props && props.status && (
-    <span class:list={[base, 'border-[1.5px]', statusStyles[props.status], props.class]}>
-      {props.status === 'ready-to-move' && (
-        <span aria-hidden="true" class="size-1.5 rounded-full bg-neem" />
-      )}
+    <span class:list={[base, props.class]}>
+      <span aria-hidden="true" class:list={['size-1.5 rounded-full', statusDot[props.status]]} />
       {STATUS_LABELS[props.status]}
     </span>
   )
 }
 {
   'category' in props && props.category && (
-    <span class:list={[base, categoryStyles[props.category], props.class]}>
-      {TYPE_LABELS[props.category]}
-    </span>
+    <span class:list={[base, props.class]}>{TYPE_LABELS[props.category]}</span>
   )
 }
 {
   'launch' in props && props.launch && (
-    <span class:list={[base, 'bg-sun text-ink font-extrabold', props.class]}>
-      <Ring tone="ink" />
+    <span class:list={[base, 'border-champagne/50 text-champagne', props.class]}>
+      <Ring />
       New launch
     </span>
   )

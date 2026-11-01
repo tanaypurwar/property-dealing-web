@@ -45,53 +45,54 @@ const headingId = `project-${p.slug}`;
 
 <article
   aria-labelledby={headingId}
-  class="relative flex flex-col overflow-hidden rounded-card border border-line bg-white"
+  class="group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface/50 transition-[border-color,box-shadow] duration-200 hover:border-champagne/40 hover:ring-1 hover:ring-champagne/25 focus-within:border-champagne/40 focus-within:ring-1 focus-within:ring-champagne/25"
 >
-  <a href={href} tabindex="-1" aria-hidden="true" class="relative block bg-sand">
+  <!-- Fixed 16:9 frame reserves the image space before it loads, so the grid never shifts. -->
+  <a href={href} tabindex="-1" aria-hidden="true" class="relative block aspect-video overflow-hidden bg-raised">
     <Image
       src={p.images.hero.src}
       alt={p.images.hero.alt}
       width={800}
-      height={500}
+      height={450}
       widths={[400, 640, 800]}
       sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : 'auto'}
-      class="aspect-[16/10] w-full object-cover"
+      class="size-full object-cover"
     />
     {
       p.images.hero.caption && (
-        <span class="absolute right-2.5 bottom-2.5 max-w-[calc(100%-1.25rem)] rounded-badge bg-paper/90 px-2 py-0.5 text-[0.75rem] leading-4 text-stone">
+        <span class="absolute right-2.5 bottom-2.5 max-w-[calc(100%-1.25rem)] rounded-badge bg-canvas/70 px-2.5 py-0.5 text-[0.6875rem] leading-4 text-alabaster/80 backdrop-blur-md">
           {p.images.hero.caption}
         </span>
       )
     }
   </a>
   <!-- Outside the aria-hidden image link so screen readers still hear type and status. -->
-  <div class="pointer-events-none absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 pr-2.5">
+  <div class="pointer-events-none absolute top-3 left-3 flex flex-wrap gap-1.5 pr-3">
     <Badge category={p.type} />
     <Badge status={p.status} />
     {newLaunch && <Badge launch />}
   </div>
 
-  <div class="flex flex-1 flex-col gap-3 p-4">
+  <div class="flex flex-1 flex-col gap-4 p-5">
     <div class="flex flex-col gap-1">
-      <p class="font-display text-small font-bold text-stone">{p.developer}</p>
-      <h3 id={headingId} class="text-[1.1875rem] leading-6 font-extrabold">
-        <a href={href} class="hover:text-deep hover:underline">{p.name}</a>
+      <p class="text-small font-medium text-mist">{p.developer}</p>
+      <h3 id={headingId} class="text-[1.625rem] leading-[1.875rem] font-medium">
+        <a href={href} class="decoration-1 underline-offset-4 hover:text-champagne hover:underline">{p.name}</a>
       </h3>
-      <p class="text-[0.9375rem] text-stone">{area}</p>
+      <p class="text-[0.9375rem] text-mist">{area}</p>
     </div>
 
-    <ul class="flex flex-wrap gap-x-4 gap-y-1 text-[0.875rem]">
+    <ul class="flex flex-wrap gap-x-4 gap-y-1.5 text-[0.875rem] text-alabaster/90">
       <li>{configurationSummary(p.configurations)}</li>
-      <li class="tabular-nums">
+      <li class="figures">
         {areaSummary(p.configurations).label === 'Area' ? 'Area on request' : areaSummary(p.configurations).value}
         {areaSummary(p.configurations).label === 'Saleable area' && ' saleable'}
       </li>
       {
         p.possessionDate && (
-          <li>
+          <li class="figures">
             {p.status === 'ready-to-move' ? 'Ready since' : 'Possession'} {formatMonth(p.possessionDate)}
           </li>
         )
@@ -103,17 +104,17 @@ const headingId = `project-${p.slug}`;
       max={p.priceRange.max}
       from={p.priceRange.max === undefined}
       note={priceLabel(p)}
-      class="border-t border-dashed border-line pt-3"
+      class="border-t border-line pt-4"
     />
 
     {
       p.reraStatus === 'registered' ? (
-        <p class="flex items-center gap-1.5 text-small text-stone">
+        <p class="flex items-center gap-1.5 text-small text-mist">
           <Ring />
-          <span>UP RERA <span class="tabular-nums">{p.reraNumber}</span>, verified by our team</span>
+          <span>UP RERA <span class="figures">{p.reraNumber}</span>, verified by our team</span>
         </p>
       ) : (
-        <p class="text-small font-medium text-deep">UP RERA: applied for, not yet registered</p>
+        <p class="text-small font-medium text-alert">UP RERA: applied for, not yet registered</p>
       )
     }
 

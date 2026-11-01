@@ -1,20 +1,18 @@
 ---
 import { Image } from 'astro:assets';
-import Logo from '../../../brand/logo/propertydealing-horizontal-reversed.svg';
+import Logo from '../../../brand/logo/propertydealing-mono-white.svg';
 import Icon from '../Icon.astro';
 import SkylineRule from '../SkylineRule.astro';
 import { site } from '../../config/site';
 import { whatsappUrl } from '../../lib/whatsapp';
 
 const year = new Date().getFullYear();
-const linkClass = 'inline-flex min-h-tap items-center text-paper/85 hover:text-paper hover:underline';
-const headingClass = 'font-display text-[0.9375rem] font-bold text-sun';
+const linkClass = 'inline-flex min-h-tap items-center text-alabaster/85 hover:text-alabaster hover:underline';
+const headingClass = 'text-small font-medium tracking-[0.02em] text-champagne';
 ---
 
-<footer class="bg-ink text-paper">
-  <div class="bg-paper">
-    <SkylineRule class="-mb-px" />
-  </div>
+<footer class="bg-surface/40 text-alabaster">
+  <SkylineRule class="-mb-px bg-canvas" />
 
   <div class="mx-auto grid max-w-site grid-cols-2 gap-x-6 gap-y-10 px-4 pt-12 pb-8 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:gap-8">
     <div class="col-span-2 flex flex-col gap-4 lg:col-span-1">
@@ -22,12 +20,12 @@ const headingClass = 'font-display text-[0.9375rem] font-bold text-sun';
       <a href="/" class="inline-flex min-h-tap w-fit items-center">
         <Image src={Logo} alt={`${site.name} home`} width={168} height={23} class="h-auto w-[168px]" />
       </a>
-      <p class="font-display text-lead font-bold">{site.tagline}</p>
-      <p class="max-w-[40ch] text-paper/75">
+      <p class="font-display text-h4 font-medium">{site.tagline}</p>
+      <p class="max-w-[40ch] text-alabaster/75">
         A RERA-certified property advisory in Noida and Greater Noida. Every project we list is
         verified by our team and comes with an all-inclusive price sheet.
       </p>
-      <p class="text-small text-paper/75">UP RERA agent registration {site.agentRera}</p>
+      <p class="text-small text-alabaster/75">UP RERA agent registration {site.agentRera}</p>
     </div>
 
     <nav aria-label="Quick links">
@@ -52,7 +50,7 @@ const headingClass = 'font-display text-[0.9375rem] font-bold text-sun';
       <h2 class={headingClass}>Talk to an advisor</h2>
       <ul class="mt-2">
         <li>
-          <a href={`tel:${site.phone}`} class:list={[linkClass, 'gap-3 font-display font-bold text-paper tabular-nums']}>
+          <a href={`tel:${site.phone}`} class:list={[linkClass, 'gap-3 font-semibold text-alabaster tabular-nums']}>
             <Icon name="phone" size={18} />{site.phoneDisplay}
           </a>
         </li>
@@ -66,8 +64,8 @@ const headingClass = 'font-display text-[0.9375rem] font-bold text-sun';
             <Icon name="mail" size={18} />{site.email}
           </a>
         </li>
-        <li class="flex gap-3 py-2.5 text-paper/85"><Icon name="pin" size={18} class="mt-1" />{site.address}</li>
-        <li class="flex gap-3 py-2.5 text-paper/85"><Icon name="clock" size={18} class="mt-1" />{site.hours}</li>
+        <li class="flex gap-3 py-2.5 text-alabaster/85"><Icon name="pin" size={18} class="mt-1" />{site.address}</li>
+        <li class="flex gap-3 py-2.5 text-alabaster/85"><Icon name="clock" size={18} class="mt-1" />{site.hours}</li>
       </ul>
       <ul class="mt-3 flex flex-wrap gap-x-5" aria-label="Social media">
         {site.social.map((s) => (
@@ -77,13 +75,13 @@ const headingClass = 'font-display text-[0.9375rem] font-bold text-sun';
     </div>
   </div>
 
-  <div class="border-t border-paper/15">
-    <div class="mx-auto flex max-w-site flex-col gap-3 px-4 pt-6 pb-24 text-small text-paper/65 sm:px-6 md:pb-8">
+  <div class="border-t border-line">
+    <div class="mx-auto flex max-w-site flex-col gap-3 px-4 pt-6 pb-24 text-small text-alabaster/65 sm:px-6 md:pb-8">
       <p class="max-w-[90ch]">
         {site.name} is a real estate agent registered with UP RERA ({site.agentRera}). Project
         details, prices and possession dates come from the developer and the project's UP RERA
         filing, and can change. Check the latest filing on{' '}
-        <a href="https://up-rera.in" target="_blank" rel="noopener" class="underline hover:text-paper">up-rera.in</a>{' '}
+        <a href="https://up-rera.in" target="_blank" rel="noopener" class="underline hover:text-alabaster">up-rera.in</a>{' '}
         before you pay any amount. Prices are all-inclusive unless stated. Renders are artist's
         impressions, not site photos.
       </p>

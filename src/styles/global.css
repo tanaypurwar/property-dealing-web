@@ -1,72 +1,76 @@
 @import "tailwindcss";
 
-/* Brand tokens from brand/brand-book.html. Use these utilities (bg-ink, text-sun, font-display…) instead of raw hex values. */
+/* Brand tokens from brand/brand-book.html. Use these utilities (bg-canvas, text-champagne, border-line, font-display…) instead of raw hex values. */
 @theme {
-  --color-ink: #1c1b19;
-  --color-paper: #faf7f2;
-  --color-sand: #efe8dc;
-  --color-line: #e3dccf; /* hairline borders on paper and white */
-  --color-stone: #6b665e;
-  --color-sun: #f26b1d; /* graphics and ink-on-sun badges only, never as a text colour on light grounds */
-  --color-deep: #b84a0e; /* CTA buttons (white text), links on light */
-  --color-neem: #2f6b4f; /* residential, WhatsApp */
-  --color-slate: #3d4b5a; /* commercial */
+  /* Architectural neutrals with one champagne accent. Dark by default: the site has no light theme. */
+  --color-canvas: #0f0e0e; /* page ground, and text on champagne */
+  --color-surface: #1c1917; /* cards, panels, inputs */
+  --color-raised: #292524; /* hover and pressed states on surface */
+  --color-alabaster: #ece6dc; /* primary text */
+  --color-mist: #a8a29e; /* secondary text, 7.6:1 on canvas */
+  --color-line: rgb(41 37 36 / 0.6); /* 1px hairline dividers (stone-800/60) */
+  --color-edge: #78716c; /* form control borders, 3:1 against surface */
+  --color-champagne: #d4af37; /* accent, links, primary CTA (canvas text) */
+  --color-champagne-soft: #e3c766; /* hover on champagne */
+  --color-neem: #2f6b4f; /* WhatsApp only, white text */
+  --color-alert: #e8907a; /* form errors, 7:1 on canvas */
 
-  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Mukta", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  /* Mukta stays in the stack to render Devanagari (Hindi); Plus Jakarta has no Devanagari glyphs. */
+  --font-sans: "Plus Jakarta Sans", "Mukta", ui-sans-serif, system-ui, sans-serif;
 
-  /* Type scale: 1.25 ratio from a 16px base (brand book, Part C). On mobile, step headings down one size: text-h2 md:text-h1. */
+  /* Sans UI sizes stay on a 16px base. Serif headings run larger: Cormorant has a small x-height. */
   --text-small: 0.8125rem;
   --text-small--line-height: 1.25rem;
   --text-body: 1rem;
-  --text-body--line-height: 1.625rem;
-  --text-lead: 1.25rem;
+  --text-body--line-height: 1.7rem;
+  --text-lead: 1.1875rem;
   --text-lead--line-height: 1.875rem;
-  --text-h4: 1.5625rem;
-  --text-h4--line-height: 1.875rem;
-  --text-h3: 1.9375rem;
-  --text-h3--line-height: 2.25rem;
-  --text-h2: 2.4375rem;
-  --text-h2--line-height: 2.75rem;
+  --text-h4: 1.75rem;
+  --text-h4--line-height: 2.0625rem;
+  --text-h3: 2.25rem;
+  --text-h3--line-height: 2.5rem;
+  --text-h2: 2.875rem;
+  --text-h2--line-height: 3.0625rem;
   --text-h2--letter-spacing: -0.01em;
-  --text-h1: 3.8125rem;
-  --text-h1--line-height: 4rem;
+  --text-h1: 4.5rem;
+  --text-h1--line-height: 4.5rem;
   --text-h1--letter-spacing: -0.02em;
 
   /* Spacing keeps Tailwind's 4px scale. `tap` is the minimum touch target. */
   --spacing-tap: 2.75rem;
   --container-site: 75rem;
 
-  /* Radius by role, so hierarchy stays consistent: badges < controls < cards. */
-  --radius-badge: 5px;
-  --radius-control: 8px;
-  --radius-card: 12px;
+  /* Radius by role: badges are capsules, controls and cards stay nearly square. */
+  --radius-badge: 999px;
+  --radius-control: 3px;
+  --radius-card: 4px;
 
-  /* Cards and panels use borders, not shadows. Shadows are only for things that float above the page. */
-  --shadow-float: 0 8px 24px -8px rgb(28 27 25 / 0.35);
-  --shadow-raise: 0 12px 32px -12px rgb(28 27 25 / 0.25);
+  /* Cards and panels use hairlines, not shadows. Shadows are only for things that float above the page. */
+  --shadow-float: 0 12px 32px -8px rgb(0 0 0 / 0.7);
+  --shadow-raise: 0 16px 40px -16px rgb(0 0 0 / 0.8);
 }
 
 /* Long-form Markdown (blog posts). Body text at a readable measure; tables in tabular figures. */
 @layer components {
   .prose-site {
-    @apply max-w-[68ch] text-[1.0625rem] leading-[1.75] text-ink;
+    @apply max-w-[68ch] text-[1.0625rem] leading-[1.75] text-alabaster;
   }
   .prose-site > * + * {
     @apply mt-5;
   }
   .prose-site h2 {
-    @apply mt-12 text-h4 font-extrabold md:text-h3;
+    @apply mt-12 text-h4 font-medium md:text-h3;
   }
   .prose-site h3 {
-    @apply mt-8 text-lead font-bold;
+    @apply mt-8 font-sans text-lead font-semibold;
   }
   .prose-site h2 + *,
   .prose-site h3 + * {
     @apply mt-3;
   }
   .prose-site a {
-    @apply font-medium text-deep underline decoration-1 underline-offset-2 hover:text-ink;
+    @apply font-medium text-champagne underline decoration-1 underline-offset-2 hover:text-alabaster;
   }
   .prose-site strong {
     @apply font-semibold;
@@ -82,16 +86,16 @@
     @apply list-decimal;
   }
   .prose-site li::marker {
-    @apply text-stone;
+    @apply text-mist;
   }
   .prose-site blockquote {
-    @apply rounded-card border-l-4 border-sun bg-sand px-5 py-4 text-ink;
+    @apply rounded-card border-l border-champagne py-1 pl-6 font-display text-h4 leading-snug text-alabaster;
   }
   .prose-site table {
     @apply block w-full overflow-x-auto text-left text-body tabular-nums sm:table;
   }
   .prose-site th {
-    @apply border-b-2 border-ink py-2 pr-4 font-display text-small font-bold text-stone;
+    @apply border-b border-edge py-2 pr-4 text-small font-semibold text-mist;
   }
   .prose-site td {
     @apply border-b border-line py-2.5 pr-4 align-top;
@@ -100,23 +104,33 @@
 
 @layer base {
   html {
+    color-scheme: dark;
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: 5rem; /* clears the sticky header for #anchor links */
   }
 
   body {
-    @apply bg-paper font-sans text-body text-ink antialiased;
+    @apply bg-canvas font-sans text-body text-alabaster antialiased;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display text-balance;
+    @apply font-display font-medium text-balance;
+  }
+
+  ::selection {
+    @apply bg-champagne text-canvas;
+  }
+
+  /* Tabular figures for every price, area and date, so stacked numbers align. */
+  .figures {
+    @apply font-sans tabular-nums tracking-tight;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-deep);
+    outline: 2px solid var(--color-champagne);
     outline-offset: 2px;
   }
 

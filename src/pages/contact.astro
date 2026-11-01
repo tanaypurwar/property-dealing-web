@@ -31,15 +31,15 @@ const jsonLd = [
 >
   <EnquirySection as="h1">
     <li>
-      <a href={`mailto:${site.email}`} class="inline-flex min-h-tap items-center gap-3 break-all hover:text-sun">
+      <a href={`mailto:${site.email}`} class="inline-flex min-h-tap items-center gap-3 break-all hover:text-champagne">
         <Icon name="mail" size={20} />{site.email}
       </a>
     </li>
-    <li class="flex min-h-tap items-center gap-3 text-paper/80"><Icon name="pin" size={20} />{site.address}</li>
-    <li class="mt-4 flex flex-wrap gap-x-5 border-t border-paper/15 pt-4">
+    <li class="flex min-h-tap items-center gap-3 text-alabaster/80"><Icon name="pin" size={20} />{site.address}</li>
+    <li class="mt-4 flex flex-wrap gap-x-5 border-t border-alabaster/15 pt-4">
       {
         site.social.map((s) => (
-          <a href={s.href} target="_blank" rel="noopener" class="inline-flex min-h-tap items-center text-paper/80 hover:text-sun hover:underline">
+          <a href={s.href} target="_blank" rel="noopener" class="inline-flex min-h-tap items-center text-alabaster/80 hover:text-champagne hover:underline">
             {s.label}
           </a>
         ))

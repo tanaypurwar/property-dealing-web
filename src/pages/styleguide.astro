@@ -14,51 +14,53 @@ import { formatArea, formatAreaRange, formatPrice, formatPriceRange } from '../l
 const samples = (await getCollection('projects')).map((e) => e.data);
 
 const colours = [
-  { name: 'Ink', token: 'ink', hex: '#1C1B19', role: 'Text, headings, dark plates', swatch: 'bg-ink', dark: true },
-  { name: 'Paper', token: 'paper', hex: '#FAF7F2', role: 'Page ground', swatch: 'bg-paper', dark: false },
-  { name: 'Sand', token: 'sand', hex: '#EFE8DC', role: 'Panels, form fields', swatch: 'bg-sand', dark: false },
-  { name: 'Line', token: 'line', hex: '#E3DCCF', role: 'Hairline borders', swatch: 'bg-line', dark: false },
-  { name: 'Stone', token: 'stone', hex: '#6B665E', role: 'Secondary text, captions', swatch: 'bg-stone', dark: true },
-  { name: 'Sunrise', token: 'sun', hex: '#F26B1D', role: 'Sun, rings, badges. Ink text only', swatch: 'bg-sun', dark: false },
-  { name: 'Deep orange', token: 'deep', hex: '#B84A0E', role: 'CTA buttons, links', swatch: 'bg-deep', dark: true },
-  { name: 'Neem', token: 'neem', hex: '#2F6B4F', role: 'Residential, WhatsApp', swatch: 'bg-neem', dark: true },
-  { name: 'Slate', token: 'slate', hex: '#3D4B5A', role: 'Commercial', swatch: 'bg-slate', dark: true },
+  { name: 'Canvas', token: 'canvas', hex: '#0F0E0E', role: 'Page ground, text on champagne', swatch: 'bg-canvas', dark: true },
+  { name: 'Surface', token: 'surface', hex: '#1C1917', role: 'Cards, panels, inputs', swatch: 'bg-surface', dark: true },
+  { name: 'Raised', token: 'raised', hex: '#292524', role: 'Hover and pressed on surface', swatch: 'bg-raised', dark: true },
+  { name: 'Alabaster', token: 'alabaster', hex: '#ECE6DC', role: 'Primary text', swatch: 'bg-alabaster', dark: false },
+  { name: 'Mist', token: 'mist', hex: '#A8A29E', role: 'Secondary text, captions', swatch: 'bg-mist', dark: false },
+  { name: 'Line', token: 'line', hex: 'stone-800 / 60%', role: '1px hairline dividers', swatch: 'bg-line', dark: true },
+  { name: 'Edge', token: 'edge', hex: '#78716C', role: 'Form control borders', swatch: 'bg-edge', dark: true },
+  { name: 'Champagne', token: 'champagne', hex: '#D4AF37', role: 'Accent, links, primary CTA', swatch: 'bg-champagne', dark: false },
+  { name: 'Neem', token: 'neem', hex: '#2F6B4F', role: 'WhatsApp only', swatch: 'bg-neem', dark: true },
+  { name: 'Alert', token: 'alert', hex: '#E8907A', role: 'Form errors, RERA pending', swatch: 'bg-alert', dark: false },
 ];
 
 const typeScale = [
-  { cls: 'text-h1 font-extrabold font-display', label: 'h1 · 61/64 · 800', sample: 'Full price, upfront.' },
-  { cls: 'text-h2 font-extrabold font-display', label: 'h2 · 39/44 · 800', sample: 'New launches in Greater Noida' },
-  { cls: 'text-h3 font-bold font-display', label: 'h3 · 31/36 · 700', sample: 'Hero Homes, Sector Mu' },
-  { cls: 'text-h4 font-bold font-display', label: 'h4 · 25/30 · 700', sample: '3BHK, 1,650 sq. ft.' },
-  { cls: 'text-lead', label: 'lead · 20/30 · 400', sample: 'Every listing comes with its RERA number and an all-inclusive price breakup.' },
-  { cls: 'text-body', label: 'body · 16/26 · 400', sample: 'One advisor stays with you from the first site visit to registry, including loan paperwork.' },
-  { cls: 'text-small text-stone', label: 'small · 13/20 · 500', sample: 'Prices are all-inclusive unless stated.' },
-  { cls: 'text-lead font-medium', label: 'Hindi · Mukta 500', sample: 'भरोसा, लिखित में। पूरा दाम, पहले दिन से।' },
+  { cls: 'font-display text-h1 font-medium', label: 'h1 · Cormorant 72/72 · 500', sample: 'Full price, upfront.' },
+  { cls: 'font-display text-h2 font-medium', label: 'h2 · Cormorant 46/49 · 500', sample: 'New launches in Greater Noida' },
+  { cls: 'font-display text-h3 font-medium', label: 'h3 · Cormorant 36/40 · 500', sample: 'Hero Homes, Sector Mu' },
+  { cls: 'font-display text-h4 font-medium', label: 'h4 · Cormorant 28/33 · 500', sample: 'Leafsong Retreat' },
+  { cls: 'text-lead', label: 'lead · Plus Jakarta 19/30 · 400', sample: 'Every listing comes with its RERA number and an all-inclusive price breakup.' },
+  { cls: 'text-body', label: 'body · Plus Jakarta 16/27 · 400', sample: 'One advisor stays with you from the first site visit to registry, including loan paperwork.' },
+  { cls: 'figures text-lead font-semibold', label: 'figures · Plus Jakarta tabular · 600', sample: '₹1.82–2.52 Cr · 1,656 sq. ft.' },
+  { cls: 'text-small text-mist', label: 'small · 13/20 · 400', sample: 'Prices are all-inclusive unless stated.' },
+  { cls: 'text-lead', label: 'Hindi · Mukta 400 (fallback)', sample: 'भरोसा, लिखित में। पूरा दाम, पहले दिन से।' },
 ];
 
 const priceSamples = [4500000, 7850000, 9999900, 12000000, 12500000, 18500];
 const section = 'mx-auto max-w-site px-4 py-12 sm:px-6 md:py-16';
-const label = 'font-display text-small font-bold text-stone';
+const label = 'text-small font-semibold text-mist';
 ---
 
 <BaseLayout title="Styleguide" noindex>
   <div class={section}>
-    <h1 class="text-h2 font-extrabold md:text-h1">Styleguide</h1>
-    <p class="mt-3 max-w-[60ch] text-lead text-stone">
+    <h1 class="text-h2 font-medium md:text-h1">Styleguide</h1>
+    <p class="mt-3 max-w-[60ch] text-lead text-mist">
       Tokens and components for review. This page is not linked anywhere and is hidden from search
       engines. Resize the window to see the header menu and the mobile Call / WhatsApp bar.
     </p>
   </div>
 
   <section class={section} aria-labelledby="sg-colour">
-    <SectionHeading title="Colour" intro="Paper carries about 60% of any layout, Ink 22%. Sunrise stays near 6%, which is what keeps it calm." />
+    <SectionHeading title="Colour" intro="Canvas and surface carry almost every layout. Champagne stays rare: links, the primary button and the verification ring." />
     <ul id="sg-colour" class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
       {colours.map((c) => (
-        <li class="overflow-hidden rounded-card border border-line bg-white">
+        <li class="overflow-hidden rounded-card border border-line bg-surface">
           <div class:list={['h-20', c.swatch]} />
           <div class="p-3">
-            <p class="font-display font-bold">{c.name}</p>
-            <p class="text-small text-stone tabular-nums">{c.hex} · <code>{c.token}</code></p>
+            <p class="font-semibold">{c.name}</p>
+            <p class="text-small text-mist tabular-nums">{c.hex} · <code>{c.token}</code></p>
             <p class="mt-1 text-small">{c.role}</p>
           </div>
         </li>
@@ -67,7 +69,7 @@ const label = 'font-display text-small font-bold text-stone';
   </section>
 
   <section class={section} aria-label="Typography">
-    <SectionHeading title="Type" intro="Manrope for headings and prices, Mukta for body text and Hindi. A 1.25 scale from 16px; headings drop one step on mobile." />
+    <SectionHeading title="Type" intro="Cormorant Garamond for headings and project names. Plus Jakarta Sans for body text, prices and areas, with tabular figures. Mukta renders Hindi." />
     <ul class="mt-8 divide-y divide-line border-y border-line">
       {typeScale.map((t) => (
         <li class="grid gap-1 py-5 md:grid-cols-[12rem_1fr] md:items-baseline md:gap-6">
@@ -92,7 +94,7 @@ const label = 'font-display text-small font-bold text-stone';
         <Button>Medium</Button>
         <Button size="lg">Large</Button>
       </div>
-      <div class="flex flex-wrap items-center gap-3 rounded-card bg-ink p-5">
+      <div class="flex flex-wrap items-center gap-3 rounded-card bg-canvas p-5">
         <Button variant="inverse">Get price sheet</Button>
         <Button variant="whatsapp" icon="chat">Chat on WhatsApp</Button>
       </div>
@@ -132,7 +134,7 @@ const label = 'font-display text-small font-bold text-stone';
   <section class={section} aria-label="Prices">
     <SectionHeading title="Prices" intro="Stored as rupees, shown in Lakh and Cr through one helper. Figures are tabular so columns line up." />
     <div class="mt-8 grid gap-8 md:grid-cols-2">
-      <div class="flex flex-col gap-4 rounded-card bg-sand p-5">
+      <div class="flex flex-col gap-4 rounded-card bg-surface p-5">
         <PriceTag min={7800000} max={11000000} size="lg" />
         <PriceTag min={12000000} max={18000000} />
         <PriceTag min={4500000} max={6000000} />
@@ -150,17 +152,17 @@ const label = 'font-display text-small font-bold text-stone';
         <tbody>
           {priceSamples.map((n) => (
             <tr class="border-b border-line">
-              <td class="py-2 text-stone">{n}</td>
-              <td class="py-2 font-display font-bold">{formatPrice(n)}</td>
+              <td class="py-2 text-mist">{n}</td>
+              <td class="py-2 font-semibold">{formatPrice(n)}</td>
             </tr>
           ))}
           <tr class="border-b border-line">
-            <td class="py-2 text-stone">7800000, 11000000</td>
-            <td class="py-2 font-display font-bold">{formatPriceRange(7800000, 11000000)}</td>
+            <td class="py-2 text-mist">7800000, 11000000</td>
+            <td class="py-2 font-semibold">{formatPriceRange(7800000, 11000000)}</td>
           </tr>
           <tr class="border-b border-line">
-            <td class="py-2 text-stone">1650 / 1150–1650</td>
-            <td class="py-2 font-display font-bold">{formatArea(1650)} / {formatAreaRange(1150, 1650)}</td>
+            <td class="py-2 text-mist">1650 / 1150–1650</td>
+            <td class="py-2 font-semibold">{formatArea(1650)} / {formatAreaRange(1150, 1650)}</td>
           </tr>
         </tbody>
       </table>

@@ -17,22 +17,22 @@ const describedBy = [hint && `${id}-hint`, `${id}-error`].filter(Boolean).join('
 ---
 
 <div class="flex flex-col gap-1">
-  <label for={id} class="font-display text-small font-bold text-stone">
+  <label for={id} class="text-small font-semibold text-mist">
     {label}
-    {optional && <span class="font-sans font-normal text-stone"> (optional)</span>}
+    {optional && <span class="font-sans font-normal text-mist"> (optional)</span>}
   </label>
   <div
-    class="flex min-h-tap items-center rounded-control border border-line bg-white focus-within:border-ink has-[[aria-invalid=true]]:border-deep"
+    class="flex min-h-tap items-center rounded-control border border-edge/70 bg-surface transition-colors focus-within:border-champagne has-[[aria-invalid=true]]:border-alert"
   >
-    {prefix && <span class="pl-3 text-stone tabular-nums" aria-hidden="true">{prefix}</span>}
+    {prefix && <span class="pl-3 text-mist tabular-nums" aria-hidden="true">{prefix}</span>}
     <input
       id={id}
       name={name}
       aria-describedby={describedBy}
-      class="min-h-tap w-full min-w-0 rounded-control bg-transparent px-3 text-body text-ink outline-none placeholder:text-stone/70"
+      class="min-h-tap w-full min-w-0 rounded-control bg-transparent px-3 text-body text-alabaster outline-none placeholder:text-mist/70"
       {...rest}
     />
   </div>
-  {hint && <p id={`${id}-hint`} class="text-small text-stone">{hint}</p>}
-  <p id={`${id}-error`} hidden class="text-small font-medium text-deep"></p>
+  {hint && <p id={`${id}-hint`} class="text-small text-mist">{hint}</p>}
+  <p id={`${id}-error`} hidden class="text-small font-medium text-alert"></p>
 </div>

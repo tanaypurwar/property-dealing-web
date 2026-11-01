@@ -1,15 +1,13 @@
 ---
 /**
- * The skyline rule from the brand book: one monoline of NCR towers with the sun
+ * The skyline rule from the brand book: one hairline of NCR towers with the sun
  * caught between them. Used as a footer edge or a section divider.
  */
 interface Props {
-  /** `ink` on light grounds, `paper` on Ink. */
-  tone?: 'ink' | 'paper';
   class?: string;
 }
 
-const { tone = 'ink', class: className } = Astro.props;
+const { class: className } = Astro.props;
 ---
 
 <svg
@@ -17,14 +15,14 @@ const { tone = 'ink', class: className } = Astro.props;
   preserveAspectRatio="none"
   aria-hidden="true"
   focusable="false"
-  class:list={['block h-auto w-full', tone === 'ink' ? 'text-ink' : 'text-paper', className]}
+  class:list={['block h-auto w-full text-edge/60', className]}
 >
   <path
     d="M0 64 H90 V40 H120 V24 H150 V64 H210 V34 H240 V14 H262 V64 H330 V46 H372 V64 H460 V28 H500 V64 H560 V20 H582 V8 H604 V64 H690 V40 H736 V64 H800 V30 H830 V18 H860 V64 H1000"
     fill="none"
     stroke="currentColor"
-    stroke-width="2.5"
+    stroke-width="1"
     stroke-linejoin="round"
     vector-effect="non-scaling-stroke"></path>
-  <circle cx="676" cy="22" r="11" class="fill-sun"></circle>
+  <circle cx="676" cy="22" r="9" fill="none" stroke-width="1" vector-effect="non-scaling-stroke" class="stroke-champagne"></circle>
 </svg>

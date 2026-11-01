@@ -52,8 +52,8 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
 >
   <div class="mx-auto max-w-site px-4 pt-8 pb-16 sm:px-6 md:pt-12">
     <header class="max-w-[44rem]">
-      <h1 class="text-h2 font-extrabold md:text-h1">Projects in Noida and Greater Noida</h1>
-      <p class="mt-3 text-lead text-stone">
+      <h1 class="text-h2 font-medium md:text-h1">Projects in Noida and Greater Noida</h1>
+      <p class="mt-3 text-lead text-mist">
         Every project here shows its UP RERA status, and every price says exactly what it
         includes.
       </p>
@@ -62,9 +62,9 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
     <!-- Desktop: the form sits here. Mobile: the script moves it into the bottom sheet when it opens. -->
     {
       items.length === 0 && (
-        <section class="mt-8 flex flex-col items-start gap-4 rounded-card border border-dashed border-stone/50 bg-sand/60 p-6 md:p-10">
-          <h2 class="text-h4 font-bold">New verified projects are on their way</h2>
-          <p class="max-w-[56ch] text-stone">
+        <section class="mt-8 flex flex-col items-start gap-4 rounded-card border border-edge/50 bg-surface/60 p-6 md:p-10">
+          <h2 class="text-h4 font-medium">New verified projects are on their way</h2>
+          <p class="max-w-[56ch] text-mist">
             We list a project only after our team has visited the site and checked its RERA
             registration. Tell us your budget and area, and we'll send options we've already verified.
           </p>
@@ -84,13 +84,13 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
         id="project-filters"
         action="/projects"
         method="get"
-        class="grid gap-4 md:grid-cols-5 md:gap-3 md:rounded-card md:border md:border-line md:bg-white md:p-4"
+        class="grid gap-4 md:grid-cols-5 md:gap-0 md:divide-x md:divide-line md:rounded-card md:border md:border-line md:bg-surface/40"
       >
-        <SelectField label="Location" name="location" anyLabel="Any location" options={locations} />
-        <SelectField label="Type" name="type" anyLabel="Any type" options={typeOptions} />
-        <SelectField label="Status" name="status" anyLabel="Any status" options={statusOptions} />
-        <SelectField label="Configuration" name="bhk" anyLabel="Any size" options={UNIT_OPTIONS} />
-        <SelectField label="Budget" name="budget" anyLabel="Any budget" options={BUDGETS} />
+        <SelectField label="Location" name="location" anyLabel="Any location" options={locations} inConsole />
+        <SelectField label="Type" name="type" anyLabel="Any type" options={typeOptions} inConsole />
+        <SelectField label="Status" name="status" anyLabel="Any status" options={statusOptions} inConsole />
+        <SelectField label="Configuration" name="bhk" anyLabel="Any size" options={UNIT_OPTIONS} inConsole />
+        <SelectField label="Budget" name="budget" anyLabel="Any budget" options={BUDGETS} inConsole />
       </form>
     </div>
 
@@ -99,7 +99,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
         <button
           type="button"
           data-filter-open
-          class="inline-flex min-h-tap items-center gap-2 rounded-control border-2 border-ink px-4 font-display font-bold md:hidden"
+          class="inline-flex min-h-tap items-center gap-2 rounded-control border border-alabaster/30 px-4 font-medium md:hidden"
           aria-haspopup="dialog"
         >
           <Icon name="filters" size={18} />
@@ -107,17 +107,17 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
           <span
             data-filter-count
             hidden
-            class="inline-grid min-w-6 place-items-center rounded-full bg-ink px-1.5 text-small text-paper"
+            class="inline-grid min-w-6 place-items-center rounded-full bg-champagne px-1.5 text-small font-semibold text-canvas"
           ></span>
         </button>
-        <p data-result-count aria-live="polite" class="font-display font-bold max-md:hidden">
+        <p data-result-count aria-live="polite" class="figures font-medium max-md:hidden">
           {count(items.length)}
         </p>
         <button
           type="button"
           data-filter-clear
           hidden
-          class="inline-flex min-h-tap items-center font-display font-bold text-deep underline decoration-2 underline-offset-4 hover:text-ink max-md:hidden"
+          class="inline-flex min-h-tap items-center font-semibold text-champagne underline decoration-1 underline-offset-4 hover:text-alabaster max-md:hidden"
         >
           Clear filters
         </button>
@@ -132,7 +132,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
         class="w-[13.5rem] max-md:flex-1"
       />
     </div>
-    <p data-result-count-mobile aria-live="polite" class:list={['mt-3 text-small text-stone md:hidden', items.length === 0 && 'hidden']}>{count(items.length)}</p>
+    <p data-result-count-mobile aria-live="polite" class:list={['mt-3 text-small text-mist md:hidden', items.length === 0 && 'hidden']}>{count(items.length)}</p>
 
     <div data-project-grid class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {
@@ -148,10 +148,10 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
       data-empty
       hidden
       aria-labelledby="empty-title"
-      class="mt-6 flex flex-col items-start gap-4 rounded-card border border-dashed border-stone/50 bg-sand/60 p-6 md:p-10"
+      class="mt-6 flex flex-col items-start gap-4 rounded-card border border-edge/50 bg-surface/60 p-6 md:p-10"
     >
-      <h2 id="empty-title" class="text-h4 font-bold">No projects match these filters</h2>
-      <p class="max-w-[56ch] text-stone">
+      <h2 id="empty-title" class="text-h4 font-medium">No projects match these filters</h2>
+      <p class="max-w-[56ch] text-mist">
         Try removing a filter. Or tell us your budget and area: we also track projects that aren't
         listed here yet, and we'll only call at a time you pick.
       </p>
@@ -168,14 +168,14 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
   <dialog
     data-filter-sheet
     aria-labelledby="sheet-title"
-    class="fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-none flex-col rounded-t-card bg-paper p-0 text-ink backdrop:bg-ink/50 open:flex"
+    class="fixed inset-x-0 top-auto bottom-0 m-0 max-h-[85dvh] w-full max-w-none flex-col rounded-t-card border-t border-line bg-surface p-0 text-alabaster backdrop:bg-canvas/80 open:flex"
   >
     <div class="flex items-center justify-between border-b border-line px-4 py-2">
-      <h2 id="sheet-title" class="font-display text-lead font-extrabold">Filters</h2>
+      <h2 id="sheet-title" class="text-h4">Filters</h2>
       <button
         type="button"
         data-filter-close
-        class="-mr-2 inline-flex size-tap items-center justify-center rounded-control hover:bg-sand"
+        class="-mr-2 inline-flex size-tap items-center justify-center rounded-control hover:bg-raised"
       >
         <span class="sr-only">Close filters</span>
         <Icon name="close" size={24} />

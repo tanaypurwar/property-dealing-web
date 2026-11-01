@@ -1,5 +1,5 @@
 ---
-import Logo from '../../../brand/logo/propertydealing-horizontal.svg';
+import Logo from '../../../brand/logo/propertydealing-mono-white.svg';
 import Button from '../Button.astro';
 import Icon from '../Icon.astro';
 import { site } from '../../config/site';
@@ -9,7 +9,7 @@ const isCurrent = (href: string) =>
   href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`);
 ---
 
-<header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur-sm">
+<header class="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-md">
   <div class="mx-auto flex h-16 max-w-site items-center gap-2 px-4 sm:px-6 lg:h-[4.5rem]">
     <a href="/" class="mr-auto flex min-h-tap items-center" aria-label={`${site.name} home`}>
       <Logo width={136} height={18} aria-hidden="true" class="h-auto w-[136px] lg:w-[168px]" />
@@ -23,7 +23,7 @@ const isCurrent = (href: string) =>
               <a
                 href={item.href}
                 aria-current={isCurrent(item.href) ? 'page' : undefined}
-                class="flex min-h-tap items-center px-3 font-display text-[0.9375rem] font-semibold text-ink hover:text-deep aria-[current=page]:text-deep aria-[current=page]:underline aria-[current=page]:decoration-sun aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8"
+                class="flex min-h-tap items-center px-3 text-[0.9375rem] font-medium text-alabaster/85 hover:text-champagne aria-[current=page]:text-champagne aria-[current=page]:underline aria-[current=page]:decoration-champagne aria-[current=page]:decoration-1 aria-[current=page]:underline-offset-8"
               >
                 {item.label}
               </a>
@@ -40,7 +40,7 @@ const isCurrent = (href: string) =>
 
     <button
       type="button"
-      class="group -mr-2 inline-flex size-tap items-center justify-center rounded-control text-ink hover:bg-sand lg:hidden"
+      class="group -mr-2 inline-flex size-tap items-center justify-center rounded-control text-alabaster hover:bg-raised lg:hidden"
       aria-controls="mobile-menu"
       aria-expanded="false"
       data-menu-toggle
@@ -54,7 +54,7 @@ const isCurrent = (href: string) =>
   <nav
     id="mobile-menu"
     aria-label="Main"
-    class="hidden border-t border-line bg-paper shadow-raise lg:hidden"
+    class="hidden border-t border-line bg-canvas shadow-raise lg:hidden"
     data-menu
   >
     <ul class="mx-auto flex max-w-site flex-col px-4 py-2 sm:px-6">
@@ -64,7 +64,7 @@ const isCurrent = (href: string) =>
             <a
               href={item.href}
               aria-current={isCurrent(item.href) ? 'page' : undefined}
-              class="flex min-h-14 items-center font-display text-lead font-bold text-ink aria-[current=page]:text-deep"
+              class="flex min-h-14 items-center font-display text-h4 font-medium text-alabaster aria-[current=page]:text-champagne"
             >
               {item.label}
             </a>

@@ -31,11 +31,13 @@ Most visitors are in India, on mobile phones with average connections.
 
 ## Design
 - Use the `frontend-design` skill for all UI work.
-- Follow the brand system in `brand/brand-book.html`. Logo files are in `brand/logo/` (outlined SVGs).
-- Brand tokens are defined in `src/styles/global.css` (`@theme`). Use the token utilities (`bg-ink`, `text-sun`, `bg-deep`, `font-display`…) rather than raw hex values.
-- Fonts: Manrope for headings, Mukta for body text and Hindi. Never use Inter-only typography.
+- Follow the brand system in `brand/brand-book.html`. For the website, its "Revision, November 2026" section replaces the older colour and type rules. Logo files are in `brand/logo/` (outlined SVGs); the site uses the mono white logo.
+- Brand tokens are defined in `src/styles/global.css` (`@theme`). Use the token utilities (`bg-canvas`, `bg-surface`, `text-alabaster`, `text-mist`, `border-line`, `text-champagne`, `font-display`…) rather than raw hex values.
+- The site is dark only: warm charcoal canvas, stone surfaces, alabaster text, one champagne accent. Dividers are 1px `border-line` hairlines; cards use borders, not shadows.
+- Fonts: Cormorant Garamond (`font-display`) for headings and project names. Plus Jakarta Sans (`font-sans`) for body, UI, and every price, area and date, using the `figures` class for tabular numbers. Cormorant has no ₹ glyph, so never put a price in it. Mukta stays in the sans stack for Hindi.
+- Badges are translucent capsules (`bg-canvas/65 backdrop-blur-md`, hairline border), never bright solid fills.
 - Avoid generic AI-looking design: no purple or blue gradients, no stock "dream home" visuals, and no `rounded-xl shadow-lg` on every card.
-- White text on Sunrise orange (`sun`) fails contrast. Use `ink` text on `sun`, and white text on `deep` for buttons.
+- Buttons: canvas text on `champagne` for primary, white text on `neem` for WhatsApp only.
 
 ## Git
 - Commit after each completed feature, with a clear message that says what was added or changed (e.g. `Add project listing card with RERA badge`).

@@ -18,9 +18,9 @@ interface Props {
 const { title, id, intro, as: Tag = 'h2', link, align = 'left', class: className } = Astro.props;
 
 const sizes = {
-  h1: 'text-h2 md:text-h1 font-extrabold',
-  h2: 'text-h3 md:text-h2 font-extrabold',
-  h3: 'text-h4 md:text-h3 font-bold',
+  h1: 'text-h2 md:text-h1',
+  h2: 'text-h3 md:text-h2',
+  h3: 'text-h4 md:text-h3',
 };
 ---
 
@@ -32,14 +32,14 @@ const sizes = {
   ]}
 >
   <div class:list={['flex max-w-[40rem] flex-col gap-2', align === 'center' && 'items-center']}>
-    <Tag id={id} class:list={[sizes[Tag], 'text-ink']}>{title}</Tag>
-    {intro && <p class="max-w-[60ch] text-lead text-stone">{intro}</p>}
+    <Tag id={id} class:list={[sizes[Tag], 'text-alabaster']}>{title}</Tag>
+    {intro && <p class="max-w-[60ch] text-lead text-mist">{intro}</p>}
   </div>
   {
     link && (
       <a
         href={link.href}
-        class="inline-flex min-h-tap shrink-0 items-center font-display font-bold text-deep underline decoration-2 underline-offset-4 hover:text-ink"
+        class="inline-flex min-h-tap shrink-0 items-center font-medium text-champagne underline decoration-1 underline-offset-[6px] hover:text-alabaster"
       >
         {link.label}
       </a>

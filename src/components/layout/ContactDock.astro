@@ -20,11 +20,11 @@ const wa = whatsappUrl(message);
 ---
 
 <div
-  class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-paper/95 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden"
+  class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-canvas/95 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden"
 >
   <a
     href={`tel:${site.phone}`}
-    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-deep font-display font-bold text-white"
+    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-champagne font-semibold text-canvas"
   >
     <Icon name="phone" size={20} />Call
   </a>
@@ -32,7 +32,7 @@ const wa = whatsappUrl(message);
     href={wa}
     target="_blank"
     rel="noopener"
-    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-neem font-display font-bold text-white"
+    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-neem font-semibold text-white"
   >
     <Icon name="chat" size={20} />WhatsApp
   </a>
@@ -42,7 +42,7 @@ const wa = whatsappUrl(message);
   href={wa}
   target="_blank"
   rel="noopener"
-  class="fixed right-6 bottom-6 z-40 hidden min-h-14 items-center gap-2.5 rounded-full bg-neem pr-6 pl-5 font-display font-bold text-white shadow-float transition-[filter] hover:brightness-90 md:flex"
+  class="fixed right-6 bottom-6 z-40 hidden min-h-14 items-center gap-2.5 rounded-full bg-neem pr-6 pl-5 font-semibold text-white shadow-float transition-[filter] hover:brightness-90 md:flex"
 >
   <Icon name="chat" size={22} />Chat on WhatsApp
 </a>}

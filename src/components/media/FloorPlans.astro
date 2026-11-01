@@ -27,7 +27,7 @@ const tabs = plans.length > 1;
             aria-controls={`plan-panel-${i}`}
             aria-selected={i === 0 ? 'true' : 'false'}
             tabindex={i === 0 ? 0 : -1}
-            class="min-h-tap rounded-control border-2 border-line bg-white px-4 font-display font-bold text-ink hover:border-ink aria-selected:border-ink aria-selected:bg-ink aria-selected:text-paper"
+            class="min-h-tap rounded-control border border-line bg-surface px-4 font-semibold text-alabaster hover:border-champagne/50 aria-selected:border-champagne aria-selected:text-champagne"
           >
             {p.configuration}
           </button>
@@ -49,7 +49,7 @@ const tabs = plans.length > 1;
           type="button"
           data-lightbox-open="floor-plan-viewer"
           data-index={i}
-          class="group relative block w-full overflow-hidden rounded-card border border-line bg-white"
+          class="group relative block w-full overflow-hidden rounded-card border border-line bg-surface"
         >
           <Image
             src={p.src}
@@ -60,7 +60,7 @@ const tabs = plans.length > 1;
             sizes="(min-width: 1024px) 760px, 100vw"
             class="w-full"
           />
-          <span class="absolute right-3 bottom-3 inline-flex min-h-tap items-center gap-2 rounded-control bg-ink/85 px-3 font-display text-small font-bold text-paper group-hover:bg-ink">
+          <span class="absolute right-3 bottom-3 inline-flex min-h-tap items-center gap-2 rounded-control bg-canvas/85 px-3 text-small font-semibold text-alabaster group-hover:bg-champagne-soft">
             <Icon name="expand" size={16} />
             Zoom
             <span class="sr-only">{p.configuration} floor plan</span>

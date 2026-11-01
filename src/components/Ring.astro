@@ -4,19 +4,19 @@
  * (RERA number, price sheet). Decorative; the text next to it carries the meaning.
  */
 interface Props {
-  /** `sun` on light and dark grounds, `ink` when sitting on a Sunrise badge. */
-  tone?: 'sun' | 'ink';
+  /** `champagne` on canvas and surface, `canvas` when sitting on a champagne fill. */
+  tone?: 'champagne' | 'canvas';
   class?: string;
 }
 
-const { tone = 'sun', class: className } = Astro.props;
+const { tone = 'champagne', class: className } = Astro.props;
 ---
 
 <span
   aria-hidden="true"
   class:list={[
-    'inline-block size-[0.6875rem] shrink-0 rounded-full border-[2.5px]',
-    tone === 'sun' ? 'border-sun' : 'border-ink',
+    'inline-block size-[0.625rem] shrink-0 rounded-full border-[1.5px]',
+    tone === 'champagne' ? 'border-champagne' : 'border-canvas',
     className,
   ]}
 ></span>

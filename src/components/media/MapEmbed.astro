@@ -22,7 +22,7 @@ const embed = `https://www.google.com/maps?q=${q}&z=15&output=embed`;
 const directions = `https://www.google.com/maps/search/?api=1&query=${q}`;
 ---
 
-<div class="overflow-hidden rounded-card border border-line bg-sand">
+<div class="overflow-hidden rounded-card border border-line bg-surface">
   <div
     class="relative flex aspect-[4/3] flex-col items-center justify-center gap-4 p-6 text-center sm:aspect-[16/9]"
     data-map={embed}
@@ -37,17 +37,17 @@ const directions = `https://www.google.com/maps/search/?api=1&query=${q}`;
       </defs>
       <rect width="100%" height="100%" fill="url(#map-grid)"></rect>
     </svg>
-    <span class="relative grid size-14 place-items-center rounded-full bg-deep text-white shadow-float">
+    <span class="relative grid size-14 place-items-center rounded-full bg-champagne text-canvas shadow-float">
       <Icon name="pin" size={26} />
     </span>
-    <p class="relative max-w-[36ch] text-ink">{address}</p>
-    <Button variant="secondary" class="relative bg-paper" data-map-load>Show map</Button>
+    <p class="relative max-w-[36ch] text-alabaster">{address}</p>
+    <Button variant="secondary" class="relative bg-canvas" data-map-load>Show map</Button>
   </div>
   <a
     href={directions}
     target="_blank"
     rel="noopener"
-    class="flex min-h-tap items-center justify-center gap-2 border-t border-line bg-white font-display font-bold text-deep hover:text-ink"
+    class="flex min-h-tap items-center justify-center gap-2 border-t border-line bg-surface font-semibold text-champagne hover:text-alabaster"
   >
     Open in Google Maps <Icon name="external" size={16} />
   </a>

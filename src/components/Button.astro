@@ -3,10 +3,10 @@ import type { HTMLAttributes } from 'astro/types';
 import Icon, { type IconName } from './Icon.astro';
 
 /**
- * primary: white on Deep Orange, the main action on a page.
- * secondary: Ink outline, for a second action next to a primary one.
+ * primary: canvas on champagne, the main action on a page.
+ * secondary: hairline alabaster outline, for a second action next to a primary one.
  * whatsapp: white on Neem, only for WhatsApp links.
- * inverse: Paper on Ink grounds (footer, dark panels).
+ * inverse: alabaster fill, for the rare panel that is itself champagne.
  */
 type Variant = 'primary' | 'secondary' | 'whatsapp' | 'inverse';
 type Size = 'sm' | 'md' | 'lg';
@@ -32,10 +32,10 @@ const {
 } = Astro.props;
 
 const variants: Record<Variant, string> = {
-  primary: 'border-transparent bg-deep text-white hover:bg-ink',
-  secondary: 'border-ink text-ink hover:bg-ink hover:text-paper',
+  primary: 'border-transparent bg-champagne text-canvas hover:bg-champagne-soft',
+  secondary: 'border-alabaster/30 text-alabaster hover:border-champagne hover:text-champagne',
   whatsapp: 'border-transparent bg-neem text-white hover:brightness-90',
-  inverse: 'border-transparent bg-paper text-ink hover:bg-sand',
+  inverse: 'border-transparent bg-alabaster text-canvas hover:bg-mist',
 };
 
 // Every size meets the 44px tap target; `sm` only tightens the padding and type.
@@ -46,8 +46,8 @@ const sizes: Record<Size, string> = {
 };
 
 const classes = [
-  'inline-flex items-center justify-center rounded-control border-2',
-  'font-display font-bold leading-tight whitespace-nowrap transition-colors duration-150',
+  'inline-flex items-center justify-center rounded-control border',
+  'font-semibold leading-tight tracking-[0.01em] whitespace-nowrap transition-colors duration-150',
   variants[variant],
   sizes[size],
   block && 'w-full',

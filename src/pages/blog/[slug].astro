@@ -52,19 +52,19 @@ const jsonLd = [
 <BaseLayout title={data.title} description={data.description} ogType="article" jsonLd={jsonLd} noindex={data.draft} floatingWhatsApp={false}>
   <article class="mx-auto max-w-site px-4 pt-4 pb-16 sm:px-6 md:pb-24">
     <nav aria-label="Breadcrumb">
-      <ol class="flex flex-wrap items-center gap-x-1 text-small text-stone">
-        <li><a href="/" class="inline-flex min-h-tap items-center hover:text-deep hover:underline">Home</a></li>
+      <ol class="flex flex-wrap items-center gap-x-1 text-small text-mist">
+        <li><a href="/" class="inline-flex min-h-tap items-center hover:text-champagne hover:underline">Home</a></li>
         <li aria-hidden="true"><Icon name="chevronRight" size={14} /></li>
-        <li><a href="/blog" class="inline-flex min-h-tap items-center hover:text-deep hover:underline">Blog</a></li>
+        <li><a href="/blog" class="inline-flex min-h-tap items-center hover:text-champagne hover:underline">Blog</a></li>
         <li aria-hidden="true"><Icon name="chevronRight" size={14} /></li>
-        <li aria-current="page" class="line-clamp-1 font-medium text-ink">{data.title}</li>
+        <li aria-current="page" class="line-clamp-1 font-medium text-alabaster">{data.title}</li>
       </ol>
     </nav>
 
     <header class="mt-6 max-w-[48rem] md:mt-10">
-      <h1 class="text-h3 font-extrabold md:text-h2 lg:text-[3.0625rem] lg:leading-[1.1]">{data.title}</h1>
-      <p class="mt-4 text-lead text-stone">{data.description}</p>
-      <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-small text-stone">
+      <h1 class="text-h3 font-medium md:text-h2 lg:text-[3.0625rem] lg:leading-[1.1]">{data.title}</h1>
+      <p class="mt-4 text-lead text-mist">{data.description}</p>
+      <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-small text-mist">
         <span>By {data.author}</span>
         <time datetime={isoDate(data.publishedAt)}>Published {formatDate(data.publishedAt)}</time>
         {data.updatedAt && <time datetime={isoDate(data.updatedAt)}>Updated {formatDate(data.updatedAt)}</time>}
@@ -78,9 +78,9 @@ const jsonLd = [
       </div>
 
       <aside class="lg:sticky lg:top-24 lg:self-start" aria-label="Talk to an advisor">
-        <div class="rounded-card bg-ink p-6 text-paper">
-          <p class="font-display text-lead font-extrabold">Weighing a project in this area?</p>
-          <p class="mt-2 text-paper/80">
+        <div class="rounded-card border border-line bg-surface/60 p-6 text-alabaster">
+          <p class="text-lead font-semibold">Weighing a project in this area?</p>
+          <p class="mt-2 text-alabaster/80">
             Send us the project name. We'll check its RERA status and get the all-inclusive price in
             writing before you pay anything.
           </p>
@@ -97,17 +97,17 @@ const jsonLd = [
     {
       data.sources.length > 0 && (
         <section aria-labelledby="sources-title" class="mt-14 max-w-[68ch] border-t border-line pt-8">
-          <h2 id="sources-title" class="font-display text-lead font-bold">Sources</h2>
-          <ol class="mt-3 flex list-decimal flex-col gap-2 pl-6 text-small text-stone">
+          <h2 id="sources-title" class="text-lead font-medium">Sources</h2>
+          <ol class="mt-3 flex list-decimal flex-col gap-2 pl-6 text-small text-mist">
             {data.sources.map((s) => (
               <li>
-                <a href={s.url} target="_blank" rel="noopener" class="text-ink underline decoration-line underline-offset-2 hover:text-deep">
+                <a href={s.url} target="_blank" rel="noopener" class="text-alabaster underline decoration-line underline-offset-2 hover:text-champagne">
                   {s.title}
                 </a>
               </li>
             ))}
           </ol>
-          <p class="mt-4 text-small text-stone">
+          <p class="mt-4 text-small text-mist">
             This article is general information, not financial advice. Plans, timelines and prices
             can change; check the latest RERA filing on up-rera.in before you pay any amount.
           </p>

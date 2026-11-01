@@ -26,13 +26,13 @@ const value = max === undefined ? formatPrice(min) : formatPriceRange(min, max);
 <p class:list={['flex flex-wrap items-baseline gap-x-2', className]}>
   <strong
     class:list={[
-      'font-display font-extrabold tabular-nums tracking-tight text-ink',
-      size === 'lg' ? 'text-h4 sm:text-h3' : 'text-[1.3125rem] leading-7',
+      'figures font-semibold text-alabaster',
+      size === 'lg' ? 'text-[1.75rem] leading-9 sm:text-[2rem] sm:leading-10' : 'text-[1.25rem] leading-7',
     ]}
   >
-    {from && <span class:list={['font-bold text-stone', size === 'lg' ? 'text-lead' : 'text-body']}>From </span>}
+    {from && <span class:list={['font-medium text-mist', size === 'lg' ? 'text-lead' : 'text-body']}>From </span>}
     {value}
-    {per && <span class="text-body font-bold text-stone">{per}</span>}
+    {per && <span class="text-body font-medium text-mist">{per}</span>}
   </strong>
-  {note && <span class="text-small text-stone">{note}</span>}
+  {note && <span class="text-small text-mist">{note}</span>}
 </p>

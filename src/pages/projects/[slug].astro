@@ -158,18 +158,18 @@ const section = 'scroll-mt-24';
 >
   <div class="mx-auto max-w-site md:px-6">
     <nav aria-label="Breadcrumb" class="px-4 py-2 md:px-0">
-      <ol class="flex flex-wrap items-center gap-x-1 text-small text-stone">
-        <li><a href="/" class="inline-flex min-h-tap items-center hover:text-deep hover:underline">Home</a></li>
+      <ol class="flex flex-wrap items-center gap-x-1 text-small text-mist">
+        <li><a href="/" class="inline-flex min-h-tap items-center hover:text-champagne hover:underline">Home</a></li>
         <li aria-hidden="true"><Icon name="chevronRight" size={14} /></li>
-        <li><a href="/projects" class="inline-flex min-h-tap items-center hover:text-deep hover:underline">Projects</a></li>
+        <li><a href="/projects" class="inline-flex min-h-tap items-center hover:text-champagne hover:underline">Projects</a></li>
         <li aria-hidden="true"><Icon name="chevronRight" size={14} /></li>
-        <li aria-current="page" class="font-medium text-ink">{p.name}</li>
+        <li aria-current="page" class="font-medium text-alabaster">{p.name}</li>
       </ol>
     </nav>
 
     {
       !p.published && (
-        <p role="note" class="mx-4 mb-3 rounded-control border-2 border-dashed border-deep bg-paper px-4 py-3 font-medium text-ink md:mx-0">
+        <p role="note" class="mx-4 mb-3 rounded-control border border-champagne/40 bg-surface/60 px-4 py-3 font-medium text-alabaster md:mx-0">
           Draft preview. This page only exists in <code>astro dev</code> and won't be published until{' '}
           <code>published: true</code> is set, which needs a real UP RERA number.
         </p>
@@ -188,10 +188,10 @@ const section = 'scroll-mt-24';
           <Badge status={p.status} />
         </div>
         <div>
-          <p class="font-display text-lead font-extrabold text-stone md:text-h4">{p.developer}</p>
-          <h1 class="text-h2 font-extrabold md:text-h1">{p.name}</h1>
+          <p class="text-lead font-medium text-mist">{p.developer}</p>
+          <h1 class="text-h2 font-medium md:text-h1">{p.name}</h1>
         </div>
-        <p class="flex items-start gap-1.5 text-lead text-stone">
+        <p class="flex items-start gap-1.5 text-lead text-mist">
           <Icon name="pin" size={20} class="mt-1.5" />
           <span>{area}</span>
         </p>
@@ -205,7 +205,7 @@ const section = 'scroll-mt-24';
           size="lg"
           class="md:justify-end"
         />
-        {p.priceNote && <p class="max-w-[42ch] text-small text-stone">{p.priceNote}</p>}
+        {p.priceNote && <p class="max-w-[42ch] text-small text-mist">{p.priceNote}</p>}
         <div class="grid grid-cols-2 gap-2 sm:flex">
           <Button href="#enquire" size="lg">Enquire now</Button>
           {
@@ -226,14 +226,14 @@ const section = 'scroll-mt-24';
 
     {
       p.reraStatus === 'applied' && (
-        <div role="note" class="mt-6 flex gap-3 rounded-card border-2 border-deep bg-paper p-4 sm:p-5">
-          <Icon name="shield" size={22} class="mt-0.5 text-deep" />
+        <div role="note" class="mt-6 flex gap-3 rounded-card border border-champagne/40 bg-surface/60 p-4 sm:p-5">
+          <Icon name="shield" size={22} class="mt-0.5 text-champagne" />
           <div>
-            <p class="font-display font-bold text-ink">RERA registration applied for, not yet granted</p>
-            <p class="mt-1 text-stone">
+            <p class="font-semibold text-alabaster">RERA registration applied for, not yet granted</p>
+            <p class="mt-1 text-mist">
               The details below come from the developer's marketing partners and may change. We don't
               take bookings or EOI payments for a project until it is registered on{' '}
-              <a href="https://up-rera.in" target="_blank" rel="noopener" class="font-medium text-deep underline">up-rera.in</a>.
+              <a href="https://up-rera.in" target="_blank" rel="noopener" class="font-medium text-champagne underline">up-rera.in</a>.
               Register your interest and we'll tell you as soon as it is.
             </p>
           </div>
@@ -258,16 +258,16 @@ const section = 'scroll-mt-24';
         facts.map((f, i) => (
           <div
             class:list={[
-              'flex flex-col gap-1 bg-white p-4',
+              'flex flex-col gap-1 bg-surface p-4',
               (f.icon === 'shield' || (i === facts.length - 2 && facts.length % 2 === 0)) &&
                 (threeCol ? 'max-sm:col-span-2' : 'max-lg:col-span-2'),
             ]}
           >
-            <dt class="flex items-center gap-1.5 font-display text-small font-bold text-stone">
+            <dt class="flex items-center gap-1.5 text-small font-semibold text-mist">
               <Icon name={f.icon} size={16} />
               {f.label}
             </dt>
-            <dd class="font-display font-bold break-words text-ink tabular-nums">{f.value}</dd>
+            <dd class="font-semibold break-words text-alabaster tabular-nums">{f.value}</dd>
           </div>
         ))
       }
@@ -277,15 +277,15 @@ const section = 'scroll-mt-24';
       <div class="flex min-w-0 flex-col gap-14 md:gap-20 lg:col-start-1 lg:row-start-1">
         <!-- 3. Overview -->
         <section id="overview" aria-labelledby="overview-title" class={section}>
-          <h2 id="overview-title" class="text-h3 font-extrabold md:text-h2">Overview</h2>
-          <p class="mt-2 text-lead text-stone">{p.tagline}</p>
-          <div class="mt-5 max-w-[68ch] [&_a]:text-deep [&_a]:underline [&>*+*]:mt-4 [&_h3]:mt-8 [&_h3]:text-h4 [&_h3]:font-bold [&_li]:ml-5 [&_li]:list-disc [&_table]:w-full [&_table]:text-left [&_td]:border-b [&_td]:border-line [&_td]:py-2 [&_td]:pr-3 [&_td:last-child]:text-right [&_td:last-child]:tabular-nums [&_th]:border-b-2 [&_th]:border-ink [&_th]:py-2 [&_th]:pr-3 [&_th]:font-display [&_th]:text-small [&_th]:text-stone [&_th:last-child]:text-right">
+          <h2 id="overview-title" class="text-h3 font-medium md:text-h2">Overview</h2>
+          <p class="mt-2 text-lead text-mist">{p.tagline}</p>
+          <div class="mt-5 max-w-[68ch] [&_a]:text-champagne [&_a]:underline [&>*+*]:mt-4 [&_h3]:mt-8 [&_h3]:text-h4 [&_h3]:font-medium [&_li]:ml-5 [&_li]:list-disc [&_table]:w-full [&_table]:text-left [&_td]:border-b [&_td]:border-line [&_td]:py-2 [&_td]:pr-3 [&_td:last-child]:text-right [&_td:last-child]:tabular-nums [&_th]:border-b [&_th]:border-edge [&_th]:py-2 [&_th]:pr-3 [&_th]:text-small [&_th]:font-medium [&_th]:text-mist [&_th:last-child]:text-right">
             <Content />
           </div>
           <ul class="mt-8 grid gap-3 sm:grid-cols-2">
             {
               p.highlights.map((h) => (
-                <li class="flex items-start gap-3 rounded-card bg-sand p-4">
+                <li class="flex items-start gap-3 rounded-card bg-surface p-4">
                   <Ring class="mt-1.5 size-4 border-[3px]" />
                   <span class="font-medium">{h}</span>
                 </li>
@@ -293,9 +293,9 @@ const section = 'scroll-mt-24';
             }
           </ul>
           <dl class="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-small">
-            <div class="flex gap-1.5"><dt class="text-stone">Developer</dt><dd class="font-medium">{p.developer}</dd></div>
-            {p.landAreaAcres && <div class="flex gap-1.5"><dt class="text-stone">Land area</dt><dd class="font-medium tabular-nums">{p.landAreaAcres} acres</dd></div>}
-            {p.floors && <div class="flex gap-1.5"><dt class="text-stone">Tallest tower</dt><dd class="font-medium tabular-nums">{p.floors} floors</dd></div>}
+            <div class="flex gap-1.5"><dt class="text-mist">Developer</dt><dd class="font-medium">{p.developer}</dd></div>
+            {p.landAreaAcres && <div class="flex gap-1.5"><dt class="text-mist">Land area</dt><dd class="font-medium tabular-nums">{p.landAreaAcres} acres</dd></div>}
+            {p.floors && <div class="flex gap-1.5"><dt class="text-mist">Tallest tower</dt><dd class="font-medium tabular-nums">{p.floors} floors</dd></div>}
           </dl>
         </section>
 
@@ -313,28 +313,28 @@ const section = 'scroll-mt-24';
           <table class="mt-6 w-full border-collapse text-left">
             <caption class="sr-only">Prices for each configuration at {p.name}</caption>
             <thead class="max-md:sr-only">
-              <tr class="border-b-2 border-ink font-display text-small text-stone">
-                <th scope="col" class="py-3 pr-4 font-bold">Unit type</th>
-                <th scope="col" class="py-3 pr-4 font-bold">{areaHeader}</th>
-                <th scope="col" class="py-3 pr-4 font-bold">{allInclusive ? 'Price, all-inclusive' : p.priceBasis === 'base' ? 'Price (BSP)' : 'Starting price'}</th>
+              <tr class="border-b border-edge text-small text-mist">
+                <th scope="col" class="py-3 pr-4 font-semibold">Unit type</th>
+                <th scope="col" class="py-3 pr-4 font-semibold">{areaHeader}</th>
+                <th scope="col" class="py-3 pr-4 font-semibold">{allInclusive ? 'Price, all-inclusive' : p.priceBasis === 'base' ? 'Price (BSP)' : 'Starting price'}</th>
                 <th scope="col" class="py-3"><span class="sr-only">Action</span></th>
               </tr>
             </thead>
             <tbody class="max-md:flex max-md:flex-col max-md:gap-3">
               {
                 p.configurations.map((c) => (
-                  <tr class="border-line max-md:grid max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-2 max-md:rounded-card max-md:border max-md:bg-white max-md:p-4 md:border-b">
-                    <th scope="row" class="py-4 pr-4 font-display text-lead font-extrabold max-md:col-span-2 max-md:py-0">
+                  <tr class="border-line max-md:grid max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-2 max-md:rounded-card max-md:border max-md:bg-surface max-md:p-4 md:border-b">
+                    <th scope="row" class="py-4 pr-4 text-lead font-semibold max-md:col-span-2 max-md:py-0">
                       {c.type}
                     </th>
                     <td class="py-4 pr-4 tabular-nums max-md:py-0">
-                      <span class:list={['block text-small text-stone', areaHeader !== 'Area' && 'md:hidden']}>
+                      <span class:list={['block text-small text-mist', areaHeader !== 'Area' && 'md:hidden']}>
                         {unitArea(c).label}
                       </span>
                       {unitArea(c).value}
                     </td>
-                    <td class="py-4 pr-4 font-display font-bold tabular-nums max-md:py-0">
-                      <span class="block font-sans text-small font-normal text-stone md:hidden">Price</span>
+                    <td class="py-4 pr-4 font-semibold tabular-nums max-md:py-0">
+                      <span class="block font-sans text-small font-normal text-mist md:hidden">Price</span>
                       {c.price ? formatPriceRange(c.price.min, c.price.max) : 'On request'}
                     </td>
                     <td class="py-3 text-right max-md:col-span-2 max-md:py-0 max-md:pt-1">
@@ -360,8 +360,8 @@ const section = 'scroll-mt-24';
         {
           p.images.floorPlans.length > 0 && (
             <section id="floor-plans" aria-labelledby="plans-title" class={section}>
-              <h2 id="plans-title" class="text-h3 font-extrabold md:text-h2">Floor plans</h2>
-              <p class="mt-2 text-lead text-stone">Tap a plan to see it full size.</p>
+              <h2 id="plans-title" class="text-h3 font-medium md:text-h2">Floor plans</h2>
+              <p class="mt-2 text-lead text-mist">Tap a plan to see it full size.</p>
               <div class="mt-6">
                 <FloorPlans projectName={p.name} plans={p.images.floorPlans} />
               </div>
@@ -373,11 +373,11 @@ const section = 'scroll-mt-24';
         {
           p.amenities.length > 0 && (
             <section id="amenities" aria-labelledby="amenities-title" class={section}>
-              <h2 id="amenities-title" class="text-h3 font-extrabold md:text-h2">Amenities</h2>
+              <h2 id="amenities-title" class="text-h3 font-medium md:text-h2">Amenities</h2>
               <ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {p.amenities.map((a) => (
-                  <li class="flex items-center gap-3 rounded-card border border-line bg-white p-3">
-                    <span class="grid size-10 shrink-0 place-items-center rounded-control bg-sand text-ink">
+                  <li class="flex items-center gap-3 rounded-card border border-line bg-surface p-3">
+                    <span class="grid size-10 shrink-0 place-items-center rounded-control bg-surface text-alabaster">
                       <Icon name={amenityIcon(a)} size={20} />
                     </span>
                     <span class="text-[0.9375rem] leading-snug">{a}</span>
@@ -392,7 +392,7 @@ const section = 'scroll-mt-24';
         {
           p.images.gallery.length > 0 && (
             <section id="gallery" aria-labelledby="gallery-title" class={section}>
-              <h2 id="gallery-title" class="text-h3 font-extrabold md:text-h2">Gallery</h2>
+              <h2 id="gallery-title" class="text-h3 font-medium md:text-h2">Gallery</h2>
               <ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {p.images.gallery.map((g, i) => (
                   <li>
@@ -400,7 +400,7 @@ const section = 'scroll-mt-24';
                       type="button"
                       data-lightbox-open="gallery-viewer"
                       data-index={i}
-                      class="group block w-full overflow-hidden rounded-card bg-sand text-left"
+                      class="group block w-full overflow-hidden rounded-card bg-surface text-left"
                     >
                       <Image
                         src={g.src}
@@ -411,7 +411,7 @@ const section = 'scroll-mt-24';
                         sizes="(min-width: 1024px) 250px, 50vw"
                         class="aspect-[16/10] w-full object-cover transition-opacity group-hover:opacity-90"
                       />
-                      <span class="block px-1 pt-2 text-small text-stone">{g.caption}</span>
+                      <span class="block px-1 pt-2 text-small text-mist">{g.caption}</span>
                     </button>
                   </li>
                 ))}
@@ -425,7 +425,7 @@ const section = 'scroll-mt-24';
         {
           videoId && (
             <section id="video" aria-labelledby="video-title" class={section}>
-              <h2 id="video-title" class="text-h3 font-extrabold md:text-h2">Video walkthrough</h2>
+              <h2 id="video-title" class="text-h3 font-medium md:text-h2">Video walkthrough</h2>
               <div class="mt-6">
                 <VideoEmbed videoId={videoId} title={`${p.name} walkthrough`} poster={p.images.hero.src} />
               </div>
@@ -435,8 +435,8 @@ const section = 'scroll-mt-24';
 
         <!-- 9. Location -->
         <section id="location" aria-labelledby="location-title" class={section}>
-          <h2 id="location-title" class="text-h3 font-extrabold md:text-h2">Location</h2>
-          <p class="mt-2 text-lead text-stone">{p.location.address}</p>
+          <h2 id="location-title" class="text-h3 font-medium md:text-h2">Location</h2>
+          <p class="mt-2 text-lead text-mist">{p.location.address}</p>
           <div class="mt-6">
             <MapEmbed
               latitude={p.location.latitude}
@@ -450,7 +450,7 @@ const section = 'scroll-mt-24';
               <div class="mt-8 grid gap-6 sm:grid-cols-2">
                 {nearby.map((g) => (
                   <div>
-                    <h3 class="flex items-center gap-2 font-display text-body font-bold">
+                    <h3 class="flex items-center gap-2 text-body font-medium">
                       <Icon name={g.icon} size={20} />
                       {g.label}
                     </h3>
@@ -458,7 +458,7 @@ const section = 'scroll-mt-24';
                       {g.places.map((n) => (
                         <li class="flex items-baseline justify-between gap-4 py-2.5">
                           <span>{n.name}</span>
-                          <span class="shrink-0 font-display font-bold tabular-nums">{formatNearby(n)}</span>
+                          <span class="shrink-0 font-semibold tabular-nums">{formatNearby(n)}</span>
                         </li>
                       ))}
                     </ul>
@@ -487,36 +487,36 @@ const section = 'scroll-mt-24';
       <section
         id="rera"
         aria-labelledby="rera-title"
-        class:list={[section, 'rounded-card bg-sand p-5 sm:p-6 lg:col-start-1 lg:row-start-2']}
+        class:list={[section, 'rounded-card bg-surface p-5 sm:p-6 lg:col-start-1 lg:row-start-2']}
       >
-        <h2 id="rera-title" class="text-h4 font-extrabold">RERA registration</h2>
+        <h2 id="rera-title" class="text-h4 font-medium">RERA registration</h2>
         <dl class="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2">
           <div>
-            <dt class="text-small text-stone">Project UP RERA {p.reraStatus === 'registered' ? 'number' : 'status'}</dt>
-            <dd class="flex items-center gap-2 font-display font-bold tabular-nums">
-              {p.reraStatus === 'registered' ? <><Ring />{p.reraNumber}</> : <span class="text-deep">{reraText(p)}</span>}
+            <dt class="text-small text-mist">Project UP RERA {p.reraStatus === 'registered' ? 'number' : 'status'}</dt>
+            <dd class="flex items-center gap-2 font-semibold tabular-nums">
+              {p.reraStatus === 'registered' ? <><Ring />{p.reraNumber}</> : <span class="text-champagne">{reraText(p)}</span>}
             </dd>
           </div>
           <div>
-            <dt class="text-small text-stone">Developer</dt>
-            <dd class="font-display font-bold">{p.developer}</dd>
+            <dt class="text-small text-mist">Developer</dt>
+            <dd class="font-semibold">{p.developer}</dd>
           </div>
           {
             possession && p.status !== 'ready-to-move' && (
               <div>
-                <dt class="text-small text-stone">RERA possession date</dt>
-                <dd class="font-display font-bold">{possession}</dd>
+                <dt class="text-small text-mist">RERA possession date</dt>
+                <dd class="font-semibold">{possession}</dd>
               </div>
             )
           }
           <div>
-            <dt class="text-small text-stone">Our UP RERA agent registration</dt>
-            <dd class="font-display font-bold tabular-nums">{site.agentRera}</dd>
+            <dt class="text-small text-mist">Our UP RERA agent registration</dt>
+            <dd class="font-semibold tabular-nums">{site.agentRera}</dd>
           </div>
         </dl>
-        <p class="mt-5 text-small text-stone">
+        <p class="mt-5 text-small text-mist">
           You can check this project's registration, approvals and quarterly progress on{' '}
-          <a href="https://up-rera.in" target="_blank" rel="noopener" class="font-medium text-deep underline">up-rera.in</a>.
+          <a href="https://up-rera.in" target="_blank" rel="noopener" class="font-medium text-champagne underline">up-rera.in</a>.
           Details on this page come from the developer and the RERA filing and can change; confirm
           them before you pay. Prices are all-inclusive unless stated. Images marked "artist's
           impression" are renders, not site photos.
