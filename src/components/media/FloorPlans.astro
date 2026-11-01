@@ -27,7 +27,7 @@ const tabs = plans.length > 1;
             aria-controls={`plan-panel-${i}`}
             aria-selected={i === 0 ? 'true' : 'false'}
             tabindex={i === 0 ? 0 : -1}
-            class="min-h-tap rounded-control border border-line bg-surface px-4 font-semibold text-alabaster hover:border-champagne/50 aria-selected:border-champagne aria-selected:text-champagne"
+            class="min-h-tap rounded-control border border-line bg-surface px-4 font-semibold text-alabaster transition-[color,border-color,transform] duration-200 ease-hover hover:border-champagne/50 active:scale-[0.97] active:duration-75 aria-selected:border-champagne aria-selected:text-champagne"
           >
             {p.configuration}
           </button>
@@ -43,7 +43,7 @@ const tabs = plans.length > 1;
         id={`plan-panel-${i}`}
         aria-labelledby={tabs ? `plan-tab-${i}` : undefined}
         hidden={i !== 0}
-        class="mt-4"
+        class="reveal-swap mt-4"
       >
         <button
           type="button"
@@ -58,9 +58,9 @@ const tabs = plans.length > 1;
             height={Math.round((Math.min(1200, p.src.width) * p.src.height) / p.src.width)}
             widths={[480, 800, Math.min(1200, p.src.width)]}
             sizes="(min-width: 1024px) 760px, 100vw"
-            class="w-full"
+            class="w-full transition-transform duration-700 ease-settle group-hover:scale-[1.02] motion-reduce:transition-none"
           />
-          <span class="absolute right-3 bottom-3 inline-flex min-h-tap items-center gap-2 rounded-control bg-canvas/85 px-3 text-small font-semibold text-alabaster group-hover:bg-champagne-soft">
+          <span class="absolute right-3 bottom-3 inline-flex min-h-tap items-center gap-2 rounded-control bg-canvas/85 px-3 text-small font-semibold text-alabaster transition-colors duration-200 ease-hover group-hover:bg-champagne group-hover:text-canvas">
             <Icon name="expand" size={16} />
             Zoom
             <span class="sr-only">{p.configuration} floor plan</span>

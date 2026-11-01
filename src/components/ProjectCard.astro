@@ -34,18 +34,24 @@ interface Props {
   /** Pass true for the first card when it sits above the fold. */
   eager?: boolean;
   newLaunch?: boolean;
+  class?: string;
 }
 
-const { project: p, eager = false, newLaunch = false } = Astro.props;
+const { project: p, eager = false, newLaunch = false, class: className } = Astro.props;
 
 const href = projectUrl(p.slug);
 const area = `${p.location.sector}, ${p.location.city}`;
 const headingId = `project-${p.slug}`;
 ---
 
+<!-- The champagne ring is a pseudo-element that fades with opacity, so hover never repaints the card's box. -->
 <article
   aria-labelledby={headingId}
-  class="group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface/50 transition-[border-color,box-shadow] duration-200 hover:border-champagne/40 hover:ring-1 hover:ring-champagne/25 focus-within:border-champagne/40 focus-within:ring-1 focus-within:ring-champagne/25"
+  class:list={[
+    'group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface/50 transition-colors duration-300 ease-hover hover:border-champagne/40 focus-within:border-champagne/40',
+    'after:pointer-events-none after:absolute after:inset-0 after:rounded-card after:opacity-0 after:ring-1 after:ring-champagne/30 after:ring-inset after:transition-opacity after:duration-300 after:ease-hover hover:after:opacity-100 focus-within:after:opacity-100',
+    className,
+  ]}
 >
   <!-- Fixed 16:9 frame reserves the image space before it loads, so the grid never shifts. -->
   <a href={href} tabindex="-1" aria-hidden="true" class="relative block aspect-video overflow-hidden bg-raised">
@@ -58,7 +64,7 @@ const headingId = `project-${p.slug}`;
       sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : 'auto'}
-      class="size-full object-cover"
+      class="size-full object-cover transition-transform duration-700 ease-settle group-hover:scale-[1.04] motion-reduce:transition-none"
     />
     {
       p.images.hero.caption && (

@@ -107,22 +107,22 @@ const section = 'mx-auto max-w-site px-4 sm:px-6';
         <div class:list={[section, 'grid gap-6 py-6 md:py-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-center lg:gap-12']}>
           <HeroCarousel label={`${latest.name} images`} slides={latestSlides} variant="compact" />
           <div class="flex flex-col gap-3">
-            <p class="flex items-center gap-2 text-small font-semibold text-champagne">
+            <p class="reveal-load [--step:0] flex items-center gap-2 text-small font-semibold text-champagne">
               <span aria-hidden="true" class="size-2 rounded-full bg-champagne" />
               {latest.featured ? 'Featured project' : `Just listed on ${formatDate(latest.listedAt)}`}
             </p>
-            <div>
+            <div class="reveal-load [--step:1]">
               <p class="text-body font-medium text-mist">{latest.developer}</p>
               <h2 id="latest-title" class="text-h3 font-medium md:text-h2">
                 <a href={projectUrl(latest.slug)} class="decoration-1 underline-offset-[6px] hover:text-champagne hover:underline">{latest.name}</a>
               </h2>
             </div>
-            <p class="text-lead text-mist">{latestArea}</p>
-            <div class="flex flex-wrap gap-1.5">
+            <p class="reveal-load [--step:2] text-lead text-mist">{latestArea}</p>
+            <div class="reveal-load [--step:2] flex flex-wrap gap-1.5">
               <Badge category={latest.type} />
               <Badge status={latest.status} />
             </div>
-            <ul class="flex flex-wrap gap-x-5 gap-y-1 text-[0.9375rem] text-alabaster/90">
+            <ul class="reveal-load [--step:3] flex flex-wrap gap-x-5 gap-y-1 text-[0.9375rem] text-alabaster/90">
               <li>{configurationSummary(latest.configurations)}</li>
               <li class="figures">
                 {areaSummary(latest.configurations).label === 'Area'
@@ -136,12 +136,13 @@ const section = 'mx-auto max-w-site px-4 sm:px-6';
               from={latest.priceRange.max === undefined}
               note={priceLabel(latest)}
               size="lg"
+              class="reveal-load [--step:3]"
             />
-            <p class="flex items-center gap-1.5 text-small text-mist">
+            <p class="reveal-load [--step:4] flex items-center gap-1.5 text-small text-mist">
               <Ring />
               <span>UP RERA <span class="figures">{latest.reraNumber}</span></span>
             </p>
-            <div class="mt-2 grid grid-cols-2 gap-2 sm:flex">
+            <div class="reveal-load [--step:4] mt-2 grid grid-cols-2 gap-2 sm:flex">
               <Button href={projectUrl(latest.slug)} size="lg">View details</Button>
               <Button
                 href={whatsappUrl(projectWhatsappMessage(latest.name, latestArea))}
@@ -163,26 +164,26 @@ const section = 'mx-auto max-w-site px-4 sm:px-6';
   <!-- Hero: the promise on the left, the price sheet it refers to on the right. -->
   <section aria-labelledby="hero-title" class:list={[section, 'grid items-center gap-12 pt-12 pb-16 md:pt-20 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-24 lg:pt-28 lg:pb-28']}>
     <div>
-      <h1 id="hero-title" class="text-h2 font-medium md:text-h1">
+      <h1 id="hero-title" class="reveal-load [--step:2] text-h2 font-medium md:text-h1">
         Verified projects in Noida and Greater Noida.
         <span class="block">Full price, upfront.</span>
       </h1>
-      <p class="mt-5 max-w-[54ch] text-lead text-mist">
+      <p class="reveal-load [--step:3] mt-5 max-w-[54ch] text-lead text-mist">
         Every listing is RERA-checked and comes with an itemised price breakup, so the number you see
         is the number you pay. One advisor stays with you till registry.
       </p>
-      <div class="mt-7 grid gap-3 sm:flex">
+      <div class="reveal-load [--step:4] mt-7 grid gap-3 sm:flex">
         <Button href="#enquire" size="lg">Get the price sheet</Button>
         <Button href={whatsappUrl()} variant="whatsapp" icon="chat" size="lg" target="_blank" rel="noopener">
           Chat on WhatsApp
         </Button>
       </div>
-      <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-small font-medium text-alabaster/85" aria-label="Why buyers choose us">
+      <ul class="reveal-load [--step:5] mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-small font-medium text-alabaster/85" aria-label="Why buyers choose us">
         {trust.map((t) => <li class="flex items-center gap-2"><Ring />{t}</li>)}
       </ul>
     </div>
 
-    <figure class="relative mx-auto w-full max-w-[26rem] lg:mr-0" aria-labelledby="sheet-caption">
+    <figure class="reveal-load [--step:5] relative mx-auto w-full max-w-[26rem] lg:mr-0" aria-labelledby="sheet-caption">
       <div class="rounded-t-card border border-b-0 border-line bg-surface px-6 pt-6 pb-4 shadow-raise">
         <div class="flex items-baseline justify-between gap-4 border-b border-edge pb-3">
           <p class="font-display text-h4 font-medium">Price sheet</p>
@@ -230,7 +231,7 @@ const section = 'mx-auto max-w-site px-4 sm:px-6';
           link={{ label: 'See all projects', href: '/projects' }}
         />
         <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {showcase.map((p) => <ProjectCard project={p} />)}
+          {showcase.map((p) => <ProjectCard project={p} class="reveal-scroll" />)}
         </div>
       </section>
     )

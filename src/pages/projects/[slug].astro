@@ -183,20 +183,20 @@ const section = 'scroll-mt-24';
   <div class="mx-auto max-w-site px-4 sm:px-6">
     <header class="flex flex-col gap-5 pt-5 md:flex-row md:items-end md:justify-between md:gap-10 md:pt-8">
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-1.5">
+        <div class="reveal-load [--step:0] flex flex-wrap gap-1.5">
           <Badge category={p.type} />
           <Badge status={p.status} />
         </div>
-        <div>
+        <div class="reveal-load [--step:1]">
           <p class="text-lead font-medium text-mist">{p.developer}</p>
           <h1 class="text-h2 font-medium md:text-h1">{p.name}</h1>
         </div>
-        <p class="flex items-start gap-1.5 text-lead text-mist">
+        <p class="reveal-load [--step:2] flex items-start gap-1.5 text-lead text-mist">
           <Icon name="pin" size={20} class="mt-1.5" />
           <span>{area}</span>
         </p>
       </div>
-      <div class="flex flex-col gap-3 md:items-end md:text-right">
+      <div class="reveal-load [--step:3] flex flex-col gap-3 md:items-end md:text-right">
         <PriceTag
           min={p.priceRange.min}
           max={p.priceRange.max}

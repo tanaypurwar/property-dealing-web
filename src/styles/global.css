@@ -49,6 +49,57 @@
   /* Cards and panels use hairlines, not shadows. Shadows are only for things that float above the page. */
   --shadow-float: 0 12px 32px -8px rgb(0 0 0 / 0.7);
   --shadow-raise: 0 16px 40px -16px rgb(0 0 0 / 0.8);
+
+  /* Easing by role. Entrances decelerate hard and settle; hovers ease both ways; presses respond at once. */
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-hover: cubic-bezier(0.45, 0, 0.2, 1);
+  --ease-press: cubic-bezier(0.2, 0, 0, 1);
+
+  --color-neem-deep: #275a43; /* WhatsApp hover */
+}
+
+/*
+ * Motion. Only transform and opacity animate, so nothing triggers layout.
+ * Everything is behind `prefers-reduced-motion: no-preference`: with reduced motion
+ * the classes do nothing and content renders in its final state straight away.
+ * Never put these on the LCP image: a fade from opacity 0 delays LCP.
+ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.5rem, 0) scale(0.99);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Page-load sequence. Order items with --step (0, 1, 2…): each starts 90ms after the last. */
+  .reveal-load {
+    animation: rise 900ms var(--ease-settle) both;
+    animation-delay: calc(var(--step, 0) * 90ms + 60ms);
+  }
+
+  /* Re-runs whenever the element is shown again, e.g. a tab panel losing `hidden`. */
+  .reveal-swap {
+    animation: settle 420ms var(--ease-settle) both;
+  }
+
+  /* Scroll reveal, driven by the element's own position in the viewport: no JS, no listeners.
+     Browsers without scroll timelines skip it and show the content static. */
+  @supports (animation-timeline: view()) {
+    .reveal-scroll {
+      animation: rise linear both;
+      animation-timing-function: var(--ease-settle);
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
 }
 
 /* Long-form Markdown (blog posts). Body text at a readable measure; tables in tabular figures. */

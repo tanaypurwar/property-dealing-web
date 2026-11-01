@@ -24,7 +24,7 @@ const wa = whatsappUrl(message);
 >
   <a
     href={`tel:${site.phone}`}
-    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-champagne font-semibold text-canvas"
+    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-champagne font-semibold text-canvas transition-transform duration-75 ease-press active:scale-[0.97]"
   >
     <Icon name="phone" size={20} />Call
   </a>
@@ -32,7 +32,7 @@ const wa = whatsappUrl(message);
     href={wa}
     target="_blank"
     rel="noopener"
-    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-neem font-semibold text-white"
+    class="flex min-h-12 items-center justify-center gap-2 rounded-control bg-neem font-semibold text-white transition-transform duration-75 ease-press active:scale-[0.97]"
   >
     <Icon name="chat" size={20} />WhatsApp
   </a>
@@ -42,7 +42,7 @@ const wa = whatsappUrl(message);
   href={wa}
   target="_blank"
   rel="noopener"
-  class="fixed right-6 bottom-6 z-40 hidden min-h-14 items-center gap-2.5 rounded-full bg-neem pr-6 pl-5 font-semibold text-white shadow-float transition-[filter] hover:brightness-90 md:flex"
+  class="fixed right-6 bottom-6 z-40 hidden min-h-14 items-center gap-2.5 rounded-full bg-neem pr-6 pl-5 font-semibold text-white shadow-float transition-[background-color,transform] duration-300 ease-hover hover:-translate-y-0.5 hover:bg-neem-deep active:translate-y-0 active:scale-[0.98] md:flex"
 >
   <Icon name="chat" size={22} />Chat on WhatsApp
 </a>}

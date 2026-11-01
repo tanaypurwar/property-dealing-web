@@ -52,8 +52,8 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
 >
   <div class="mx-auto max-w-site px-4 pt-8 pb-16 sm:px-6 md:pt-12">
     <header class="max-w-[44rem]">
-      <h1 class="text-h2 font-medium md:text-h1">Projects in Noida and Greater Noida</h1>
-      <p class="mt-3 text-lead text-mist">
+      <h1 class="reveal-load [--step:0] text-h2 font-medium md:text-h1">Projects in Noida and Greater Noida</h1>
+      <p class="reveal-load [--step:1] mt-3 text-lead text-mist">
         Every project here shows its UP RERA status, and every price says exactly what it
         includes.
       </p>
@@ -79,7 +79,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
     }
 
     <!-- Filters only make sense once there is something to filter. -->
-    <div data-filter-home class:list={['mt-8 max-md:hidden', items.length === 0 && 'hidden']}>
+    <div data-filter-home class:list={['reveal-load [--step:2] mt-8 max-md:hidden', items.length === 0 && 'hidden']}>
       <form
         id="project-filters"
         action="/projects"
@@ -138,7 +138,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
       {
         ordered.map((p, i) => (
           <div data-project={p.slug} class="flex flex-col [&>article]:flex-1">
-            <ProjectCard project={p} eager={i === 0} />
+            <ProjectCard project={p} eager={i === 0} class="reveal-scroll" />
           </div>
         ))
       }
@@ -196,7 +196,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`;
 <style>
   @media (prefers-reduced-motion: no-preference) {
     dialog[open] {
-      animation: sheet-up 200ms ease-out;
+      animation: sheet-up 320ms var(--ease-settle);
     }
   }
   @keyframes sheet-up {
