@@ -74,6 +74,8 @@ const ogImage = image
     <meta name="theme-color" content="#0f0e0e" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <!-- Page-specific head tags, e.g. site verification on the home page. -->
+    <slot name="head" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
